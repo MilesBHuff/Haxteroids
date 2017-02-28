@@ -127,30 +127,30 @@ function new_star() {
 	// I used https://en.wikipedia.org/wiki/Stellar_classification#Harvard_spectral_classification
 	// to get the percentages, colors (RGB), luminosities (alpha), and sizes (radius).  As the
 	// Wikipedia percentages did not add up to 100, I scaled them.  I also scaled the luminosities.
-	star.rgba.a = Math.random() * 100;  // This is a temporary setting used to determine the stellar spectral class of the star
+	star.rgba.a = Math.random();  // This is a temporary setting used to determine the stellar spectral class of the star
 	         // Class M
-	 if(star.rgba.a <= 76.5418272300) {
+	 if(star.rgba.a <= 0.765418272300) {
 		star.rgba.r = 255;
 		star.rgba.g = 189;
 		star.rgba.b = 111;
 		star.rgba.a = Math.round(    0.5   + (Math.random() * 0.027));  // 0.527 - 0.5
 		star.r      = maxStarSize * (0     + (Math.random() * 0.7  ));  // 0.7   - 0
 	} else   // Class K
-	 if(star.rgba.a <= 88.6563610363) {
+	 if(star.rgba.a <= 0.886563610363) {
 		star.rgba.r = 255;
 		star.rgba.g = 221;
 		star.rgba.b = 180;
 		star.rgba.a = Math.round(    0.527 + (Math.random() * 0.2  ));  // 0.727 - 0.527
 		star.r      = maxStarSize * (0.7   + (Math.random() * 0.26 ));  // 0.96  - 0.7
 	} else   // Class G
-	 if(star.rgba.a <= 96.2654897080) {
+	 if(star.rgba.a <= 0.962654897080) {
 		star.rgba.r = 255;
 		star.rgba.g = 244;
 		star.rgba.b = 232;
 		star.rgba.a = Math.round(    0.727 + (Math.random() * 0.273));  // 1     - 0.727
 		star.r      = maxStarSize * (0.96  + (Math.random() * 0.19 ));  // 1.15  - 0.96
 	} else   // Class F
-	 if(star.rgba.a <= 99.2690931310) {
+	 if(star.rgba.a <= 0.992690931310) {
 		star.rgba.r = 251;
 		star.rgba.g = 248;
 		star.rgba.b = 255;
@@ -158,7 +158,7 @@ function new_star() {
 //		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
 		star.r      = maxStarSize * (1.15  + (Math.random() * 0.25 ));  // 1.4   - 1.15
 	} else   // Class A
-	 if(star.rgba.a <= 99.8698138156) {
+	 if(star.rgba.a <= 0.998698138156) {
 		star.rgba.r = 202;
 		star.rgba.g = 216;
 		star.rgba.b = 255;
@@ -166,7 +166,7 @@ function new_star() {
 //		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
 		star.r      = maxStarSize * (1.4   + (Math.random() * 0.4  ));  // 1.8   - 1.4
 	} else   // Class B
-	 if(star.rgba.a <= 99.9996996400) {
+	 if(star.rgba.a <= 0.999996996400) {
 		star.rgba.r = 170;
 		star.rgba.g = 191;
 		star.rgba.b = 255;
