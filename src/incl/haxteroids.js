@@ -1506,11 +1506,11 @@ function init() {
 
 	// Audio
 	sounds = {
-		  boom: new Audio("resources/boom.ogg"),
-		  mono: new Audio("resources/mono.ogg"),
-		  ship: new Audio("resources/ship.ogg"),
-		  shot: new Audio("resources/shot.ogg"),
-		thrust: new Audio("resources/thrust.ogg")
+		  boom: new Audio("res/boom.ogg"),
+		  mono: new Audio("res/mono.ogg"),
+		  ship: new Audio("res/ship.ogg"),
+		  shot: new Audio("res/shot.ogg"),
+		thrust: new Audio("res/thrust.ogg")
 	};
 	sounds.mono.loop     = true;
 	sounds.thrust.loop   = true;
@@ -1530,14 +1530,14 @@ function init() {
 		menu20:  new Image(),
 		menu21:  new Image()
 	};
-	graphics.rock.src    = "resources/rock.png";
-	graphics.ship.src    = "resources/ship.png";
-	graphics.shipHot.src = "resources/shiphot.png";
-	graphics.shot.src    = "resources/shot.png";
-	graphics.menu10.src  = "resources/menu(1, 0).png";
-	graphics.menu11.src  = "resources/menu(1, 1).png";
-	graphics.menu20.src  = "resources/menu(2, 0).png";
-	graphics.menu21.src  = "resources/menu(2, 1).png";
+	graphics.rock.src    = "res/rock.png";
+	graphics.ship.src    = "res/ship.png";
+	graphics.shipHot.src = "res/shiphot.png";
+	graphics.shot.src    = "res/shot.png";
+	graphics.menu10.src  = "res/menu(1, 0).png";
+	graphics.menu11.src  = "res/menu(1, 1).png";
+	graphics.menu20.src  = "res/menu(2, 0).png";
+	graphics.menu21.src  = "res/menu(2, 1).png";
 
 	// DOM Variables
 	canvas    = document.getElementById("haxteroids");
