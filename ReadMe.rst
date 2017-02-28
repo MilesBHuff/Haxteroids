@@ -189,11 +189,11 @@ License
 
 Usage
 ================================================================================
-| Open ./public_html/csci4070/project1.htm in the latest version of Firefox.
+| Open ./public_html/haxteroids.htm in the latest version of Firefox.
   Compatibility not tested in other versions or browsers.
 | As this is just a snapshot of the relevant files from my school website, you
   can also simply visit
-  ``http://cobweb.cs.uga.edu/~huff/csci4070/project1.htm``.
+  ``http://cobweb.cs.uga.edu/~huff/haxteroids.htm``.
 
 Additional Information
 ================================================================================
