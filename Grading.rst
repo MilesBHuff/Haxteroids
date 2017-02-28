@@ -16,12 +16,12 @@ Interaction between Game Objects
 ================================================================================
 | There is collision between:
 
-  + Asteroids and other asteroids (toggleable)
-  + Asteroids and particles
-  + Asteroids and the player's probe
-  + Unimplemented:  Asteroids and missiles
-  + The player's probe and asteroids
-  + Unimplemented:  The player's probe and missiles
++ Asteroids and other asteroids (toggleable)
++ Asteroids and particles
++ Asteroids and the player's probe
++ Unimplemented:  Asteroids and missiles
++ The player's probe and asteroids
++ Unimplemented:  The player's probe and missiles
 
 Keeping Score (or Achieving some Objective / Reaching some Destination)
 ================================================================================
@@ -62,39 +62,39 @@ Effectiveness of Personal Twist
 ================================================================================
 | Personal twists:  (there are more than the below, but these are the main ones)
 
-  + **Better physics:**  Although vastly improved over the original game, my
-    physics are yet imperfect.  I'm not a very good mathematician, but I did my
-    best.  See ``ReadMe.rst`` for more information.
-    The original had friction in space, rocks went through each other, lasers
-    had physical form...  Needless to say, it was *quite* unrealistic.
-  + **Better graphics:**  I absolutely nailed this one.  My graphics are
-    fantastic.  They aren't perfect, however, as the asteroid textures have a
-    tendency to wobble.  This is a tradeoff of using floats.  Forcing the center
-    coordinates for textured asteroids to be integers helped to mitigate the
-    issue, but as the asteroids' sizes are still floats, this did not
-    completely fix the issue, and this tweak comes at the cost of slightly less
-    accurate asteroid movement.  Oh, and pretty much everything is parallaxed
-    (the particles are an exception).
-  + **Better sounds:**  My sounds are much more immersive than the original's,
-    to say the least.
-  + **Egocentric orientation:**  I wanted the ship to be piloted more as it
-    would be in real life:  from the orientation of the ship itself.  Although
-    this involved some complicated math and although I was not able to rotate
-    vectors, this still paid off quite nicely, and allowed me to create the
-    illusion of a limitless universe, instead of having to rely on border-
-    wrapping like the original.
-  + **More realistic scenario:**  In the original, you're in a trianglular ship
-    in an arbitrary asteroid-field.  You are equipped with a laser-cannon, and
-    gain points by shooting asteroids (of which there is a limited supply) and
-    flying saucers.  
-    In mine, you're in an orbital station remotely piloting a research probe
-    through the Oort Cloud.  You only have one probe.  Your probe is
-    realistically designed, and is loosely based off several real-life probes.
-    There is no end to the asteroids, and there is no other life in-sight:  just
-    you, and cold, empty space.
-  + **More everything:**  My version of Asteroids has so little in-common with
-    the original that almost everything in it could be considered a personal
-    twist.  Even the absence of missiles is almost a personal twist.
++ **Better physics:**  Although vastly improved over the original game, my
+  physics are yet imperfect.  I'm not a very good mathematician, but I did my
+  best.  See ``ReadMe.rst`` for more information.
+  The original had friction in space, rocks went through each other, lasers
+  had physical form...  Needless to say, it was *quite* unrealistic.
++ **Better graphics:**  I absolutely nailed this one.  My graphics are
+  fantastic.  They aren't perfect, however, as the asteroid textures have a
+  tendency to wobble.  This is a tradeoff of using floats.  Forcing the center
+  coordinates for textured asteroids to be integers helped to mitigate the
+  issue, but as the asteroids' sizes are still floats, this did not
+  completely fix the issue, and this tweak comes at the cost of slightly less
+  accurate asteroid movement.  Oh, and pretty much everything is parallaxed
+  (the particles are an exception).
++ **Better sounds:**  My sounds are much more immersive than the original's,
+  to say the least.
++ **Egocentric orientation:**  I wanted the ship to be piloted more as it
+  would be in real life:  from the orientation of the ship itself.  Although
+  this involved some complicated math and although I was not able to rotate
+  vectors, this still paid off quite nicely, and allowed me to create the
+  illusion of a limitless universe, instead of having to rely on border-
+  wrapping like the original.
++ **More realistic scenario:**  In the original, you're in a trianglular ship
+  in an arbitrary asteroid-field.  You are equipped with a laser-cannon, and
+  gain points by shooting asteroids (of which there is a limited supply) and
+  flying saucers.  
+  In mine, you're in an orbital station remotely piloting a research probe
+  through the Oort Cloud.  You only have one probe.  Your probe is
+  realistically designed, and is loosely based off several real-life probes.
+  There is no end to the asteroids, and there is no other life in-sight:  just
+  you, and cold, empty space.
++ **More everything:**  My version of Asteroids has so little in-common with
+  the original that almost everything in it could be considered a personal
+  twist.  Even the absence of missiles is almost a personal twist.
 
 Documentation
 ================================================================================
