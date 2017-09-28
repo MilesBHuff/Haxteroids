@@ -189,7 +189,7 @@ License
 
 Usage
 ================================================================================
-| Open ./public_html/haxteroids.htm in the latest version of Firefox.
+| Open ./src/haxteroids.htm in the latest version of Firefox.
   Compatibility not tested in other versions or browsers.
 | As this is just a snapshot of the relevant files from my school website, you
   can also simply visit
