@@ -170,7 +170,7 @@ Meta
 --------------------------------------------------------------------------------
 | **Author(s):**
 
-  * Miles B Huff (811296033)
+* Miles B Huff (811296033)
   
 | **Date Submitted:**  2017-02-22
 
@@ -178,9 +178,9 @@ License
 --------------------------------------------------------------------------------
 | Except where otherwise stated:  
 
-  * Code is Copyright (C) to the author(s) per the terms of the GNU LGPL3
+* Code is Copyright (C) to the author(s) per the terms of the GNU LGPL3
     ("GNU"'s Not UNIX Lesser General Public License v3).
-  * Non-code is Copyright (C) to the author(s) per the terms of the CC-BY-SA v4
+* Non-code is Copyright (C) to the author(s) per the terms of the CC-BY-SA v4
     (Creative Commons Attribution-ShareAlike v4 International).
 
 | The terms of these licenses can be found at /Licenses.txt.  Where there are
