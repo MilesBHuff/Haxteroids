@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang=en-US>
+	<head>
+		<base url= target=_self>
+		<script type=text/javascript src=includes/meta.js></script>
+		<title>Haxteroids</title>
+		<link rel=stylesheet type=text/css href=includes/style.css>
+		<script type=text/javascript src=includes/project1.js></script>
+	</head>
+	<body>
+		<!--<script type=text/javascript src=includes/header.js></script>-->
+		<table ><tr>
+			<!--<td><script type=text/javascript src=includes/sidebar.js></script></td>-->
+			<td><table><tr>
+					<td class=pad-right>
+					<div class=card>
+		   			<h2>Haxteroids<span class="float-right pad-hor"><a href=resources/project1/Report.pdf>ReadMe</a></span></h2>
+						<table><tr>
+							<td>Research&nbsp;Points:&nbsp;<span id=scoreSpan>0</span></td>
+						</tr></table>
+						<canvas id=haxteroids width=720 height=405>ERROR:  Your browser does not support the HTML5 canvas element!</canvas>
+					</div>
+				</td><td class=pad-right>
+					<div id=premise class=card style=display:none>
+						<h2>
+							Premise
+							<span class=mar-right></span>
+							<a onclick=showInstructions()>Instructions</a>
+							<span class=mar-right></span>
+							<a onclick=showSettings()>Settings</a>
+						</h2>
+						<p>The United Human Space Program has launched a small probe into the Oort cloud.  You are located nearby (in astronomical terms) inside an orbital station flying high over the Pluto-Charon system.  Your job is to monitor this probe and process the data it uncovers.  Unfortunately, shortly after the probe's arrival to a particularly dense segment of the Oort cloud, the automatic guidance system was irreparably damaged, likely due to impact with high-velocity microdebris.  As the success or failure of your career depends upon that of this mission, you have decided to take manual control over the probe, in a last-ditch effort to minimize the mission's inevitable losses.</p>
+					</div>
+					<div id=instructions class=card style=display:none>
+						<h2>
+							<a onclick=showPremise()>Premise</a>
+							<span class=mar-right></span>
+							Instructions
+							<span class=mar-right></span>
+							<a onclick=showSettings()>Settings</a>
+						</h2>
+						<ul class=list-style-circle>
+							<li>To move, use either the arrow keys or WASD.</li>
+							<li>To fire a missile, use either the spacebar or the return key.</li>
+							<li>You have unlimited liquid fuel and monopropellant.</li>
+							<li>You have unlimited missiles.</li>
+						</ul>
+						<ul class=list-style-circle>
+							<li>Protip:  Move backwards, and use your main thrusters to brake.  You don't need to move fast to do well at this game, and your main engine is twice the thrust of your RCS.</li>
+					</div>
+					<div id=settings class=card style=display:none>
+						<h2>
+							<a onclick=showPremise()>Premise</a>
+							<span class=mar-right></span>
+							<a onclick=showInstructions()>Instructions</a>
+							<span class=mar-right></span>
+							Settings
+						</h2>
+						<ul>
+							<li>Particles:&nbsp;<input id=particleSlider onchange=slideParticles(this.value) type=range min=1 max=2 step=1 value=2>&nbsp;<span id=particleSpan>High</span></li>
+							<li>Stars:&nbsp;<input id=starSlider onchange=slideStars(this.value) type=range min=0 max=3 step=1 value=3>&nbsp;<span id=starSpan>High</span></li>
+							<li><input id=texturesToggle onchange=toggleTextures(this.checked) type=checkbox checked=true>&nbsp;Rock&nbsp;Textures</li>
+							<li><input id=rockCollisionToggle onchange=toggleRockCollision(this.checked) type=checkbox checked=true>&nbsp;Rock&nbsp;Collision</li>
+							<li><input id=speedHackToggle onchange=toggleSpeedHack(this.checked) type=checkbox checked=true>&nbsp;Speedhacks</li>
+						</ul>
+					</div>
+				</td>
+			</tr></table></td>
+		</tr></table>
+		<script type=text/javascript src=includes/footer.js></script>
+		<script type=text/javascript>init()</script>
+	</body>
+</html>
