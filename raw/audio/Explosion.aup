@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="Explosion_data" version="1.3.0" audacityversion="2.1.2" sel0="0.0000000000" sel1="0.6670000000" vpos="0" h="0.0000000000" zoom="1175.0000000000" rate="32000.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags>
+		<tag name="TRACKNUMBER" value="?"/>
+		<tag name="ALBUM" value="Haxteroids"/>
+		<tag name="ARTIST" value="Miles B Huff"/>
+		<tag name="YEAR" value="2017"/>
+		<tag name="GENRE" value="Sound Effects"/>
+		<tag name="TITLE" value="Hatches Open"/>
+	</tags>
+	<wavetrack name="Mix" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="32000" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="21344">
+				<waveblock start="0">
+					<simpleblockfile filename="e0003077.au" len="21344" min="-1.53949" max="1.53833" rms="0.172224"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>
