@@ -16,13 +16,13 @@ Summary
   eating, sleeping, *etc* or doing other homework, was working on this
   assignment.  The reason I went overkill on this assignment, was because I
   didn't realize we had a project1 until the Tuesday before it was due (it was
-  due the next day), and I wanted the overkill to make up for the lateness.  
+  due the next day), and I wanted the overkill to make up for the lateness.
 |
 | **Code:**
 | There are around 2,000 lines of code in this project, between the Javascript
   itself, the webpage, the css *etc* for that webpage (which I revised
   substantially throughout this assignment), and the GIMP plugin (which I
-  originally wrote for hackathon3).
+  originally wrote for Hackahearts).
 | I wrote 100% of the code:  Javascript, HTML, and LISP.  I did not use any
   tutorials, although I did, of course, have to use Google, Stackexchange, etc
   to learn how to do certain things.  I also used Wikipedia for information
@@ -97,7 +97,7 @@ Summary
 | **Graphics:**
 | All art was made from scratch by me.  I made the asteroid-textures in GIMP,
   and I hand-drew in a GNU/Linux analogue to Microsoft Paint (Kolourpaint) the
-  probe (the player's ship) and the missile.  
+  probe (the player's ship) and the missile.
 | The colors of the art were sampled from actual pictures of the things the art
   represents.  No, an RGB color can't be copyrighted.  Fun fact:  The orange
   center of the player's ship is sampled from the Orion moonlander.
@@ -171,12 +171,12 @@ Meta
 | **Author(s):**
 
 * Miles B Huff (811296033)
-  
+
 | **Date Submitted:**  2017-02-22
 
 License
 --------------------------------------------------------------------------------
-| Except where otherwise stated:  
+| Except where otherwise stated:
 
 * Code is Copyright (C) to the author(s) per the terms of the GNU LGPL3
     ("GNU"'s Not UNIX Lesser General Public License v3).
@@ -185,7 +185,7 @@ License
 
 | The terms of these licenses can be found at /Licenses.txt.  Where there are
   exceptions, they will be noted in the directories or parent directories of the
-  excepted files.  
+  excepted files.
 
 Usage
 ================================================================================
