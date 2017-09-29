@@ -1,0 +1,8 @@
+# Images
+*.png
+*.xcf
+
+# Audio
+*.ogg
+*.au
+*.aup
