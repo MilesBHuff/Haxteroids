@@ -1,3 +1,6 @@
+# Other
+*.tmp
+
 # Images
 *.png
 *.xcf
