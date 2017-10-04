@@ -50,7 +50,7 @@ var minRockSpeed;
 var rockCD;
 var rockCDnow;
 var rockPoints;
-var rocks;
+var rocks = [];
 var rockSpriteSize;
 var rockCount;
 var wantRocks;
@@ -166,7 +166,7 @@ function new_star() {
 //		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
 		star.r      = maxStarSize * (1.4   + (Math.random() * 0.4  ));  // 1.8   - 1.4
 	} else   // Class B
-	 if(star.rgba.a <= 0.999996996400) {
+	 if(star.rgba.a <= 0.999996996400) {
 		star.rgba.r = 170;
 		star.rgba.g = 191;
 		star.rgba.b = 255;
@@ -724,7 +724,7 @@ function project1_gameLoop() {
 		for(var j = 0; j < rockPoints; j++) {
 			//              Center         Angle formula                                  Rotation                           Radius           Resizing formula
 			rocks[i].x[j] = rocks[i].cx + (Math.sin((j * ((Math.PI * 2) / rockPoints)) + (rocks[i].d * (Math.PI / 180)))) * (rocks[i].r[j] * (0.75 + ((wantRocks - i) / (wantRocks * 6))));
-			rocks[i].y[j] = rocks[i].cy + (Math.cos((j * ((Math.PI * 2) / rockPoints)) + (rocks[i].d * (Math.PI / 180)))) * (rocks[i].r[j] * (0.75 + ((wantRocks - i) / (wantRocks * 6))));
+			rocks[i].y[j] = rocks[i].cy + (Math.cos((j * ((Math.PI * 2) / rockPoints)) + (rocks[i].d * (Math.PI / 180)))) * (rocks[i].r[j] * (0.75 + ((wantRocks - i) / (wantRocks * 6))));
 		//	rocks[i].x[j] = Math.round(rocks[i].x[j]);  // The points must be ints
 		//	rocks[i].y[j] = Math.round(rocks[i].y[j]);  // The points must be ints
 		} //done
