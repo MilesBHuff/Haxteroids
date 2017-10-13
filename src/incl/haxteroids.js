@@ -1479,21 +1479,21 @@ function toggleSpeedHack(checked) {
 // Infobox
 
 function showPremise() {
-	document.getElementById("instructions").style.display = "none"
-	document.getElementById("settings").style.display = "none"  // Is most likely to be the previous screen, so should be done next-to-last.
-	document.getElementById("premise").style.display = "block"  // Is being unhidden, so should be done last.
+	document.getElementById("instructions").style.display = "none";
+	document.getElementById("settings").style.display = "none";  // Is most likely to be the previous screen, so should be done next-to-last.
+	document.getElementById("premise").style.display = "block";  // Is being unhidden, so should be done last.
 } //showPremise()
 
 function showInstructions() {
-	document.getElementById("settings").style.display = "none"
-	document.getElementById("premise").style.display = "none"        // Is most likely to be the previous screen, so should be done next-to-last.
-	document.getElementById("instructions").style.display = "block"  // Is being unhidden, so should be done last.
+	document.getElementById("settings").style.display = "none";
+	document.getElementById("premise").style.display = "none";        // Is most likely to be the previous screen, so should be done next-to-last.
+	document.getElementById("instructions").style.display = "block";  // Is being unhidden, so should be done last.
 } //showInstructions()
 
 function showSettings() {
-	document.getElementById("premise").style.display = "none"
-	document.getElementById("instructions").style.display = "none"  // Is most likely to be the previous screen, so should be done next-to-last.
-	document.getElementById("settings").style.display = "block"     // Is being unhidden, so should be done last.
+	document.getElementById("premise").style.display = "none";
+	document.getElementById("instructions").style.display = "none";  // Is most likely to be the previous screen, so should be done next-to-last.
+	document.getElementById("settings").style.display = "block";     // Is being unhidden, so should be done last.
 } //showSettings()
 
 ////////////////////////////////////////////////////////////////////////////////
