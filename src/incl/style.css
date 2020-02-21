@@ -1,31 +1,62 @@
 /*   V A R I A B L E S   */
 *:root {
-	--bg-default: #FFF;
-	--bg-dark:	#EEE;
-	--bg-link:	#9CF;
-	--bg-visited: #C9F;
-	--fg-default: #444;
-	--fg-link:	#369;
-	--fg-visited: #639;
+	/* Basic colours */
+	--light-white:     #FFF;
+	--light-black:     #DDD;
+	--light-red:       #F99;
+	--light-orange:    #FC9;
+	--light-yellow:    #FF9;
+	--light-puce:      #CF9;
+	--light-green:     #9F9;
+	--light-turquoise: #9FC;
+	--light-cyan:      #9FF;
+	--light-azure:     #9CF;
+	--light-blue:      #99F;
+	--light-violet:    #C9F;
+	--light-magenta:   #F9F;
+	--light-fuchsia:   #F9C;
+	--dark-white:      #666;
+	--dark-black:      #444;
+	--dark-red:        #933;
+	--dark-orange:     #963;
+	--dark-yellow:     #993;
+	--dark-puce:       #693;
+	--dark-green:      #393;
+	--dark-turquoise:  #396;
+	--dark-cyan:       #399;
+	--dark-azure:      #369;
+	--dark-blue:       #339;
+	--dark-violet:     #639;
+	--dark-magenta:    #939;
+	--dark-fuchsia:    #936;
+	/* Other variables */
+	--bg-default: var(--light-white);
+	--bg-shade:	  var(--light-black);
+	--bg-link:	  var(--light-azure);
+	--bg-visited: var(--light-violet);
+	--fg-default: var(--dark-black);
+	--fg-link:	  var(--dark-azure);
+	--fg-visited: var(--dark-violet);
 	--font-sans:  sans-serif;
 	--font-serif: serif;
 	--font-mono:  monospace;
-	--indent:	  2em;
-	--line-height: 1.5;
-	--pad-double: 32px;
-	--pad-double-neg: -32px;
-	--pad-full:   16px;
-	--pad-full-neg:   -16px;
-	--pad-half:	   8px;
-	--pad-half-neg:	   -8px;
-	--pad-quarter: 4px;
-	--pad-quarter-neg: -4px;
-	--shadow:	 #0004;
+	--indent:	     2em;
+	--line-height:   1.5;
+	--pad-full:      1em;
+	--pad-full-neg:    calc(var(--pad-full) * -1);
+	--pad-half:	       calc(var(--pad-full) /  2);
+	--pad-half-neg:	   calc(var(--pad-full) / -2);
+	--pad-quarter:     calc(var(--pad-full) /  4);
+	--pad-quarter-neg: calc(var(--pad-full) / -4);
+	--pad-double:      calc(var(--pad-full) *  2);
+	--pad-double-neg:  calc(var(--pad-full) * -2);
+	--shadow-color:	 #0004;
+	--shadow-width:  2px;
 }
 
 /*   D E F A U L T S   */
 * {
-	background: var(--bg-default)00;
+	background: var(--bg-default)0;
 	border: 0px solid var(--fg-default);
 	border-collapse: collapse;
 	border-spacing: 0px;
@@ -46,7 +77,7 @@
 
 /*   E L E M E N T S   */
 a {
-	text-decoration: none;
+	color: var(--fg-link);
 }
 a:link {
 	color: var(--fg-link);
@@ -68,36 +99,43 @@ a:visited:hover {
 	color: var(--bg-default);
 }
 a:active {
-	box-shadow: 0px 0px 2px 1px var(--shadow) inset;
+	box-shadow: 0px 0px var(--shadow-width) calc(var(--shadow-width) / 2) var(--shadow-color) inset;
 }
 b {
 	font-weight: bold;
 }
 body {
-	background: var(--bg-dark);
+	background: var(--bg-shade);
 	bottom: 0;
-	box-shadow: 0px 0px 4px 3px var(--shadow) inset;
+	box-shadow: 0px 0px calc(var(--shadow-width) * 2) calc(calc(var(--shadow-width) * 2) / 2) var(--shadow-color) inset;
 	left: 0;
 	position: absolute;
 	right: 0;
 	top: 0;
 	z-index: -1;
 }
-button {
+button, .button {
 	background: var(--fg-default);
 	border-radius: var(--pad-full);
-	box-shadow: 0px 0px 2px 1px var(--shadow);
+	box-shadow: 0px 0px var(--shadow-width) calc(var(--shadow-width) / 2) var(--shadow-color);
 	color: var(--bg-default);
-	overflow: hidden;
+	margin: var(--shadow-width) var(--shadow-width) calc(var(--shadow-width) + var(--pad-quarter)) var(--shadow-width); /* TODO: Should be var(--shadow-width) all around. */
 	padding: var(--pad-quarter) var(--pad-half);
-	margin: var(--pad-quarter) 0px;
 }
-button:hover {
+button:hover, .button:hover {
 	background: var(--fg-link);
 	color: var(--bg-default);
 }
-button:active {
-	box-shadow: 0px 0px 2px 1px var(--shadow) inset;
+button:active, .button:active {
+	box-shadow: 0px 0px var(--shadow-width) calc(var(--shadow-width) / 2) var(--shadow-color) inset;
+}
+center {
+	margin-left:   auto;
+	margin-right:  auto;
+	padding-left:  auto;
+	padding-right: auto;
+	text-align: center;
+	width: 100%;
 }
 h1 {
 	font-size: 150%;
@@ -120,17 +158,26 @@ i {
 	font-style: italic;
 }
 input {
-	box-shadow: 0px 0px 2px 1px var(--shadow) inset;
+	background: var(--bg-shade);
+	border-radius: var(--pad-full);
+	box-shadow: 0px 0px var(--shadow-width) calc(var(--shadow-width) / 2) var(--shadow-color) inset;
 }
 s {
 	text-decoration: line-through;
 }
 select {
-	box-shadow: 0px 0px 2px 1px var(--shadow);
+	box-shadow: 0px 0px var(--shadow-width) calc(var(--shadow-width) / 2) var(--shadow-color);
+}
+small {
+	font-size: 75%;
 }
 textarea {
-	box-shadow: 0px 0px 2px 1px var(--shadow) inset;
-	font: 100% var(--font-mono);
+	background: var(--bg-shade);
+	border-radius: var(--pad-full);
+	box-shadow: 0px 0px var(--shadow-width) calc(var(--shadow-width) / 2) var(--shadow-color) inset;
+/*	font: 100% var(--font-mono); */
+	margin: var(--pad-quarter-neg) 0px 0px 0px;
+	padding: var(--pad-quarter) var(--pad-half);
 }
 u {
 	text-decoration: underline;
@@ -255,18 +302,18 @@ u {
 .card {
 	background: var(--bg-default);
 	border-radius: var(--pad-full);
-	box-shadow: 0px 0px 2px 1px var(--shadow);
-	padding: var(--pad-half) var(--pad-full);
+	box-shadow: 0px 0px var(--shadow-width) calc(var(--shadow-width) / 2) var(--shadow-color);
+	margin: var(--shadow-width);
+	overflow: hidden !important;
+	padding: var(--pad-quarter) var(--pad-half);
 }
 .card img {
-	box-shadow: 0px 0px 2px 1px var(--shadow);
-	border-radius: 0px;
-	margin: 2px;
+	box-shadow: 0px 0px var(--shadow-width) calc(var(--shadow-width) / 2) var(--shadow-color);
+	margin: var(--shadow-width);
 }
 .card canvas {
-	box-shadow: 0px 0px 2px 1px var(--shadow);
-	border-radius: 0px;
-	margin: 2px;
+	box-shadow: 0px 0px var(--shadow-width) calc(var(--shadow-width) / 2) var(--shadow-color);
+	margin: var(--shadow-width);
 }
 .card h2 {
 	background: var(--fg-default);
@@ -404,7 +451,7 @@ u {
 
 /*   O T H E R   */
 .invisible {
-	background: var(--bg-default)00;
+	background: var(--bg-default)0;
 	box-shadow: none;
-	color: var(--bg-default)00;
+	color: var(--bg-default)0;
 }
