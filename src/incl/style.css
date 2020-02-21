@@ -56,7 +56,7 @@
 
 /*   D E F A U L T S   */
 * {
-	background: var(--bg-default)0;
+	/* background: var(--bg-default)0; */
 	border: 0px solid var(--fg-default);
 	border-collapse: collapse;
 	border-spacing: 0px;
@@ -78,6 +78,7 @@
 /*   E L E M E N T S   */
 a {
 	color: var(--fg-link);
+	cursor: pointer;
 }
 a:link {
 	color: var(--fg-link);
@@ -121,6 +122,7 @@ button, .button {
 	color: var(--bg-default);
 	margin: var(--shadow-width) var(--shadow-width) calc(var(--shadow-width) + var(--pad-quarter)) var(--shadow-width); /* TODO: Should be var(--shadow-width) all around. */
 	padding: var(--pad-quarter) var(--pad-half);
+	cursor: pointer;
 }
 button:hover, .button:hover {
 	background: var(--fg-link);
@@ -451,7 +453,8 @@ u {
 
 /*   O T H E R   */
 .invisible {
-	background: var(--bg-default)0;
+	/* background: var(--bg-default)0; */
+	/* color: var(--bg-default)0; */
 	box-shadow: none;
-	color: var(--bg-default)0;
+	opacity: 0;
 }
