@@ -1045,8 +1045,8 @@ function project1_gameLoop() {
 
 		// Vs missiles
 		for(var j = 0; j < shotCount; j++) {
-
-		} //done
+            //TODO
+        } //done
 
 		// Vs rocks
 		// The particles that result from this are computationally intensive, so I added a toggle.
@@ -1113,8 +1113,8 @@ function project1_gameLoop() {
 			} //done
 		} //fi
 		// Vs ships
-		if(menuIndex == 1) {
-			var shipDead = false;
+        var shipDead = false;
+		if(menuIndex == 1 && rocks[i]) {
 			for(var j = 0; j < rockPoints; j++) {
 				for(var k = 0; k < rockPoints; k++) {
 					if(rocks[i].x[j] <= halfWidth  + shipHalfRealSize && rocks[i].x[k] >= halfWidth  - shipHalfRealSize
@@ -1244,8 +1244,8 @@ function project1_gameLoop() {
 		// Set asteroid fill
 		if(!useTextures) {
 			context.fillStyle = "rgba(" + rocks[i].rgba.r.toString()
-				               + ", "    + rocks[i].rgba.g.toString()
-				               + ", "    + rocks[i].rgba.b.toString()
+				               + ", "   + rocks[i].rgba.g.toString()
+				               + ", "   + rocks[i].rgba.b.toString()
 				               + ", 1)";
 		} //fi
 
