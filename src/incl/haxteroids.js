@@ -1054,7 +1054,7 @@ function project1_gameLoop() {
 			for(var l = 0; l < rockCount; l++) {
 
 				// Only rocks with similar z-axises should collide.
-				if(l != i && !(l > i + rockOffset || l < i - rockOffset)) {
+				if(l != i /*&& !(l > i + rockOffset || l < i - rockOffset)*/) {
 
 //					if(speedHack) {
 						// Get the average size of the asteroid
