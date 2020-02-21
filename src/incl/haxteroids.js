@@ -1015,7 +1015,7 @@ function project1_gameLoop() {
 	} //fi
 
 	// Calculate asteroid collisions
-	var rockOffset = rockCount / 3;
+	// var rockOffset = rockCount / 3;
 	for(var i = 0; i < rockCount; i++) {
 
 		// Get the average size of the asteroid
@@ -1418,10 +1418,11 @@ function slideParticles(value) {
 
 function slideStars(value) {
 
-	// Speedhack
+    // Speedhack
+    var mult;
 	if(!speedHack)
-		 var mult = 768;
-	else var mult = 256;
+		 mult = 768;
+	else mult = 256;
 
 	// If we're decreasing the number of stars, delete all existing stars
 	if(wantStars > mult * value) {
