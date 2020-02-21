@@ -12,15 +12,21 @@ var rockCollision;
 var speedHack;
 var useTextures;
 
-// DOM Variables
+// DOM variables
 var canvas;
 var context;
+
+// Game variables
 var gameInt;
+var gameLoop;
 var gameSecs;
 var menuIndex;
+var menuTimer;
 
 // Scale variables
 var height;
+var halfHeight;
+var halfWidth;
 var width;
 var bigAxis;
 
@@ -31,6 +37,11 @@ var rightDown;
 var spaceDown;
 var upDown;
 var menuShow;
+
+// Fade variables
+var monoFade;
+var thrustFade;
+var debrisFade;
 
 // Star variables
 var maxStarSize;
@@ -61,6 +72,10 @@ var shots;
 var shotCount;
 var shotSize;
 var shotHalfSize;
+var shotHalfWidth;
+var shotHalfHeight;
+var shotWidth;
+var shotHeight;
 
 // Player variables
 var player;
@@ -632,10 +647,10 @@ function project1_gameLoop() {
 	} else {
 		// Remove stars that are no longer on the screen
 		for(var i = 0; i < starCount; i++) {
-			if(stars[i].x < 0      - star.dia
-			|| stars[i].x > width  + star.dia
-			|| stars[i].y < 0      - star.dia
-			|| stars[i].y > height + star.dia)
+			if(stars[i].x < 0      - stars[i].dia
+			|| stars[i].x > width  + stars[i].dia
+			|| stars[i].y < 0      - stars[i].dia
+			|| stars[i].y > height + stars[i].dia)
 			{ //if
 				stars.splice(i, 1);
 				starCount--;
@@ -1366,7 +1381,7 @@ function project1_gameLoop() {
 					 player.score+= 1 / gameInt;
 				else player.score+= 2 / gameInt;
 		} else       player.score+= 4 / gameInt;
-		document.getElementById("scoreSpan").innerHTML = Math.floor(player.score);
+		document.getElementById("scoreSpan").innerHTML = Math.floor(player.score).toString();
 	} //fi
 
 } //project1_gameLoop()
@@ -1417,7 +1432,8 @@ function slideStars(value) {
 	// Set the new star limit to the value of the slider
 	wantStars = mult * value;
 
-	// Create new stars
+    // Create new stars
+    var star;
 	if(!speedHack) {
 		for(var i = starCount; i < wantStars; i++) {
 			star = new_star();
