@@ -1,0 +1,31 @@
+{
+  "name": "haxteroids",
+  "version": "0.0.0",
+  "license": "LGPL-3.0-or-later",
+  "description": "An advanced remake of arcade Asteroids.",
+  "keywords": [
+    "haxteroids"
+  ],
+  "homepage": "https://MilesBHuff.GitHub.io/Haxteroids/src/haxteroids.htm",
+  "bugs": "https://GitHub.com/MilesBHuff/Haxteroids/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://GitHub.com/MilesBHuff/Haxteroids.git"
+  },
+  "private": true,
+  "directories": {
+    "bin": "./dist",
+    "lib": "./src"
+  },
+  "type": "module",
+  "main": "./dist/incl/haxteroids.js",
+  "scripts": {
+    "postinstall": "npm dedupe && && npm rebuild",
+    "relock": "rm -rf node_modules && rm -f npm-shrinkwrap.json && npm install && npm shrinkwrap",
+    "build": "echo todo"
+  },
+  "engines": {
+    "npm": "^7"
+  },
+  "devDependencies": {}
+}

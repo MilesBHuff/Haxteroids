@@ -1,8 +1,10 @@
 ## Version control
 .git/
+package-lock.json
 
 ## Dynamic/Unversionable
 dist/incl
+node_modules/
 *.bak
 *.log
 *.old
