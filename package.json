@@ -20,12 +20,17 @@
   "type": "module",
   "main": "./dist/incl/haxteroids.js",
   "scripts": {
-    "postinstall": "npm dedupe && && npm rebuild",
+    "postinstall": "npm dedupe",
     "relock": "rm -rf node_modules && rm -f npm-shrinkwrap.json && npm install && npm shrinkwrap",
-    "build": "echo todo"
+    "build": "rm -rf dist/incl && npx tsc"
   },
   "engines": {
-    "npm": "^7"
+    "node": "^16",
+    "npm": "^8"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "^16",
+    "tslib": "^2",
+    "typescript": "^4"
+  }
 }

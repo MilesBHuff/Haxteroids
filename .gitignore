@@ -3,13 +3,14 @@
 package-lock.json
 
 ## Dynamic/Unversionable
-dist/incl
+dist/incl/**
 node_modules/
 *.bak
 *.log
 *.old
 *.swp
 *.tmp
+*.tsbuildinfo
 
 ## IDEs
 .vscode/
@@ -21,5 +22,6 @@ desktop.ini
 thumbs.db
 .fuse_hidden*
 
-# Keep .keep files
+# Files to keep, in spite of the above rules
 !.keep
+!dist/incl/haxteroids.js
