@@ -1554,7 +1554,7 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 	// Settings
 
-	private slideParticles() {
+	public slideParticles() {
 		const value: number = Number.parseInt((document.getElementById("particleSlider") as HTMLInputElement).value);
 
 		// Remove all particles if the multiplier is 0
@@ -1581,7 +1581,7 @@ class Haxteroids {
 
 	} //slideParticles()
 
-	private slideStars() {
+	public slideStars() {
 		const value: number = Number.parseInt((document.getElementById("starSlider") as HTMLInputElement).value);
 
 		// Speedhack
@@ -1637,12 +1637,12 @@ class Haxteroids {
 
 	} //slideStars()
 
-	private toggleTextures() {
+	public toggleTextures() {
 		const checked: boolean = (document.getElementById("texturesToggle") as HTMLInputElement).checked;
 		this.useTextures = checked;
 	} //textureToggle()
 
-	private toggleRockCollision() {
+	public toggleRockCollision() {
 		const checked: boolean = (document.getElementById("rockCollisionToggle") as HTMLInputElement).checked;
 		this.rockCollision = checked;
 		for(let i = 0; i < this.particleCount; i++) {
@@ -1654,7 +1654,7 @@ class Haxteroids {
 		} //done
 	} //rockCollision()
 
-	private toggleSpeedHack() {
+	public toggleSpeedHack() {
 		const checked: boolean = (document.getElementById("speedHackToggle") as HTMLInputElement).checked;
 		this.speedHack = checked;
 		this.slideStars();
@@ -1664,19 +1664,19 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 	// Infobox
 
-	private showPremise() {
+	public showPremise() {
 		document.getElementById("instructions").style.display = "none";
 		document.getElementById("settings").style.display = "none";  // Is most likely to be the previous screen, so should be done next-to-last.
 		document.getElementById("premise").style.display = "block";  // Is being unhidden, so should be done last.
 	} //showPremise()
 
-	private showInstructions() {
+	public showInstructions() {
 		document.getElementById("settings").style.display = "none";
 		document.getElementById("premise").style.display = "none";        // Is most likely to be the previous screen, so should be done next-to-last.
 		document.getElementById("instructions").style.display = "block";  // Is being unhidden, so should be done last.
 	} //showInstructions()
 
-	private showSettings() {
+	public showSettings() {
 		document.getElementById("premise").style.display = "none";
 		document.getElementById("instructions").style.display = "none";  // Is most likely to be the previous screen, so should be done next-to-last.
 		document.getElementById("settings").style.display = "block";     // Is being unhidden, so should be done last.
