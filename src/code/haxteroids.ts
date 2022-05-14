@@ -1555,7 +1555,7 @@ class Haxteroids {
 	// Settings
 
 	private slideParticles() {
-		const value = document.getElementById("particleSlider").value;
+		const value: number = Number.parseInt((document.getElementById("particleSlider") as HTMLInputElement).value);
 
 		// Remove all particles if the multiplier is 0
 		if(value == 0) {
@@ -1582,7 +1582,7 @@ class Haxteroids {
 	} //slideParticles()
 
 	private slideStars() {
-		const value = document.getElementById("starSlider").value;
+		const value: number = Number.parseInt((document.getElementById("starSlider") as HTMLInputElement).value);
 
 		// Speedhack
 		let mult: number;
@@ -1638,12 +1638,12 @@ class Haxteroids {
 	} //slideStars()
 
 	private toggleTextures() {
-		const checked = document.getElementById("texturesToggle").checked;
+		const checked: boolean = (document.getElementById("texturesToggle") as HTMLInputElement).checked;
 		this.useTextures = checked;
 	} //textureToggle()
 
 	private toggleRockCollision() {
-		const checked = document.getElementById("rockCollisionToggle").checked;
+		const checked: boolean = (document.getElementById("rockCollisionToggle") as HTMLInputElement).checked;
 		this.rockCollision = checked;
 		for(let i = 0; i < this.particleCount; i++) {
 			if(this.particles[i].type == 0) {
@@ -1655,7 +1655,7 @@ class Haxteroids {
 	} //rockCollision()
 
 	private toggleSpeedHack() {
-		const checked = document.getElementById("speedHackToggle").checked;
+		const checked: boolean = (document.getElementById("speedHackToggle") as HTMLInputElement).checked;
 		this.speedHack = checked;
 		this.slideStars();
 	} //rockCollision()
