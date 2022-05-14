@@ -18,17 +18,18 @@
     "lib": "./src"
   },
   "type": "module",
-  "main": "./dist/incl/haxteroids.js",
+  "main": "./code/src/main.ts",
   "scripts": {
     "postinstall": "npm dedupe",
     "relock": "rm -rf node_modules && rm -f npm-shrinkwrap.json && npm install && npm shrinkwrap",
-    "build": "rm -rf dist/incl && npx tsc"
+    "build": "rm -rf dist/incl && npx tsc --NoEmit & npx esbuild src/code/main.ts --bundle --outfile=dist/incl/haxteroids.js &"
   },
   "engines": {
     "npm": "^8"
   },
   "devDependencies": {
+    "esbuild": "latest",
     "tslib": "latest",
-    "typescript": "next"
+    "typescript": "latest"
   }
 }

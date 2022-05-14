@@ -4,9 +4,9 @@
     "compilerOptions": {
 
         // Library versions
-        "moduleResolution": "NodeNext",
+        "moduleResolution": "Node",
         "module": "ESNext",
-        "target": "ES5",
+        "target": "ES6",
 
         "lib": [
             "ESNext",
@@ -24,23 +24,23 @@
         // "strict": true,
 
         // Maps
-        "declarationMap": true,
         "sourceMap": true,
-        // "mapRoot": "debug/maps",
         "sourceRoot": "src/code",
 
         // Misc
-        // "declaration": false,
-        "composite": true,
         "preserveSymlinks": true,
-
-        // Compilation options
         "downlevelIteration": true,
-        "emitDecoratorMetadata": true,
-        "esModuleInterop": true,
         "importHelpers": true,
-        // "importsNotUsedAsValues": "preserve",
+        "importsNotUsedAsValues": "preserve",
         "removeComments": true,
+
+        // Workarounds for bundler
+        "composite": false,
+        "declaration": false,
+        "declarationMap": false,
+        "emitDecoratorMetadata": false,
+        "esModuleInterop": true,
+        "isolatedModules": true,
 
         "baseUrl": "./src/code",
         "rootDir": "./src/code",
@@ -48,7 +48,7 @@
     },
 
     "files": [
-        "./src/code/haxteroids.ts",
+        "./src/code/main.ts",
     ],
     "include": [
         "./**/*.ts",
