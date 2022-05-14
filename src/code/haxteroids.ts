@@ -1,3 +1,4 @@
+import { Particle, ParticleType } from "classes/particle.class";
 import { RGBA } from "classes/rgba.class";
 
 export class Haxteroids {
@@ -247,21 +248,6 @@ export class Haxteroids {
 		this.gameLoop = setInterval(this.haxteroidsGameLoop, this.gameInt);
 		this.menuTimer = setInterval(this.haxteroidsMenuTimer, this.gameInt * 30);
 	} //constructor()
-
-	////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////
-
-	private new_particle() {
-		let particle = {
-			x: 0,
-			y: 0,
-			vx: 0,
-			vy: 0,
-			rgba: new RGBA(),
-			type: 0  // debris:0::mono:1::thrust:2::shot:3
-		};
-		return particle;
-	} //new_particle()
 
 	////////////////////////////////////////////////////////////////////////////////
 
@@ -523,8 +509,8 @@ export class Haxteroids {
 
 		// Create debris
 		for (let i = 0; i < avgSize * this.particleMultiplier; i++) {
-			let particle = this.new_particle();
-			particle.type = 0;  // Debris
+			let particle = new Particle();
+			particle.type = ParticleType.debris;
 			particle.x = (rock.cx - halfSize) + (Math.random() * avgSize);
 			particle.y = (rock.cy - halfSize) + (Math.random() * avgSize);
 			particle.vx = Math.random() * rock.vx * 2;
@@ -543,38 +529,38 @@ export class Haxteroids {
 
 	private shipsplosion(ship: any, rock: { vx: number; vy: number; }) {
 		for (let l = 0; l < this.shipRealSize * 2 * this.particleMultiplier; l++) {
-			let particle = this.new_particle();
+			let particle = new Particle();
 			particle.x = (this.halfWidth - this.shipHalfRealSize) + (Math.random() * this.shipRealSize);
 			particle.y = (this.halfHeight - this.shipHalfRealSize) + (Math.random() * this.shipRealSize);
 			particle.vx = Math.random() * rock.vx * 2;
 			particle.vy = Math.random() * (rock.vy - this.player.ship.vy);
 			switch (Math.round(4 * Math.random())) {
 				case 0: // Monopropellant
-					particle.type = 1;
+					particle.type = ParticleType.mono;
 					particle.rgba.r = 255;
 					particle.rgba.g = 255;
 					particle.rgba.b = 255;
 					break;
 				case 1: // Liquid fuel
-					particle.type = 2;
+					particle.type = ParticleType.shot;
 					particle.rgba.r = 255 - Math.round(32 * Math.random());
 					particle.rgba.g = 127 + Math.round(32 - (64 * Math.random()));
 					particle.rgba.b = Math.round(32 * Math.random());
 					break;
 				case 2: // Grey structure
-					particle.type = 0;
+					particle.type = ParticleType.debris;
 					particle.rgba.r = 80;
 					particle.rgba.g = 81;
 					particle.rgba.b = 87;
 					break;
 				case 3: // Orange structure
-					particle.type = 0;
+					particle.type = ParticleType.debris;
 					particle.rgba.r = 70;
 					particle.rgba.g = 45;
 					particle.rgba.b = 25;
 					break;
 				case 4: // Solar Panels
-					particle.type = 0;
+					particle.type = ParticleType.debris;
 					particle.rgba.r = 17;
 					particle.rgba.g = 21;
 					particle.rgba.b = 26;
@@ -613,20 +599,20 @@ export class Haxteroids {
 
 	private shotsplosion(shot: { vx: number; vy: number; }, rock: { vx: number; vy: number; }) {
 		for (let l = 0; l < this.shipRealSize * 2 * this.particleMultiplier; l++) {
-			let particle = this.new_particle();
+			let particle = new Particle();
 			particle.x = (this.halfWidth - this.shotHalfWidth) + (Math.random() * this.shotWidth);
 			particle.y = (this.halfHeight - this.shotHalfHeight) + (Math.random() * this.shotHeight);
 			particle.vx = Math.random() * (rock.vx - shot.vx);
 			particle.vy = Math.random() * (rock.vy - shot.vy);
 			switch (Math.round(Math.random())) {
 				case 0: // Liquid fuel
-					particle.type = 3;
+					particle.type = ParticleType.thrust;
 					particle.rgba.r = 255 - Math.round(32 * Math.random());
 					particle.rgba.g = 127 + Math.round(32 - (64 * Math.random()));
 					particle.rgba.b = Math.round(32 * Math.random());
 					break;
 				case 1: // Structure
-					particle.type = 0;
+					particle.type = ParticleType.debris;
 					particle.rgba.r = 49;
 					particle.rgba.g = 49;
 					particle.rgba.b = 47;
@@ -921,8 +907,8 @@ export class Haxteroids {
 			// Create exhaust particles
 			if (this.upDown) {
 				for (let i = 0; i < 6 * this.particleMultiplier; i++) {
-					let particle = this.new_particle();
-					particle.type = 2;
+					let particle = new Particle();
+					particle.type = ParticleType.shot;
 					particle.x = (this.halfWidth - 2) + (4 * Math.random());
 					particle.y = (this.halfHeight + 15);
 					particle.vx = 0;
@@ -936,8 +922,8 @@ export class Haxteroids {
 			} //fi
 			if (this.leftDown) {
 				for (let i = 0; i < 3 * this.particleMultiplier; i++) {
-					let particle = this.new_particle();
-					particle.type = 1;
+					let particle = new Particle();
+					particle.type = ParticleType.mono;
 					particle.x = this.halfWidth + 4;
 					particle.y = this.halfHeight - 4;
 					particle.vx = 0 + (4 * Math.random());
@@ -951,8 +937,8 @@ export class Haxteroids {
 			} //fi
 			if (this.downDown) {
 				for (let i = 0; i < 3 * this.particleMultiplier; i++) {
-					let particle = this.new_particle();
-					particle.type = 1;
+					let particle = new Particle();
+					particle.type = ParticleType.mono;
 					particle.x = this.halfWidth;
 					particle.y = this.halfHeight - 4;
 					particle.vx = 2 - (4 * Math.random());
@@ -966,8 +952,8 @@ export class Haxteroids {
 			} //fi
 			if (this.rightDown) {
 				for (let i = 0; i < 3 * this.particleMultiplier; i++) {
-					let particle = this.new_particle();
-					particle.type = 1;
+					let particle = new Particle();
+					particle.type = ParticleType.mono;
 					particle.x = this.halfWidth - 4;
 					particle.y = this.halfHeight - 4;
 					particle.vx = 0 - (4 * Math.random());
