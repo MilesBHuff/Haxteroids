@@ -6,19 +6,19 @@ export class Defines {
     public static readonly gameSecs: number = Defines.gameInt / 1000;
 
     // Star variables
-    public static readonly maxStarSize = 0.05;
-    public static readonly starIVX = 1.0 - (Math.random() * 2.0);
-    public static readonly starIVY = 1.0 - (Math.random() * 2.0);
-    public static readonly starSpeed = 0.1625;
+    public static readonly maxStarSize: number = 0.05;
+    public static readonly starIVX: number = 1.0 - (Math.random() * 2.0);
+    public static readonly starIVY: number = 1.0 - (Math.random() * 2.0);
+    public static readonly starSpeed: number = 0.1625;
 
     // Asteroid variables
     public static readonly rockPoints: number = 11;  // Too many sides generates asteroids that are too spiky, and too few generates asteroids that are too alike.  Using a prime number helps prevent symmetry.
     public static readonly rockSpriteSize: number = 128;
     public static readonly maxRockSize: number = 128;
-    public static readonly minRockSize = Defines.maxRockSize / 4;
-    public static readonly maxRockSpeed = 1.0;
-    public static readonly minRockSpeed = Defines.maxRockSpeed / 4;
-    public static readonly maxRockSpin = 1.0;
+    public static readonly minRockSize: number = Defines.maxRockSize / 4;
+    public static readonly maxRockSpeed: number = 1.0;
+    public static readonly minRockSpeed: number = Defines.maxRockSpeed / 4;
+    public static readonly maxRockSpin: number = 1.0;
 
     // Missile variables
     public static readonly shotSize: number = 16;
