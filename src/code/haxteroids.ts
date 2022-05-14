@@ -1,4 +1,5 @@
 import { Particle, ParticleType } from "classes/particle.class";
+import { Player } from "classes/player.class";
 import { RGBA } from "classes/rgba.class";
 import { Ship } from "classes/ship.class";
 
@@ -81,7 +82,7 @@ export class Haxteroids {
 	private shotHeight: number;
 
 	// Player variables
-	private player: { [key: string]: any; };
+	private player: Player;
 	private shipFullThrust: number;
 	private shipHalfRealSize: number;
 	private shipMonoThrust: number;
@@ -191,7 +192,7 @@ export class Haxteroids {
 		this.shotHalfSize = this.shotSize / 2;
 
 		// Player variables
-		this.player = this.new_player();
+		this.player = new Player();
 		this.shipFullThrust = 0.0625;
 		this.shipMonoThrust = 0.03125;
 		this.shipRealSize = 30;
@@ -377,21 +378,6 @@ export class Haxteroids {
 
 		return star;
 	} //new_star()
-
-	////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////
-
-	private new_player() {
-		let player = {
-			score: 0,
-			ship: new Ship(),
-			//		 shotsFired: 0,
-			//		rocksBroken: 0,
-			//		 timePlayed: 0,
-			//		  timesDied: 0
-		};
-		return player;
-	} //new_player()
 
 	////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
