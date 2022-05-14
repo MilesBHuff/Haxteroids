@@ -246,8 +246,8 @@ class Haxteroids {
 		this.canvas.addEventListener("keyup",   this.event_keyUp,   true);
 
 		// Set timers
-		this.gameLoop  = setInterval(this.project1_gameLoop,  this.gameInt);
-		this.menuTimer = setInterval(this.project1_menuTimer, this.gameInt * 30);
+		this.gameLoop  = setInterval(this.haxteroidsGameLoop,  this.gameInt);
+		this.menuTimer = setInterval(this.haxteroidsMenuTimer, this.gameInt * 30);
 	} //constructor()
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -754,14 +754,14 @@ class Haxteroids {
 
 	////////////////////////////////////////////////////////////////////////////////
 
-	private project1_menuTimer() {
+	private haxteroidsMenuTimer() {
 		if(this.menuShow) this.menuShow = false;
 		else this.menuShow = true;
-	} //project1_menuTimer()
+	} //haxteroidsMenuTimer()
 
 	////////////////////////////////////////////////////////////////////////////////
 
-	private project1_gameLoop() {
+	private haxteroidsGameLoop() {
 
 		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 		// Missiles
@@ -1548,7 +1548,7 @@ class Haxteroids {
 			document.getElementById("scoreSpan").innerHTML = Math.floor(this.player.score).toString();
 		} //fi
 
-	} //project1_gameLoop()
+	} //haxteroidsGameLoop()
 
 	////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
