@@ -1,3 +1,4 @@
+import { Defines } from 'defines.const';
 import { RGBA } from './rgba.class';
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -24,13 +25,6 @@ export class Star {
     public rgba = new RGBA();
 
     ////////////////////////////////////////////////////////////////////////////////
-
-    protected readonly maxStarSize = 0.05;
-    protected readonly starIVX = 1.0 - (Math.random() * 2.0);
-    protected readonly starIVY = 1.0 - (Math.random() * 2.0);
-    protected readonly starSpeed = 0.1625;
-
-    ////////////////////////////////////////////////////////////////////////////////
     constructor(
         private readonly bigAxis: number,
         private readonly width: number,
@@ -49,21 +43,21 @@ export class Star {
 			this.rgba.g = 189;
 			this.rgba.b = 111;
 			this.rgba.a = Math.round(0.5 + (Math.random() * 0.027));  // 0.527 - 0.5
-			this.r = this.maxStarSize * (0 + (Math.random() * 0.7));  // 0.7   - 0
+			this.r = Defines.maxStarSize * (0 + (Math.random() * 0.7));  // 0.7   - 0
 		} else   // Class K
 			if (this.rgba.a <= 0.886563610363) {
 				this.rgba.r = 255;
 				this.rgba.g = 221;
 				this.rgba.b = 180;
 				this.rgba.a = Math.round(0.527 + (Math.random() * 0.2));  // 0.727 - 0.527
-				this.r = this.maxStarSize * (0.7 + (Math.random() * 0.26));  // 0.96  - 0.7
+				this.r = Defines.maxStarSize * (0.7 + (Math.random() * 0.26));  // 0.96  - 0.7
 			} else   // Class G
 				if (this.rgba.a <= 0.962654897080) {
 					this.rgba.r = 255;
 					this.rgba.g = 244;
 					this.rgba.b = 232;
 					this.rgba.a = Math.round(0.727 + (Math.random() * 0.273));  // 1     - 0.727
-					this.r = this.maxStarSize * (0.96 + (Math.random() * 0.19));  // 1.15  - 0.96
+					this.r = Defines.maxStarSize * (0.96 + (Math.random() * 0.19));  // 1.15  - 0.96
 				} else   // Class F
 					if (this.rgba.a <= 0.992690931310) {
 						this.rgba.r = 251;
@@ -71,7 +65,7 @@ export class Star {
 						this.rgba.b = 255;
 						this.rgba.a = 1;
 						//		this.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
-						this.r = this.maxStarSize * (1.15 + (Math.random() * 0.25));  // 1.4   - 1.15
+						this.r = Defines.maxStarSize * (1.15 + (Math.random() * 0.25));  // 1.4   - 1.15
 					} else   // Class A
 						if (this.rgba.a <= 0.998698138156) {
 							this.rgba.r = 202;
@@ -79,7 +73,7 @@ export class Star {
 							this.rgba.b = 255;
 							this.rgba.a = 1;
 							//		this.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
-							this.r = this.maxStarSize * (1.4 + (Math.random() * 0.4));  // 1.8   - 1.4
+							this.r = Defines.maxStarSize * (1.4 + (Math.random() * 0.4));  // 1.8   - 1.4
 						} else   // Class B
 							if (this.rgba.a <= 0.999996996400) {
 								this.rgba.r = 170;
@@ -87,21 +81,21 @@ export class Star {
 								this.rgba.b = 255;
 								this.rgba.a = 1;
 								//		this.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
-								this.r = this.maxStarSize * (1.8 + (Math.random() * 4.8));  // 6.6   - 1.8
+								this.r = Defines.maxStarSize * (1.8 + (Math.random() * 4.8));  // 6.6   - 1.8
 							} else { // Class O
 								this.rgba.r = 155;
 								this.rgba.g = 176;
 								this.rgba.b = 255;
 								this.rgba.a = 1;
 								//		this.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
-								this.r = this.maxStarSize * 6.6;
+								this.r = Defines.maxStarSize * 6.6;
 								//		this.r      = maxStarSize * (6.6   + (Math.random() * 0    ));  // 6.6   - 6.6
 							} //fi
 
 		// Calculate star speed and apply distance to speed and luminosity
 		this.z = 6 * Math.random();
-		this.vx = this.z * this.starSpeed * this.starIVX;
-		this.vy = this.z * this.starSpeed * this.starIVY;
+		this.vx = this.z * Defines.starSpeed * Defines.starIVX;
+		this.vy = this.z * Defines.starSpeed * Defines.starIVY;
 		this.r *= this.z;
 		this.dia = this.r * 2;
 		this.rgba.a *= this.z / 6;

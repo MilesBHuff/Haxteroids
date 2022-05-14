@@ -5,6 +5,12 @@ export class Defines {
     public static readonly gameInt: number = 1000 / 60;
     public static readonly gameSecs: number = Defines.gameInt / 1000;
 
+    // Star variables
+    public static readonly maxStarSize = 0.05;
+    public static readonly starIVX = 1.0 - (Math.random() * 2.0);
+    public static readonly starIVY = 1.0 - (Math.random() * 2.0);
+    public static readonly starSpeed = 0.1625;
+
     // Asteroid variables
     public static readonly rockPoints: number = 11;  // Too many sides generates asteroids that are too spiky, and too few generates asteroids that are too alike.  Using a prime number helps prevent symmetry.
     public static readonly rockSpriteSize: number = 128;
