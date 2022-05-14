@@ -208,11 +208,11 @@ class Haxteroids {
 		this.particleCount = 0;
 
 		// Settings
-		this.slideParticles(document.getElementById("particleSlider").value);
-		this.slideStars(document.getElementById("starSlider").value);
-		this.toggleTextures(document.getElementById("texturesToggle").checked);
-		this.toggleRockCollision(document.getElementById("rockCollisionToggle").checked);
-		this.toggleSpeedHack(document.getElementById("speedHackToggle").checked);
+		this.slideParticles();
+		this.slideStars();
+		this.toggleTextures();
+		this.toggleRockCollision();
+		this.toggleSpeedHack();
 
 		// Initialize asteroids
 		for(let i = 0; i < (this.wantRocks / 2); i++) {
@@ -1554,7 +1554,8 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 	// Settings
 
-	private slideParticles(value: number) {
+	private slideParticles() {
+		const value = document.getElementById("particleSlider").value;
 
 		// Remove all particles if the multiplier is 0
 		if(value == 0) {
@@ -1580,7 +1581,8 @@ class Haxteroids {
 
 	} //slideParticles()
 
-	private slideStars(value: number) {
+	private slideStars() {
+		const value = document.getElementById("starSlider").value;
 
 		// Speedhack
 		let mult: number;
@@ -1635,11 +1637,13 @@ class Haxteroids {
 
 	} //slideStars()
 
-	private toggleTextures(checked: any) {
+	private toggleTextures() {
+		const checked = document.getElementById("texturesToggle").checked;
 		this.useTextures = checked;
 	} //textureToggle()
 
-	private toggleRockCollision(checked: any) {
+	private toggleRockCollision() {
+		const checked = document.getElementById("rockCollisionToggle").checked;
 		this.rockCollision = checked;
 		for(let i = 0; i < this.particleCount; i++) {
 			if(this.particles[i].type == 0) {
@@ -1650,9 +1654,10 @@ class Haxteroids {
 		} //done
 	} //rockCollision()
 
-	private toggleSpeedHack(checked: any) {
+	private toggleSpeedHack() {
+		const checked = document.getElementById("speedHackToggle").checked;
 		this.speedHack = checked;
-		this.slideStars(document.getElementById("starSlider").value);
+		this.slideStars();
 	} //rockCollision()
 
 	////////////////////////////////////////////////////////////////////////////////
