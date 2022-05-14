@@ -1,6 +1,7 @@
 import { Particle, ParticleType } from "classes/particle.class";
 import { Player } from "classes/player.class";
 import { RGBA } from "classes/rgba.class";
+import { Rock } from "classes/rock.class";
 import { Ship } from "classes/ship.class";
 import { Star } from "classes/star.class";
 
@@ -55,10 +56,6 @@ export class Haxteroids {
 
 	// Asteroid variables
 	private maxRockSize: number;
-	private maxRockSpeed: number;
-	private maxRockSpin: number;
-	private minRockSize: number;
-	private minRockSpeed: number;
 	private rockCD;
 	private rockCDnow;
 	private rockPoints: number;
@@ -167,10 +164,6 @@ export class Haxteroids {
 
 		// Asteroid variables
 		this.maxRockSize = 128;
-		this.maxRockSpeed = 1.0;
-		this.maxRockSpin = 1.0;
-		this.minRockSize = this.maxRockSize / 4;
-		this.minRockSpeed = this.maxRockSpeed / 4;
 		this.rockPoints = 11;  // Too many sides generates asteroids that are too spiky, and too few generates asteroids that are too alike.  Using a prime number helps prevent symmetry.
 		this.rocks = new Array();
 		this.rockSpriteSize = 128;
@@ -212,7 +205,7 @@ export class Haxteroids {
 		// Initialize asteroids
 		for (let i = 0; i < (this.wantRocks / 2); i++) {
 			// Create an asteroid
-			let rock = this.new_rock();
+			let rock = new Rock(this.rockPoints, this.maxRockSize, this.player, this.width, this.height);
 
 			// Set coordinates
 			rock.cx = Math.random() * this.width;
@@ -244,88 +237,6 @@ export class Haxteroids {
 		this.gameLoop = setInterval(this.haxteroidsGameLoop, this.gameInt);
 		this.menuTimer = setInterval(this.haxteroidsMenuTimer, this.gameInt * 30);
 	} //constructor()
-
-	////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////
-
-	private new_rock() {
-		let rock = {
-			cx: 0,               // Center x
-			vx: 0,               // x-velocity
-			x: new Array(),     // xs
-
-			cy: 0,               // Center y
-			vy: 0,               // y-velocity
-			y: new Array(),     // ys
-
-			r: new Array(),     // Radiuses
-
-			d: 0,               // Facing
-			vd: 0,               // Spin
-
-			irgba: new RGBA(), // Initial color
-			rgba: new RGBA()  // Color
-		};
-
-		// Generate color
-		rock.irgba.r = 114 - (Math.random() * 3);
-		rock.irgba.g = 111 - (Math.random() * 5);
-		rock.irgba.b = 106 - (Math.random() * 7);
-
-		// Calculate radiuses
-		let rockSize = (this.minRockSize + (Math.random() * (this.maxRockSize - this.minRockSize)));
-		let rockSizeThird = rockSize / 3;
-		for (let j = 0; j < this.rockPoints; j++) {
-			rock.r.push(rockSizeThird + (Math.random() * ((rockSizeThird * 2) - rockSizeThird)));
-		} //done
-
-		// Initialize coordinates
-		for (let j = 0; j < this.rockPoints; j++) {
-			rock.x.push(0);
-			rock.y.push(0);
-		} //done
-
-		// Set velocities
-		rock.vd = Math.random() * this.maxRockSpin;
-		let offsetRockSpeed = this.maxRockSpeed - this.minRockSpeed;
-		rock.vx = this.minRockSpeed + (Math.random() * offsetRockSpeed);
-		rock.vy = this.minRockSpeed + (Math.random() * offsetRockSpeed);
-
-		// Allow negative velocities
-		if (Math.round(Math.random()) == 0)
-			rock.vd *= -1;
-		if (Math.round(Math.random()) == 0)
-			rock.vx *= -1;
-		if (Math.round(Math.random()) == 0)
-			rock.vy *= -1;
-
-		// Set positions
-		rock.d = Math.random() * 360;
-		// 'Even' means we generate the rock with a static y-axis
-		if (Math.round(Math.random()) == 0) {
-			rock.cx = Math.random() * (this.width + (2 * rockSize));
-
-			// If the y-velocity is positive, start the rock on the top
-			if (rock.vy + this.player.ship.vy > 0)
-				rock.cy = (0 - rockSize);
-
-			// If the y-velocity is negative, start the rock on the bottom
-			else rock.cy = (this.height + rockSize);
-
-			// 'Odd' means we generate the rock with a static x-axis
-		} else {
-			rock.cy = Math.random() * (this.height + (2 * rockSize));
-
-			// If the x-velocity is positive, start the rock on the left
-			if (rock.vx > 0)
-				rock.cx = (0 - rockSize);
-
-			// If the x-velocity is negative, start the rock on the right
-			else rock.cx = (this.width + rockSize);
-		} //fi
-
-		return rock;
-	} //new_rock()
 
 	////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
@@ -673,7 +584,7 @@ export class Haxteroids {
 		// Add asteroids if there aren't enough.  Never add more than 1/4 the desired asteroids at once.
 		for (let i = 0; i < this.wantRocks / 4 && this.rockCount < this.wantRocks; i++) { //if
 			// Set unconfigurable variables
-			this.rocks.push(this.new_rock());
+			this.rocks.push(new Rock(this.rockPoints, this.maxRockSize, this.player, this.width, this.height));
 			this.rockCount++;
 		} //fi
 
