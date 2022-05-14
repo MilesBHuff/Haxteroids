@@ -1,8 +1,6 @@
-////////////////////////////////////////////////////////////////////////////////
-// Copyright (C) 2017 by Miles Bradley Huff per LGPL3 (assets per CC-BY-SA-4) //
-////////////////////////////////////////////////////////////////////////////////
+import { RGBA } from "classes/rgba.class";
 
-class Haxteroids {
+export class Haxteroids {
 
 	// Resources
 	private graphics: { [key: string]: HTMLImageElement; };
@@ -253,26 +251,13 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
 
-	private new_rgba() {
-		let rgba = {
-			r: 127, // Red
-			g: 127, // Green
-			b: 127, // Blue
-			a: 1.0  // Alpha
-		};
-		return rgba;
-	} //new_rgba()
-
-	////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////
-
 	private new_particle() {
 		let particle = {
 			x: 0,
 			y: 0,
 			vx: 0,
 			vy: 0,
-			rgba: this.new_rgba(),
+			rgba: new RGBA(),
 			type: 0  // debris:0::mono:1::thrust:2::shot:3
 		};
 		return particle;
@@ -292,7 +277,7 @@ class Haxteroids {
 			vx: 0, // x-velocity
 			vy: 0, // y-velocity
 
-			rgba: this.new_rgba()
+			rgba: new RGBA()
 		};
 
 		// Generate more-or-less scientifically accurate star-data
@@ -451,8 +436,8 @@ class Haxteroids {
 			d: 0,               // Facing
 			vd: 0,               // Spin
 
-			irgba: this.new_rgba(), // Initial color
-			rgba: this.new_rgba()  // Color
+			irgba: new RGBA(), // Initial color
+			rgba: new RGBA()  // Color
 		};
 
 		// Generate color
