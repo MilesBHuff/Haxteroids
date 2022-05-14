@@ -2,1668 +2,1671 @@
 // Copyright (C) 2017 by Miles Bradley Huff per LGPL3 (assets per CC-BY-SA-4) //
 ////////////////////////////////////////////////////////////////////////////////
 
-// Resources
-var graphics;
-var sounds;
-
-// Settings
-var particleMultiplier;
-var rockCollision;
-var speedHack;
-var useTextures;
-
-// DOM variables
-var canvas;
-var context;
-
-// Game variables
-var gameInt;
-var gameLoop;
-var gameSecs;
-var menuIndex;
-var menuTimer;
-
-// Scale variables
-var height;
-var halfHeight;
-var halfWidth;
-var width;
-var bigAxis;
-
-// Input variables
-var downDown;
-var leftDown;
-var rightDown;
-var spaceDown;
-var upDown;
-var menuShow;
-
-// Fade variables
-var monoFade;
-var thrustFade;
-var debrisFade;
-
-// Star variables
-var maxStarSize;
-var starIVX;
-var starIVY;
-var stars;
-var starSpeed;
-var starCount;
-var wantStars;
-
-// Asteroid variables
-var maxRockSize;
-var maxRockSpeed;
-var maxRockSpin;
-var minRockSize;
-var minRockSpeed;
-var rockCD;
-var rockCDnow;
-var rockPoints;
-var rocks = [];
-var rockSpriteSize;
-var rockCount;
-var wantRocks;
-
-// Missile variables
-var shotCd;
-var shots;
-var shotCount;
-var shotSize;
-var shotHalfSize;
-var shotHalfWidth;
-var shotHalfHeight;
-var shotWidth;
-var shotHeight;
-
-// Player variables
-var player;
-var shipFullThrust;
-var shipHalfRealSize;
-var shipMonoThrust;
-var shipRealSize;
-var shipSize;
-var shipSpinThrust;
-var thrustHeat;
-
-// Particle variables
-var particles;
-var particleFade;
-var particleSize;
-var particleCount;
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-function new_rgba() {
-	var rgba = {
-		r: 127, // Red
-		g: 127, // Green
-		b: 127, // Blue
-		a: 1.0  // Alpha
-	};
-	return rgba;
-} //new_rgba()
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-function new_particle() {
-	var particle = {
-		   x: 0,
-		   y: 0,
-		  vx: 0,
-		  vy: 0,
-		rgba: new_rgba(),
-		type: 0  // debris:0::mono:1::thrust:2::shot:3
-	};
-	return particle;
-} //new_particle()
-
-////////////////////////////////////////////////////////////////////////////////
-
-function new_star() {
-	var star = {
-		   r: 0, // Radius
-		 dia: 0, // Diameter
-
-		   x: 0, // Center x
-		   y: 0, // Center y
-		   z: 0, // Distance
-
-		  vx: 0, // x-velocity
-		  vy: 0, // y-velocity
-
-		rgba: new_rgba()
-	};
-
-	// Generate more-or-less scientifically accurate star-data
-	// I used https://en.wikipedia.org/wiki/Stellar_classification#Harvard_spectral_classification
-	// to get the percentages, colors (RGB), luminosities (alpha), and sizes (radius).  As the
-	// Wikipedia percentages did not add up to 100, I scaled them.  I also scaled the luminosities.
-	star.rgba.a = Math.random();  // This is a temporary setting used to determine the stellar spectral class of the star
-	         // Class M
-	 if(star.rgba.a <= 0.765418272300) {
-		star.rgba.r = 255;
-		star.rgba.g = 189;
-		star.rgba.b = 111;
-		star.rgba.a = Math.round(    0.5   + (Math.random() * 0.027));  // 0.527 - 0.5
-		star.r      = maxStarSize * (0     + (Math.random() * 0.7  ));  // 0.7   - 0
-	} else   // Class K
-	 if(star.rgba.a <= 0.886563610363) {
-		star.rgba.r = 255;
-		star.rgba.g = 221;
-		star.rgba.b = 180;
-		star.rgba.a = Math.round(    0.527 + (Math.random() * 0.2  ));  // 0.727 - 0.527
-		star.r      = maxStarSize * (0.7   + (Math.random() * 0.26 ));  // 0.96  - 0.7
-	} else   // Class G
-	 if(star.rgba.a <= 0.962654897080) {
-		star.rgba.r = 255;
-		star.rgba.g = 244;
-		star.rgba.b = 232;
-		star.rgba.a = Math.round(    0.727 + (Math.random() * 0.273));  // 1     - 0.727
-		star.r      = maxStarSize * (0.96  + (Math.random() * 0.19 ));  // 1.15  - 0.96
-	} else   // Class F
-	 if(star.rgba.a <= 0.992690931310) {
-		star.rgba.r = 251;
-		star.rgba.g = 248;
-		star.rgba.b = 255;
-		star.rgba.a =   1;
-//		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
-		star.r      = maxStarSize * (1.15  + (Math.random() * 0.25 ));  // 1.4   - 1.15
-	} else   // Class A
-	 if(star.rgba.a <= 0.998698138156) {
-		star.rgba.r = 202;
-		star.rgba.g = 216;
-		star.rgba.b = 255;
-		star.rgba.a =   1;
-//		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
-		star.r      = maxStarSize * (1.4   + (Math.random() * 0.4  ));  // 1.8   - 1.4
-	} else   // Class B
-	 if(star.rgba.a <= 0.999996996400) {
-		star.rgba.r = 170;
-		star.rgba.g = 191;
-		star.rgba.b = 255;
-		star.rgba.a =   1;
-//		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
-		star.r      = maxStarSize * (1.8   + (Math.random() * 4.8  ));  // 6.6   - 1.8
-	} else { // Class O
-		star.rgba.r = 155;
-		star.rgba.g = 176;
-		star.rgba.b = 255;
-		star.rgba.a =   1;
-//		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
-		star.r      = maxStarSize *  6.6;
-//		star.r      = maxStarSize * (6.6   + (Math.random() * 0    ));  // 6.6   - 6.6
-	} //fi
-
-	// Calculate star speed and apply distance to speed and luminosity
-	star.z      = 6 * Math.random();
-	star.vx     = star.z * starSpeed * starIVX;
-	star.vy     = star.z * starSpeed * starIVY;
-	star.r     *= star.z;
-	star.dia    = star.r * 2;
-	star.rgba.a*= star.z / 6;
-
-	// 'Even' means we generate the star with a static x-axis
-	if(Math.round(Math.random()) == 0) {
-		if(!speedHack)
-			 star.x = (bigAxis * -0.5) + (Math.random() * (bigAxis * 2.0));
-		else star.x = Math.random() * (width + (2 * star.r));
-
-		// 'Even' means we generate the star on the top
-		if(Math.round(Math.random()) == 0) {
-			if(!speedHack)
-				 star.y = bigAxis * -0.5;
-			else star.y = 0 - star.r;
-
-		// 'Odd' means we generate the star on the bottom
-		} else {
-			if(!speedHack)
-				 star.y = bigAxis * 1.5;
-			else star.y = (height + star.r);
-		} //fi
-
-	// 'Odd' means we generate the star with a static y-axis
-	} else {
-		if(!speedHack)
-			 star.y = (bigAxis * -0.5) + (Math.random() * (bigAxis * 2.0));
-		else star.y = Math.random() * (height + (2 * star.r));
-
-		// 'Even' means we generate the star on the left
-		if(Math.round(Math.random()) == 0) {
-			if(!speedHack)
-				 star.x = bigAxis * -0.5;
-			else star.x = (0 - star.r);
-
-		// 'Odd' means we generate the star on the right
-		} else {
-			if(!speedHack)
-				 star.x = bigAxis * 1.5;
-			else star.x = (width + star.r);
-		} //fi
-	} //fi
-
-	return star;
-} //new_star()
-
-////////////////////////////////////////////////////////////////////////////////
-
-function new_ship() {
-	var ship = {
-		 h: 0,  // Heat
-		vy: 0,  // Vertical velocity
-		vd: 0,  // Rotational velocity, degrees
-		vr: 0,  // Rotational velocity, radians
-		cd: 0   // Missile cooldown timer
-	};
-	return ship;
-} //new_ship()
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-function new_player() {
-	var player = {
-		      score: 0,
-		       ship: new_ship(),
-//		 shotsFired: 0,
-//		rocksBroken: 0,
-//		 timePlayed: 0,
-//		  timesDied: 0
-	};
-	return player;
-} //new_player()
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-function new_rock() {
-	var rock = {
-		   cx: 0,               // Center x
-		   vx: 0,               // x-velocity
-		    x: new Array(),     // xs
-
-		   cy: 0,               // Center y
-		   vy: 0,               // y-velocity
-		    y: new Array(),     // ys
-
-		    r: new Array(),     // Radiuses
-
-		    d: 0,               // Facing
-		   vd: 0,               // Spin
-
-		irgba: new_rgba(), // Initial color
-		 rgba: new_rgba()  // Color
-	};
-
-	// Generate color
-	rock.irgba.r = 114 - (Math.random() * 3);
-	rock.irgba.g = 111 - (Math.random() * 5);
-	rock.irgba.b = 106 - (Math.random() * 7);
-
-	// Calculate radiuses
-	var rockSize = (minRockSize + (Math.random() * (maxRockSize - minRockSize)));
-	var rockSizeThird = rockSize / 3;
-	for(var j = 0; j < rockPoints; j++) {
-		rock.r.push(rockSizeThird + (Math.random() * ((rockSizeThird * 2) - rockSizeThird)));
-	} //done
-
-	// Initialize coordinates
-	for(var j = 0; j < rockPoints; j++) {
-		rock.x.push(0);
-		rock.y.push(0);
-	} //done
-
-	// Set velocities
-	rock.vd = Math.random() * maxRockSpin;
-	var offsetRockSpeed = maxRockSpeed - minRockSpeed;
-	rock.vx = minRockSpeed + (Math.random() * offsetRockSpeed);
-	rock.vy = minRockSpeed + (Math.random() * offsetRockSpeed);
-
-	// Allow negative velocities
-	if(Math.round(Math.random()) == 0)
-		rock.vd*= -1;
-	if(Math.round(Math.random()) == 0)
-		rock.vx*= -1;
-	if(Math.round(Math.random()) == 0)
-		rock.vy*= -1;
-
-	// Set positions
-	rock.d = Math.random() * 360;
-	// 'Even' means we generate the rock with a static y-axis
-	if(Math.round(Math.random()) == 0) {
-		rock.cx = Math.random() * (width + (2 * rockSize));
-
-		// If the y-velocity is positive, start the rock on the top
-		if(rock.vy + player.ship.vy > 0)
-			 rock.cy = (0 - rockSize);
-
-		// If the y-velocity is negative, start the rock on the bottom
-		else rock.cy = (height + rockSize);
-
-	// 'Odd' means we generate the rock with a static x-axis
-	} else {
-		rock.cy = Math.random() * (height + (2 * rockSize));
-
-		// If the x-velocity is positive, start the rock on the left
-		if(rock.vx > 0)
-			 rock.cx = (0 - rockSize);
-
-		// If the x-velocity is negative, start the rock on the right
-		else rock.cx = (width + rockSize);
-	} //fi
-
-	return rock;
-} //new_rock()
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-function rocksplosion(rock) {
-
-	// Figure out the size of the rock
-	var avgSize = 0;
-	for(var i = 0; i < rockPoints; i++) {
-		avgSize+= rock.r[i];
-	} //done
-	avgSize/= rockPoints;
-	var halfSize = avgSize;
-	avgSize*= 2;
-
-	// Create debris
-	for(var i = 0; i < avgSize * particleMultiplier; i++) {
-		var particle    = new_particle();
-		particle.type   = 0;  // Debris
-		particle.x      = (rock.cx - halfSize) + (Math.random() * avgSize);
-		particle.y      = (rock.cy - halfSize) + (Math.random() * avgSize);
-		particle.vx     = Math.random() * rock.vx * 2;
-		particle.vy     = Math.random() * rock.vy * 2;
-		particle.rgba   = rock.rgba;
-//		particle.rgba.r = Math.round(particle.rgba.r * particle.rgba.a);
-//		particle.rgba.g = Math.round(particle.rgba.g * particle.rgba.a);
-//		particle.rgba.b = Math.round(particle.rgba.b * particle.rgba.a);
-		particle.rgba.a = 1 - particle.rgba.a;
-		particles.push(particle);
-		particleCount++;
-	} //done
-} //rocksplosion()
-
-////////////////////////////////////////////////////////////////////////////////
-
-function shipsplosion(ship, rock) {
-	for(var l = 0; l < shipRealSize * 2 * particleMultiplier; l++) {
-		var particle = new_particle();
-		particle.x   = (halfWidth  - shipHalfRealSize) + (Math.random() * shipRealSize);
-		particle.y   = (halfHeight - shipHalfRealSize) + (Math.random() * shipRealSize);
-		particle.vx  = Math.random() * rock.vx * 2;
-		particle.vy  = Math.random() * (rock.vy - player.ship.vy);
-		switch(Math.round(4 * Math.random())) {
-			case 0: // Monopropellant
-				particle.type   =   1;
-				particle.rgba.r = 255;
-				particle.rgba.g = 255;
-				particle.rgba.b = 255;
-				break;
-			case 1: // Liquid fuel
-				particle.type   =   2;
-				particle.rgba.r = 255 - Math.round(      32 * Math.random() );
-				particle.rgba.g = 127 + Math.round(32 - (64 * Math.random()));
-				particle.rgba.b =       Math.round(      32 * Math.random() );
-				break;
-			case 2: // Grey structure
-				particle.type   =   0;
-				particle.rgba.r =  80;
-				particle.rgba.g =  81;
-				particle.rgba.b =  87;
-				break;
-			case 3: // Orange structure
-				particle.type   =   0;
-				particle.rgba.r =  70;
-				particle.rgba.g =  45;
-				particle.rgba.b =  25;
-				break;
-			case 4: // Solar Panels
-				particle.type   =   0;
-				particle.rgba.r =  17;
-				particle.rgba.g =  21;
-				particle.rgba.b =  26;
-				break;
-		} //esac
-		particle.rgba.a = 1.0;
-		//TODO:  Rotate the vector to match the ship's rotation
-		particles.push(particle);
-		particleCount++;
-	} //done
-} //shipsplosion()
-
-////////////////////////////////////////////////////////////////////////////////
-
-function new_shot() {
-	var shot = {
-		 x: 0, // x-coordinate
-		 y: 0, // y-coordinate
-		vx: 0, // x-velocity
-		vy: 0, // y-velocity
-		ax: 0, // x-acceleration
-		ay: 0, // y-acceleration
-		 d: 0  // rotation (in degrees)
-	};
-
-	// Center the shot under the ship
-	shot.x  = halfWidth  - shotHalfSize;
-	shot.y  = halfHeight - shotHalfSize;
-	shot.ay = 2;
-
-	return shot;
-} //new_shot()
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-function shotsplosion(shot, rock) {
-	for(var l = 0; l < shipRealSize * 2 * particleMultiplier; l++) {
-		var particle = new_particle();
-		particle.x   = (halfWidth  - shotHalfWidth ) + (Math.random() * shotWidth );
-		particle.y   = (halfHeight - shotHalfHeight) + (Math.random() * shotHeight);
-		particle.vx  = Math.random() * (rock.vx - shot.vx);
-		particle.vy  = Math.random() * (rock.vy - shot.vy);
-		switch(Math.round(Math.random())) {
-			case 0: // Liquid fuel
-				particle.type = 3;
-				particle.rgba.r = 255 - Math.round(      32 * Math.random() );
-				particle.rgba.g = 127 + Math.round(32 - (64 * Math.random()));
-				particle.rgba.b =       Math.round(      32 * Math.random() );
-				break;
-			case 1: // Structure
-				particle.type = 0;
-				particle.rgba.r =  49;
-				particle.rgba.g =  49;
-				particle.rgba.b =  47;
-				break;
-		} //esac
-		particle.rgba.a = 1.0;
-		particles.push(particle);
-		particleCount++;
-	} //done
-} //shotsplosion()
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-function event_keyDown(event) {
-	switch(event.keyCode) {
-
-		case 38:  // Up
-		case 87:  // W
-			if(menuIndex == 1)
-				sounds.thrust.play();
-			upDown = true;
-			break;
-
-		case 37:  // Left
-		case 65:  // A
-			if(menuIndex == 1)
-				sounds.mono.play();
-			leftDown = true;
-			break;
-
-		case 40:  // Down
-		case 68:  // S
-			if(menuIndex == 1)
-				sounds.mono.play();
-			downDown = true;
-			break;
-
-		case 39:  // Right
-		case 83:  // D
-			if(menuIndex == 1)
-				sounds.mono.play();
-			rightDown = true;
-			break;
-
-		case 13:  // Enter
-		case 32:  // Space
-			spaceDown = true;
-	} //esac
-} //event_keyDown()
-
-////////////////////////////////////////////////////////////////////////////////
-
-function event_keyUp(event) {
-	switch(event.keyCode) {
-
-		case 38:  // Up
-		case 87:  // W
-			sounds.thrust.pause();
-			upDown = false;
-			break;
-
-		case 37:  // Left
-		case 65:  // A
-			if(!downDown && !rightDown)
-				sounds.mono.pause();
-			leftDown = false;
-			break;
-
-		case 40:  // Down
-		case 68:  // S
-			if(!leftDown && !rightDown)
-				sounds.mono.pause();
-			downDown = false;
-			break;
-
-		case 39:  // Right
-		case 83:  // D
-			if(!leftDown && !downDown)
-				sounds.mono.pause();
-			rightDown = false;
-			break;
-
-		case 13:  // Enter
-		case 32:  // Space
-			if(spaceDown == true) {
-				switch(menuIndex) {
-					case 2:  // Game over
-						menuIndex = 0;
-						player.score = 0;
-						break;
-
-					case 0:  // Main menu
-						menuIndex = 1;
-						player.ship.cd = shotCd;
-						rocks.splice(0, rockCount);
-						rockCount = 0;
-						particles.splice(0, particleCount);
-						particleCount = 0;
-						shots.splice(0, shotCount);
-						shotCount = 0;
-						sounds.ship.play();
-						menuIndex = 1;
-						break;
-				} //esac
-			} //fi
-			spaceDown = false;
-	} //esac
-} //event_keyUp()
-
-////////////////////////////////////////////////////////////////////////////////
-
-function project1_menuTimer() {
-	if(menuShow) menuShow = false;
-	else menuShow = true;
-} //project1_menuTimer()
-
-////////////////////////////////////////////////////////////////////////////////
-
-function project1_gameLoop() {
-
-	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-	// Missiles
-
-	for(var i = 0; i < shotCount; i++) {
-
-		// Remove missiles when they leave the screen
-		//TODO
-
-		// Calculate missile vectors
-		//TODO
-
-		// Change missile position
-		shots[i].vx+= shots[i].ax;
-		shots[i].vy+= shots[i].ay;
-		shots[i].x += shots[i].vx;
-		shots[i].y += shots[i].vy;
-
-		// Create particles
-		//TODO
-
-	} //done
-
-	// Update missile cooldowns and fire new missiles
-	if(spaceDown && player.ship.cd == 0) {
-		sounds.shot.currentTime = 0;
-//		sounds.shot.play();
-		player.ship.cd = shotCd;
-		shots.push(new_shot());
-		shotCount++;
-	} //fi
-
-	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-
-	if(!speedHack) {
-		// Remove stars that are no longer reachable via rotation
-		for(var i = 0; i < starCount; i++) {
-			if(stars[i].x < 0 - bigAxis * 0.5
-			|| stars[i].x >     bigAxis * 1.5
-			|| stars[i].y < 0 - bigAxis * 0.5
-			|| stars[i].y >     bigAxis * 1.5)
-			{ //if
-				stars.splice(i, 1);
-				starCount--;
-			} //fi
-		} //done
-	} else {
-		// Remove stars that are no longer on the screen
-		for(var i = 0; i < starCount; i++) {
-			if(stars[i].x < 0      - stars[i].dia
-			|| stars[i].x > width  + stars[i].dia
-			|| stars[i].y < 0      - stars[i].dia
-			|| stars[i].y > height + stars[i].dia)
-			{ //if
-				stars.splice(i, 1);
-				starCount--;
-			} //fi
-		} //done
-	} //fi
-
-	// Add stars if there aren't enough
-	while(starCount < wantStars) {
-				stars.push(new_star());
-				starCount++;
-	} //done
-
-	// Apply velocity
-	for(var i = 0; i < starCount; i++) {
-		stars[i].x+= stars[i].vx;
-		stars[i].y+= stars[i].vy;
-	} //done
-
-	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-
-	if(!speedHack) {
-		// Remove asteroids when they are no longer reachable via rotation
-		for(var i = 0; i < rockCount; i++) {
-			if(rocks[i].cx < 0      - maxRockSize / 2
-			|| rocks[i].cx > width  + maxRockSize / 2
-			|| rocks[i].cy < 0      - maxRockSize / 2
-			|| rocks[i].cy > height + maxRockSize / 2)
-			{ //if
-				rocks.splice(i, 1);
-				rockCount--;
-			} //fi
-		} //done
-	} else {
-		// Remove asteroids when they leave the screen
-		for(var i = 0; i < rockCount; i++) {
-			if(rocks[i].cx < 0      - maxRockSize / 2
-			|| rocks[i].cx > width  + maxRockSize / 2
-			|| rocks[i].cy < 0      - maxRockSize / 2
-			|| rocks[i].cy > height + maxRockSize / 2)
-			{ //if
-				rocks.splice(i, 1);
-				rockCount--;
-			} //fi
-		} //done
-	} //fi
-
-	// Add asteroids if there aren't enough.  Never add more than 1/4 the desired asteroids at once.
-	for(var i = 0; i < wantRocks / 4 && rockCount <  wantRocks; i++)
-	{ //if
-		// Set unconfigurable variables
-		rocks.push(new_rock());
-		rockCount++;
-	} //fi
-
-	// Update asteroids
-	for(var i = 0; i < rockCount; i++) {
-
-		// Variables
-		var newcx = rocks[i].cx;
-		var newcy = rocks[i].cy;
-
-		// Calculate and apply delta-v (more distant asteroids are slower)
-		rocks[i].d+=  rocks[i].vd;
-		newcx+= (rocks[i].vx / 2) + ((rocks[i].vx * ((wantRocks - i) / wantRocks)) / 2);
-		newcy+= (rocks[i].vy / 2) + ((rocks[i].vy * ((wantRocks - i) / wantRocks)) / 2);
-
-		// The center must be an int or else the texture freaks out
-		if(useTextures) {
-			if(newcx < rocks[i].cx)
-				 rocks[i].cx = Math.floor(newcx);
-			else rocks[i].cx = Math.ceil(newcx);
-			if(newcy < rocks[i].cy)
-				 rocks[i].cy = Math.floor(newcy);
-			else rocks[i].cy = Math.ceil(newcy);
-		} else {
-			rocks[i].cx = newcx;
-			rocks[i].cy = newcy;
-		} //fi
-
-		// Prevent overflows
-		if(rocks[i].d >=  360) rocks[i].d-= 360;
-		if(rocks[i].d <= -360) rocks[i].d+= 360;
-
-		// Calculate asteroid points.  Overall size is influenced by asteroid index.
-		for(var j = 0; j < rockPoints; j++) {
-			//              Center         Angle formula                                  Rotation                           Radius           Resizing formula
-			rocks[i].x[j] = rocks[i].cx + (Math.sin((j * ((Math.PI * 2) / rockPoints)) + (rocks[i].d * (Math.PI / 180)))) * (rocks[i].r[j] * (0.75 + ((wantRocks - i) / (wantRocks * 6))));
-			rocks[i].y[j] = rocks[i].cy + (Math.cos((j * ((Math.PI * 2) / rockPoints)) + (rocks[i].d * (Math.PI / 180)))) * (rocks[i].r[j] * (0.75 + ((wantRocks - i) / (wantRocks * 6))));
-		//	rocks[i].x[j] = Math.round(rocks[i].x[j]);  // The points must be ints
-		//	rocks[i].y[j] = Math.round(rocks[i].y[j]);  // The points must be ints
-		} //done
-
-		// Apply shading per asteroid index
-		rocks[i].rgba.a = 0.50 * (i / wantRocks);
-	} //done
-
-	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-	// Ship calculations
-	if(menuIndex == 1) {
-
-		// Calculate delta-V
-		if(   upDown)
-			player.ship.vy+= shipFullThrust;
-		if( leftDown)
-			player.ship.vd+= shipSpinThrust;
-		if( downDown)
-			player.ship.vy-= shipMonoThrust;
-		if(rightDown)
-			player.ship.vd-= shipSpinThrust;
-		player.ship.vr = player.ship.vd * (Math.PI / 180);
-
-		// Calculate heat
-		if(upDown) {
-			if(  player.ship.h < 1)
-				 player.ship.h+= thrustHeat;
-			else player.ship.h = 1;
-		} else {
-			if(  player.ship.h > thrustHeat)
-				 player.ship.h-= thrustHeat;
-			else player.ship.h = 0;
-		} //fi
-
-		// Create exhaust particles
-		if(upDown) {
-			for(var i = 0; i < 6 * particleMultiplier; i++) {
-				var particle = new_particle();
-				particle.type = 2;
-				particle.x = (halfWidth  -  2) + (4 * Math.random());
-				particle.y = (halfHeight + 15);
-				particle.vx =  0;
-				particle.vy = (2 + (4 * Math.random())) - player.ship.vy;
-				particle.rgba.r = 255 - Math.round(      32 * Math.random() );
-				particle.rgba.g = 127 + Math.round(32 - (64 * Math.random()));
-				particle.rgba.b =       Math.round(      32 * Math.random() );
-				particles.push(particle);
-				particleCount++;
-			} //done
-		} //fi
-		if(leftDown) {
-			for(var i = 0; i < 3 * particleMultiplier; i++) {
-				var particle = new_particle();
-				particle.type = 1;
-				particle.x = halfWidth  + 4;
-				particle.y = halfHeight - 4;
-				particle.vx =  0 + (4 * Math.random());
-				particle.vy = (3 - (4 * Math.random())) - player.ship.vy;
-				particle.rgba.r = 255;
-				particle.rgba.g = 255;
-				particle.rgba.b = 255;
-				particles.push(particle);
-				particleCount++;
-			} //done
-		} //fi
-		if(downDown) {
-			for(var i = 0; i < 3 * particleMultiplier; i++) {
-				var particle = new_particle();
-				particle.type = 1;
-				particle.x = halfWidth;
-				particle.y = halfHeight - 4;
-				particle.vx =   2 - (4 * Math.random());
-				particle.vy = (-2 - (4 * Math.random())) - player.ship.vy;
-				particle.rgba.r = 255;
-				particle.rgba.g = 255;
-				particle.rgba.b = 255;
-				particles.push(particle);
-				particleCount++;
-			} //done
-		} //fi
-		if(rightDown) {
-			for(var i = 0; i < 3 * particleMultiplier; i++) {
-				var particle = new_particle();
-				particle.type = 1;
-				particle.x = halfWidth  - 4;
-				particle.y = halfHeight - 4;
-				particle.vx =  0 - (4 * Math.random());
-				particle.vy = (3 - (4 * Math.random())) - player.ship.vy;
-				particle.rgba.r = 255;
-				particle.rgba.g = 255;
-				particle.rgba.b = 255;
-				particles.push(particle);
-				particleCount++;
-			} //done
-		} //fi
-	} //fi
-
-	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-	// Particle physics
-
-	// Remove invisible particles
-	for(var i = 0; i < particleCount; i++) {
-		if(particles[i].rgba.a < 0.05) {
-			particles.splice(i, 1);
-			particleCount--;
-		} //fi
-	} //done
-
-	// Remove off-screen particles
-	for(var i = 0; i < particleCount; i++) {
-		if(particles[i].x < 0
-		|| particles[i].x > width
-		|| particles[i].y < 0
-		|| particles[i].y > height)
-		{ //if
-			particles.splice(i, 1);
-			particleCount--;
-		} //fi
-	} //done
-
-	// Calculate particle positions
-	for(var i = 0; i < particleCount; i++) {
-		particles[i].x+= particles[i].vx;
-		particles[i].y+= particles[i].vy;
-	} //done
-
-	// Calculate particle alphas
-	for(var i = 0; i < particleCount; i++) {
-		switch(particles[i].type) {
-
-			case 0:
-				particles[i].rgba.a*= debrisFade;
-				break;
-
-			case 1:
-				particles[i].rgba.a*= monoFade;
-				break;
-
-			case 2:
-			case 3:
-				particles[i].rgba.a*= thrustFade;
-				break;
-
-			default:
-				particles[i].rgba.a*= debrisFade;
-				break;
-		} //esac
-	} //done
-
-	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-	// Apply rotation
-
-	if(menuIndex == 1) {
-		// Particles
-		for(var i = 0; i < particleCount; i++) {
-
-			// Calculate new positions
-			var hypotenuse = Math.sqrt(Math.pow(particles[i].x - halfWidth, 2) + Math.pow(particles[i].y - halfHeight, 2));
-			var radians    = Math.atan2(particles[i].y - halfHeight, particles[i].x - halfWidth) + player.ship.vr;
-			particles[i].x = halfWidth  + (hypotenuse * Math.cos(radians + player.ship.vr));
-			particles[i].y = halfHeight + (hypotenuse * Math.sin(radians + player.ship.vr));
-
-			// Calculate new vectors
-			hypotenuse = Math.sqrt(Math.pow(particles[i].vx, 2) + Math.pow(particles[i].vy, 2));
-			radians    = Math.atan2(particles[i].vy, particles[i].vx) + player.ship.vr;
-			var cos    = Math.cos(radians);
-			var sin    = Math.sin(radians);
-//			particles[i].vx = (particles[i].vx * cos) - (particles[i].vy * sin);
-//			particles[i].vy = (particles[i].vx * sin) + (particles[i].vy * cos);
-
-		} //done
-
-		// Asteroids
-		for(var i = 0; i < rockCount; i++) {
-
-			// Calculate new positions
-			var hypotenuse = Math.sqrt(Math.pow(rocks[i].cx - halfWidth, 2) + Math.pow(rocks[i].cy - halfHeight, 2));
-			var radians    = Math.atan2(rocks[i].cy - halfHeight, rocks[i].cx - halfWidth) + player.ship.vr;
-			rocks[i].cx    = halfWidth  + (hypotenuse * Math.cos(radians));
-			rocks[i].cy    = halfHeight + (hypotenuse * Math.sin(radians));
-
-			// Calculate new rotations
-			//TODO:  This isn't accurate.
-			rocks[i].d-= player.ship.vd;
-
-			// Calculate new vectors
-			hypotenuse  = Math.sqrt(Math.pow(rocks[i].vx, 2) + Math.pow(rocks[i].vy, 2));
-			radians     = Math.atan2(rocks[i].vy, rocks[i].vx) + player.ship.vr;
-			var cos     = Math.cos(radians);
-			var sin     = Math.sin(radians);
-//			rocks[i].vx = (rocks[i].vx * cos) - (rocks[i].vy * sin);
-//			rocks[i].vy = (rocks[i].vx * sin) + (rocks[i].vy * cos);
-
-		} //done
-
-		// Missiles
-		for(var i = 0; i < shotCount; i++) {
-
-			// Calculate new positions
-			var hypotenuse  = Math.sqrt(Math.pow(shots[i].x - halfWidth, 2) + Math.pow(shots[i].y - halfHeight, 2));
-			var radians     = Math.atan2(shots[i].y - halfHeight, shots[i].x - halfWidth) + player.ship.vr;
-			shots[i].x      = halfWidth  + (hypotenuse * Math.cos(radians + player.ship.vr));
-			shots[i].y      = halfHeight + (hypotenuse * Math.sin(radians + player.ship.vr));
-
-			// Calculate new rotations
-			//TODO:  This isn't accurate.
-			shots[i].d-= player.ship.vd;
-
-			// Calculate new vectors
-			hypotenuse  = Math.sqrt(Math.pow(shots[i].vx, 2) + Math.pow(shots[i].vy, 2));
-			radians     = Math.atan2(shots[i].vy, shots[i].vx) + player.ship.vr;
-			var cos     = Math.cos(radians);
-			var sin     = Math.sin(radians);
-//			shots[i].vx = (shots[i].vx * cos) - (shots[i].vy * sin);
-//			shots[i].vy = (shots[i].vx * sin) + (shots[i].vy * cos);
-
-		} //done
-
-		// Stars
-		for(var i = 0; i < starCount; i++) {
-
-			// Calculate new positions
-			var hypotenuse  = Math.sqrt(Math.pow(stars[i].x - halfWidth, 2) + Math.pow(stars[i].y - halfHeight, 2));
-			var radians     = Math.atan2(stars[i].y - halfHeight, stars[i].x - halfWidth) + player.ship.vr;
-			stars[i].x      = halfWidth  + (hypotenuse * Math.cos(radians + player.ship.vr));
-			stars[i].y      = halfHeight + (hypotenuse * Math.sin(radians + player.ship.vr));
-
-			// Calculate new vectors
-			hypotenuse  = Math.sqrt(Math.pow(stars[i].vx, 2) + Math.pow(stars[i].vy, 2));
-			radians     = Math.atan2(stars[i].vy, stars[i].vx) + player.ship.vr;
-			var cos     = Math.cos(radians);
-			var sin     = Math.sin(radians);
-//			stars[i].vx = (stars[i].vx * cos) - (stars[i].vy * sin);
-//			stars[i].vy = (stars[i].vx * sin) + (stars[i].vy * cos);
-
-		} //done
-
-		// Apply delta-V
-		for(var i = 0; i < starCount; i++) {
-			stars[i].y+= stars[i].z * (player.ship.vy / 50);
-		} //done
-		for(var i = 0; i < shotCount; i++) {
-			shots[i].y+= player.ship.vy;
-		} //done
-		for(var i = 0; i < rockCount; i++) {
-			rocks[i].cy+= player.ship.vy;
-		} //done
-		for(var i = 0; i < particleCount; i++) {
-			particles[i].y+= player.ship.vy;
-		} //done
-	} //fi
-
-	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-	// Collision
-
-	// Calculate ship collisions
-	if(menuIndex == 1) {
-		// Vs particles
-		for(var i = 0; i < particleCount; i++) {
-			if(halfWidth  - shipHalfRealSize <= particles[i].x
-			&& halfWidth  + shipHalfRealSize >= particles[i].x
-			&& halfHeight - shipHalfRealSize <= particles[i].y
-			&& halfHeight + shipHalfRealSize >= particles[i].y)
-			{ //if
-				if(particles[i].type == 0) {
-					player.score++;
-					particles.splice(i, 1);
-					i--;
-					particleCount--;
-				} //fi
-			} //fi
-		} //done
-	} //fi
-
-	// Calculate asteroid collisions
-	// var rockOffset = rockCount / 3;
-	for(var i = 0; i < rockCount; i++) {
-
-		// Get the average size of the asteroid
-		var avgSize1   = rocks[i].r[0];
-		var smallSize1 = rocks[i].r[0];
-		for(var j = 1; j < rockPoints; j++) {
-			avgSize1+= rocks[i].r[j];
-			if(rocks[i].r[j] < smallSize1)
-				smallSize1 = rocks[i].r[j];
-		} //done
-		avgSize1/= rockPoints;
-		var halfSize1 = avgSize1;
-		avgSize1*= 2;
-
-		// Vs particles
-		for(var j = 0; j < particleCount; j++) {
-			if(rocks[i].cx - smallSize1 <= particles[j].x
-			&& rocks[i].cx + smallSize1 >= particles[j].x
-			&& rocks[i].cy - smallSize1 <= particles[j].y
-			&& rocks[i].cy + smallSize1 >= particles[j].y)
-			{ //if
-				particles.splice(j, 1);
-				j--;
-				particleCount--;
-			} //fi
-		} //done
-
-		// Vs missiles
-		for(var j = 0; j < shotCount; j++) {
-            //TODO
-        } //done
-
-		// Vs rocks
-		// The particles that result from this are computationally intensive, so I added a toggle.
-		if(rockCollision) {
-			for(var l = 0; l < rockCount; l++) {
-
-				// Only rocks with similar z-axises should collide.
-				if(l != i /*&& !(l > i + rockOffset || l < i - rockOffset)*/) {
-
-//					if(speedHack) {
-						// Get the average size of the asteroid
-						var avgSize2 = 0;
-						for(var j = 0; j < rockPoints; j++) {
-							avgSize2+= rocks[l].r[j];
-						} //done
-						avgSize2/= rockPoints;
-						var halfSize2 = avgSize2;
-						avgSize2*= 2;
-
-						if(rocks[i]
-						&& rocks[i].cx - halfSize1 <= rocks[l].cx + halfSize2
-						&& rocks[i].cx + halfSize1 >= rocks[l].cx - halfSize2
-						&& rocks[i].cy - halfSize1 <= rocks[l].cy + halfSize2
-						&& rocks[i].cy + halfSize1 >= rocks[l].cy - halfSize2)
-						{ //if
-							rocksplosion(rocks[i]);
-							rocksplosion(rocks[l]);
-							if(i > l) {
-								rocks.splice(i, 1);
-								rocks.splice(l, 1);
-							} else {
-								rocks.splice(l, 1);
-								rocks.splice(i, 1);
-							} //fi
-							i--;
-							l--;
-							rockCount-= 2;
-						} //fi
-
-//					// This way is technically accurate, but absolutely ridiculously computationally intensive.  My laptop can't run it.
-//					} else {
-//						for(var j = 0; j < rockPoints; j++) {
-//							for(var k = 0; k < rockPoints; k++) {
-//								for(var m = 0; m < rockPoints; m++) {
-//									for(var n = 0; n < rockPoints; n++) {
-//										if(rocks[i].x[j] <= rocks[l].x[m] && rocks[i].x[k] >= rocks[l].x[n]
-//										&& rocks[i].x[j] >= rocks[l].x[m] && rocks[i].x[k] <= rocks[l].x[n]
-//										&& rocks[i].y[j] <= rocks[l].y[m] && rocks[i].y[k] >= rocks[l].y[n]
-//										&& rocks[i].y[j] >= rocks[l].y[m] && rocks[i].y[k] <= rocks[l].y[n])
-//										{ //if
-//											rocksplosion(rocks[i]);
-//											rocksplosion(rocks[l]);
-//											rocks.splice(i, 1);
-//											rocks.splice(l, 1);
-//											i-= 2;
-//											rockCount-= 2;
-//										} //fi
-//									} //done
-//								} //done
-//							} //done
-//						} //done
-//					} //fi
-				} //fi
-			} //done
-		} //fi
-		// Vs ships
-        var shipDead = false;
-		if(menuIndex == 1 && rocks[i]) {
-			for(var j = 0; j < rockPoints; j++) {
-				for(var k = 0; k < rockPoints; k++) {
-					if(rocks[i].x[j] <= halfWidth  + shipHalfRealSize && rocks[i].x[k] >= halfWidth  - shipHalfRealSize
-					&& rocks[i].x[j] >= halfWidth  - shipHalfRealSize && rocks[i].x[k] <= halfWidth  + shipHalfRealSize
-					&& rocks[i].y[j] <= halfHeight + shipHalfRealSize && rocks[i].y[k] >= halfHeight - shipHalfRealSize
-					&& rocks[i].y[j] >= halfHeight - shipHalfRealSize && rocks[i].y[k] <= halfHeight + shipHalfRealSize)
-					{ //if
-						shipDead = true;
-						sounds.boom.play();
-						rocksplosion(rocks[i]);
-						shipsplosion(player.ship, rocks[i]);
-						rocks.splice(i, 1);
-						i--;
-						rockCount--;
-						menuIndex = 2;
-						sounds.shot.pause();
-						sounds.shot.currentTime = 0;
-						sounds.ship.pause();
-						sounds.ship.currentTime = 0;
-						sounds.mono.pause();
-						sounds.mono.currentTime = 0;
-						sounds.thrust.pause();
-						sounds.thrust.currentTime = 0;
-						player.ship = new_ship();
-						break;
-					} // fi
-				} //done
-				if(shipDead) break;
-			} //done
-		} //fi
-		if(shipDead) break;
-	} //done
-
-	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-
-	// Draw background (black)
-	context.fillStyle = "rgba(0, 0, 0, 1)";
-	context.rect(0, 0, width, height);
-	context.fill();
-
-	// Draw stars
-	// This doesn't actually draw stars in order of distance.  I might make it do so, but it would slow down the game and not really result in a noticeable improvement in realism.
-	for(var i = 0; i < starCount; i++) {
-		// Only draw stars that are on the screen
-		if(stars[i].x >= 0      - stars[i].r
-		|| stars[i].x <= width  + stars[i].r
-		|| stars[i].y >= 0      - stars[i].r
-		|| stars[i].y <= height + stars[i].r)
-		{ //if
-			// Stars are really bright, so from our perspective, we can only see what color they are from their border.
-			context.fillStyle = "rgba(255, 255, 255, " + stars[i].rgba.a.toString() + ")";
-			context.strokeStyle = "rgba(" + stars[i].rgba.r.toString()
-				                + ", "    + stars[i].rgba.g.toString()
-				                + ", "    + stars[i].rgba.b.toString()
-				                + ", "    + stars[i].rgba.a.toString()
-				                + ")";
-			context.beginPath();
-			context.arc(stars[i].x, stars[i].y, stars[i].r, 0, 2 * Math.PI, false);
-			context.closePath();
-			context.fill();
-			context.stroke();
-		} //fi
-	} //done
-
-	// Draw missiles
-	for(var i = 0; i < shotCount; i++) {
-//		context.drawImage(
-//			graphics.shot,                            // Image to use
-//			0,                                        // x-origin (frame)
-//			shotSize * Math.floor(360 - shots[i].d),  // y-origin (frame)
-//			shotSize,                                 // width    (frame)
-//			shotSize,                                 // height   (frame)
-//			shots[i].x - shotHalfSize,                // x-origin (canvas)
-//			shots[i].y - shotHalfSize,                // y-origin (canvas)
-//			shotSize,                                 // width    (canvas)
-//			shotSize                                  // height   (canvas)
-//		);
-//		context.drawImage(graphics.shot, shots[i].x, shots[i].y, shotSize, shotSize);
-	} //done
-
-	// Draw missile particles
-	for(var i = 0; i < particleCount; i++) {
-		if(particles[i].type == 3) {
-			context.fillStyle = "rgba(" + particles[i].rgba.r.toString()
-				              + ", "    + particles[i].rgba.g.toString()
-				              + ", "    + particles[i].rgba.b.toString()
-				              + ", "    + particles[i].rgba.a.toString()
-				              + ")"
-			context.beginPath();
-			context.arc(particles[i].x, particles[i].y, particleSize, 0, 2 * Math.PI, false);
-			context.closePath();
-			context.fill();
-		} //fi
-	} //done
-
-	// Draw spaceship
-	if(menuIndex == 1) {
-			context.drawImage(graphics.ship,    (width - shipSize) / 2, (height - shipSize) / 2, shipSize, shipSize);
-			context.globalAlpha = player.ship.h;
-			context.drawImage(graphics.shipHot, (width - shipSize) / 2, (height - shipSize) / 2, shipSize, shipSize);
-			context.globalAlpha = 1;
-	} //fi
-
-	// Draw non-missile particles
-	for(var i = 0; i < particleCount; i++) {
-		if(particles[i].type != 3) {
-			context.fillStyle = "rgba(" + particles[i].rgba.r.toString()
-				              + ", "    + particles[i].rgba.g.toString()
-				              + ", "    + particles[i].rgba.b.toString()
-				              + ", "    + particles[i].rgba.a.toString()
-				              + ")"
-			context.beginPath();
-			context.arc(particles[i].x, particles[i].y, particleSize, 0, 2 * Math.PI, false);
-			context.closePath();
-			context.fill();
-		} //fi
-	} //done
-
-	// Draw asteroids
-	context.strokeStyle = "rgba(0, 0, 0, 0.5)";  // Shadow
-	for(var i = 0; i < rockCount; i++) {
-
-		// Calculate spritesheet frame
-		var degrees = rocks[i].d;
-		if(degrees < 0) degrees += 360;
-
-		// Set asteroid fill
-		if(!useTextures) {
-			context.fillStyle = "rgba(" + rocks[i].rgba.r.toString()
-				               + ", "   + rocks[i].rgba.g.toString()
-				               + ", "   + rocks[i].rgba.b.toString()
-				               + ", 1)";
-		} //fi
-
-		// Draw asteroids
-		if(useTextures)
-			context.save();
-		context.beginPath();
-		var cx = 0;
-		var cy = 0;
-		for(var j = 0; j < rockPoints; j++) {
-			if(j <= 0) {
-				context.moveTo(rocks[i].x[j],
-				               rocks[i].y[j]);
-			} else {
-				context.lineTo(rocks[i].x[j],
-				               rocks[i].y[j]);
-			} //fi
-			cx+= rocks[i].x[j];
-			cy+= rocks[i].y[j];
-		} //done
-		context.lineTo(rocks[i].x[0],
-			           rocks[i].y[0]);
-		cx = Math.round(cx / rockPoints);
-		cy = Math.round(cy / rockPoints);
-		context.closePath();
-		if(useTextures) {
-			context.clip();
-			context.drawImage(
-				graphics.rock,                               // Image to use
-				0,                                           // x-origin (frame)
-				rockSpriteSize * Math.floor(360 - degrees),  // y-origin (frame)
-				rockSpriteSize,                              // width    (frame)
-				rockSpriteSize,                              // height   (frame)
-				rocks[i].cx - (maxRockSize / 2),             // x-origin (canvas)
-				rocks[i].cy - (maxRockSize / 2),             // y-origin (canvas)
-				maxRockSize,                                 // width    (canvas)
-				maxRockSize                                  // height   (canvas)
-			);
-			context.restore();
-		} //fi
-		if(!useTextures)
-			context.fill();
-		context.fillStyle = "rgba(0, 0, 0, " + rocks[i].rgba.a.toString() + ')';
-		context.fill();
-		context.stroke();
-	} //done
-
-	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-
-	// Draw GUI
-	switch(menuIndex) {
-
-		case 0:  // Main menu
-			context.strokeStyle = "rgba(255, 255, 255, 255)";
-			if(menuShow == true) {
-				context.drawImage(graphics.menu11, 0, 0, width, height);
-			} else {
-				context.drawImage(graphics.menu10, 0, 0, width, height);
-			} //fi
-			sounds.ship.pause();  // Also handle music
-			break;
-
-		case 1:  // Game
-			sounds.ship.play();  // Also handle music
-			break;
-
-		case 2:  // Game over
-			if(menuShow == true) {
-				context.drawImage(graphics.menu21, 0, 0, width, height);
-			} else {
-				context.drawImage(graphics.menu20, 0, 0, width, height);
-			} //fi
-			sounds.ship.pause();  // Also handle music
-			break;
-	} //esac
-
-//	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-//	// Sounds
-//	switch(menuIndex) {
-//		case 1:
-//			// Monopropellant
-//			var soundCutOff = sounds.mono.duration - (gameInt / 500);
-//			if(!downDown && !rightDown && !leftDown)
-//				sounds.mono.pause();
-//			if(downDown || rightDown || leftDown)
-//				sounds.mono.play();
-//			if(sounds.mono.currentTime  > soundCutOff)
-//				sounds.mono.currentTime-= soundCutOff;
-//			// Thruster
-//			var soundCutOff = sounds.thrust.duration - (gameInt / 500);
-//			if(!upDown)
-//				sounds.thrust.pause();
-//			if(upDown)
-//				sounds.thrust.play();
-//			if(sounds.thrust.currentTime  > soundCutOff)
-//				sounds.thrust.currentTime-= soundCutOff;
-//			// Ambience
-//			var soundCutOff = sounds.ship.duration - (gameInt / 500);
-//			if(sounds.ship.currentTime  > soundCutOff)
-//				sounds.ship.currentTime-= soundCutOff;
-//			break;
-//		case 0:
-//		case 2:
-//			sounds.mono.pause();
-//			sounds.mono.currentTime = 0;
-//			sounds.thrust.pause();
-//			sounds.thrust.currentTime = 0;
-//	} //esac
-
-	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-
-	// Modify cooldown timers
-	if(  player.ship.cd >= gameSecs)
-		 player.ship.cd -= gameSecs;
-	else player.ship.cd  = 0;
-
-	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-
-	// Check for memory corruption
-	if(!speedHack) {
-		if(particleCount < 0) particleCount = 0;
-		if(rockCount     < 0) rockCount     = 0;
-		if(shotCount     < 0) shotCount     = 0;
-		if(starCount     < 0) starCount     = 0;
-	} //fi
-
-	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-	// Update scores
-	if(menuIndex == 1) {
-		// You gain points simply by staying alive.
-		if(rockCollision) {
-				if(particleMultiplier > 1)
-					 player.score+= 1 / gameInt;
-				else player.score+= 2 / gameInt;
-		} else       player.score+= 4 / gameInt;
-		document.getElementById("scoreSpan").innerHTML = Math.floor(player.score).toString();
-	} //fi
-
-} //project1_gameLoop()
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-// Settings
-
-function slideParticles(value) {
-
-	// Remove all particles if the multiplier is 0
-	if(value == 0) {
-		particles.splice(0, particleCount);
-		particleCount = 0;
-	} //fi
-
-	// Set the new particle multiplier
-	particleMultiplier = Math.pow(value, 2);
-
-	// Update setting-label
-	switch(value) {
-		case 0:
-			document.getElementById("particleSpan").innerHTML = "Off";
-			break;
-		case 1:
-			document.getElementById("particleSpan").innerHTML = "Low";
-			break;
-		case 2:
-			document.getElementById("particleSpan").innerHTML = "High";
-			break;
-	} //esac
-
-} //slideParticles()
-
-function slideStars(value) {
-
-    // Speedhack
-    var mult;
-	if(!speedHack)
-		 mult = 768;
-	else mult = 256;
-
-	// If we're decreasing the number of stars, delete all existing stars
-	if(wantStars > mult * value) {
-		stars.splice(0, wantStars);
-		starCount = 0;
-	} //fi
-
-	// Set the new star limit to the value of the slider
-	wantStars = mult * value;
-
-    // Create new stars
-    var star;
-	if(!speedHack) {
-		for(var i = starCount; i < wantStars; i++) {
-			star = new_star();
-			star.x = (bigAxis * -0.5) + (Math.random() * bigAxis * 2.0);
-			star.y = (bigAxis * -0.5) + (Math.random() * bigAxis * 2.0);
-			stars.push(star);
-			starCount++;
-		} //done
-	} else {
-		for(var i = starCount; i < wantStars; i++) {
-			star = new_star();
-			star.x = Math.random() * width;
-			star.y = Math.random() * height;
-			stars.push(star);
-			starCount++;
-		} //done
-	} //fi
-
-	// Update setting-label
-	switch(value) {
-		case 0:
-			document.getElementById("starSpan").innerHTML = "Off";
-			break;
-		case 1:
-			document.getElementById("starSpan").innerHTML = "Low";
-			break;
-		case 2:
-			document.getElementById("starSpan").innerHTML = "Medium";
-			break;
-		case 3:
-			document.getElementById("starSpan").innerHTML = "High";
-			break;
-	} //esac
-
-} //slideStars()
-
-function toggleTextures(checked) {
-	useTextures = checked;
-} //textureToggle()
-
-function toggleRockCollision(checked) {
-	rockCollision = checked;
-	for(var i = 0; i < particleCount; i++) {
-		if(particles[i].type == 0) {
-			particles.splice(i, 1);
-			i--;
-			particleCount--;
-		} //fi
-	} //done
-} //rockCollision()
-
-function toggleSpeedHack(checked) {
-	speedHack = checked;
-	slideStars(document.getElementById("starSlider").value);
-} //rockCollision()
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-// Infobox
-
-function showPremise() {
-	document.getElementById("instructions").style.display = "none";
-	document.getElementById("settings").style.display = "none";  // Is most likely to be the previous screen, so should be done next-to-last.
-	document.getElementById("premise").style.display = "block";  // Is being unhidden, so should be done last.
-} //showPremise()
-
-function showInstructions() {
-	document.getElementById("settings").style.display = "none";
-	document.getElementById("premise").style.display = "none";        // Is most likely to be the previous screen, so should be done next-to-last.
-	document.getElementById("instructions").style.display = "block";  // Is being unhidden, so should be done last.
-} //showInstructions()
-
-function showSettings() {
-	document.getElementById("premise").style.display = "none";
-	document.getElementById("instructions").style.display = "none";  // Is most likely to be the previous screen, so should be done next-to-last.
-	document.getElementById("settings").style.display = "block";     // Is being unhidden, so should be done last.
-} //showSettings()
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-function init() {
-
-	// HTML
-	showPremise();
-
-	// Audio
-	sounds = {
-		  boom: new Audio("res/boom.ogg"),
-		  mono: new Audio("res/mono.ogg"),
-		  ship: new Audio("res/ship.ogg"),
-		  shot: new Audio("res/shot.ogg"),
-		thrust: new Audio("res/thrust.ogg")
-	};
-	sounds.mono.loop     = true;
-	sounds.thrust.loop   = true;
-	sounds.ship.loop     = true;
-	sounds.boom.volume   = 1.0;
-	sounds.mono.volume   = 0.5;
-	sounds.thrust.volume = 0.5;
-
-	// Graphics
-	graphics = {
-		rock:    new Image(),
-		ship:    new Image(),
-		shipHot: new Image(),
-		shot:    new Image(),
-		menu10:  new Image(),
-		menu11:  new Image(),
-		menu20:  new Image(),
-		menu21:  new Image()
-	};
-	graphics.rock.src    = "res/rock.png";
-	graphics.ship.src    = "res/ship.png";
-	graphics.shipHot.src = "res/shiphot.png";
-	graphics.shot.src    = "res/shot.png";
-	graphics.menu10.src  = "res/menu(1, 0).png";
-	graphics.menu11.src  = "res/menu(1, 1).png";
-	graphics.menu20.src  = "res/menu(2, 0).png";
-	graphics.menu21.src  = "res/menu(2, 1).png";
-
-	// DOM Variables
-	canvas    = document.getElementById("haxteroids");
-	context   = canvas.getContext("2d");
-	gameInt   = 1000 / 60;
-	gameSecs  = gameInt / 1000;
-	menuIndex =  0;
-
-	// Scale variables
-	height = canvas.height;
-	width  = canvas.width;
-	if(height > width)
-		 bigAxis = height;
-	else bigAxis = width;
-	halfHeight = height / 2;
-	halfWidth  = width  / 2;
-
-	// Input variables
-	downDown  = false;
-	leftDown  = false;
-	rightDown = false;
-	spaceDown = false;
-	upDown    = false;
-	menuShow  = false;
-
-	// Star variables
-	maxStarSize = 0.05;
-	starIVX     = 1.0 - (Math.random() * 2.0);
-	starIVY     = 1.0 - (Math.random() * 2.0);
-	stars       = new Array();
-	starSpeed   = 0.1625;
-	starCount   = 0;
-
-	// Asteroid variables
-	maxRockSize    = 128;
-	maxRockSpeed   =   1.0;
-	maxRockSpin    =   1.0;
-	minRockSize    = maxRockSize  / 4;
-	minRockSpeed   = maxRockSpeed / 4;
-	rockPoints     =  11;  // Too many sides generates asteroids that are too spiky, and too few generates asteroids that are too alike.  Using a prime number helps prevent symmetry.
-	rocks          = new Array();
-	rockSpriteSize = 128;
-	rockCount      =   0;
-	wantRocks      =  16;
-
-	// Missile variables
-	shotCd       = sounds.shot.duration;  // Cooldown for missiles
-	shots        = new Array();
-	shotCount    =  0;
-	shotSize     = 16;
-	shotHalfSize = shotSize   / 2;
-
-	// Player variables
-	player           = new_player();
-	shipFullThrust   =  0.0625;
-	shipMonoThrust   =  0.03125;
-	shipRealSize     = 30;
-	shipHalfRealSize = shipRealSize / 2;
-	shipSize         = 32;
-	shipSpinThrust   =  0.0078125;
-	thrustHeat       =  0.0125;
-
-	// Particle variables
-	particles     = new Array();
-	monoFade      = 0.5;  // Multiplier
-	thrustFade    = 0.67;  // Multiplier
-	debrisFade    = 0.9999;  // Multiplier
-	particleSize  = 1;
-	particleCount = 0;
+class Haxteroids {
+
+	// Resources
+	private graphics;
+	private sounds;
 
 	// Settings
-	slideParticles(document.getElementById("particleSlider").value);
-	slideStars(document.getElementById("starSlider").value);
-	toggleTextures(document.getElementById("texturesToggle").checked);
-	toggleRockCollision(document.getElementById("rockCollisionToggle").checked);
-	toggleSpeedHack(document.getElementById("speedHackToggle").checked);
+	private particleMultiplier;
+	private rockCollision;
+	private speedHack;
+	private useTextures;
 
-	// Initialize asteroids
-	for(var i = 0; i < (wantRocks / 2); i++) {
-		// Create an asteroid
-		var rock = new_rock();
+	// DOM variables
+	private canvas;
+	private context;
 
-		// Set coordinates
-		rock.cx = Math.random() * width;
-		rock.cy = Math.random() * height;
+	// Game variables
+	private gameInt;
+	private gameLoop;
+	private gameSecs;
+	private menuIndex;
+	private menuTimer;
 
-		// Fix speeds
-		// I have no idea why this is necessary
-		//rock.vx*= 2;
-		//rock.vy*= 2;
+	// Scale variables
+	private height;
+	private halfHeight;
+	private halfWidth;
+	private width;
+	private bigAxis;
 
-		// Fix sizes
-		// I have no idea why this is necessary
-		for(var j = 0; j < rockPoints; j++) {
-			rock.r[j]/= 2;
+	// Input variables
+	private downDown;
+	private leftDown;
+	private rightDown;
+	private spaceDown;
+	private upDown;
+	private menuShow;
+
+	// Fade variables
+	private monoFade;
+	private thrustFade;
+	private debrisFade;
+
+	// Star variables
+	private maxStarSize;
+	private starIVX;
+	private starIVY;
+	private stars;
+	private starSpeed;
+	private starCount;
+	private wantStars;
+
+	// Asteroid variables
+	private maxRockSize;
+	private maxRockSpeed;
+	private maxRockSpin;
+	private minRockSize;
+	private minRockSpeed;
+	private rockCD;
+	private rockCDnow;
+	private rockPoints;
+	private rocks = [];
+	private rockSpriteSize;
+	private rockCount;
+	private wantRocks;
+
+	// Missile variables
+	private shotCd;
+	private shots;
+	private shotCount;
+	private shotSize;
+	private shotHalfSize;
+	private shotHalfWidth;
+	private shotHalfHeight;
+	private shotWidth;
+	private shotHeight;
+
+	// Player variables
+	private player;
+	private shipFullThrust;
+	private shipHalfRealSize;
+	private shipMonoThrust;
+	private shipRealSize;
+	private shipSize;
+	private shipSpinThrust;
+	private thrustHeat;
+
+	// Particle variables
+	private particles;
+	private particleFade;
+	private particleSize;
+	private particleCount;
+
+	////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+
+	constructor() {
+
+		// HTML
+		this.showPremise();
+
+		// Audio
+		this.sounds = {
+			boom: new Audio("res/boom.ogg"),
+			mono: new Audio("res/mono.ogg"),
+			ship: new Audio("res/ship.ogg"),
+			shot: new Audio("res/shot.ogg"),
+			thrust: new Audio("res/thrust.ogg")
+		};
+		this.sounds.mono.loop     = true;
+		this.sounds.thrust.loop   = true;
+		this.sounds.ship.loop     = true;
+		this.sounds.boom.volume   = 1.0;
+		this.sounds.mono.volume   = 0.5;
+		this.sounds.thrust.volume = 0.5;
+
+		// Graphics
+		this.graphics = {
+			rock:    new Image(),
+			ship:    new Image(),
+			shipHot: new Image(),
+			shot:    new Image(),
+			menu10:  new Image(),
+			menu11:  new Image(),
+			menu20:  new Image(),
+			menu21:  new Image()
+		};
+		this.graphics.rock.src    = "res/rock.png";
+		this.graphics.ship.src    = "res/ship.png";
+		this.graphics.shipHot.src = "res/shiphot.png";
+		this.graphics.shot.src    = "res/shot.png";
+		this.graphics.menu10.src  = "res/menu(1, 0).png";
+		this.graphics.menu11.src  = "res/menu(1, 1).png";
+		this.graphics.menu20.src  = "res/menu(2, 0).png";
+		this.graphics.menu21.src  = "res/menu(2, 1).png";
+
+		// DOM Variables
+		this.canvas    = document.getElementById("haxteroids");
+		this.context   = this.canvas.getContext("2d");
+		this.gameInt   = 1000 / 60;
+		this.gameSecs  = this.gameInt / 1000;
+		this.menuIndex =  0;
+
+		// Scale variables
+		     this.height     = this.canvas.height;
+		     this.width      = this.canvas.width;
+		if(  this.height     > this.width)
+			 this.bigAxis    = this.height;
+		else this.bigAxis    = this.width;
+		     this.halfHeight = this.height / 2;
+		     this.halfWidth  = this.width  / 2;
+
+		// Input variables
+		this.downDown  = false;
+		this.leftDown  = false;
+		this.rightDown = false;
+		this.spaceDown = false;
+		this.upDown    = false;
+		this.menuShow  = false;
+
+		// Star variables
+		this.maxStarSize = 0.05;
+		this.starIVX     = 1.0 - (Math.random() * 2.0);
+		this.starIVY     = 1.0 - (Math.random() * 2.0);
+		this.stars       = new Array();
+		this.starSpeed   = 0.1625;
+		this.starCount   = 0;
+
+		// Asteroid variables
+		this.maxRockSize    = 128;
+		this.maxRockSpeed   =   1.0;
+		this.maxRockSpin    =   1.0;
+		this.minRockSize    = this.maxRockSize  / 4;
+		this.minRockSpeed   = this.maxRockSpeed / 4;
+		this.rockPoints     =  11;  // Too many sides generates asteroids that are too spiky, and too few generates asteroids that are too alike.  Using a prime number helps prevent symmetry.
+		this.rocks          = new Array();
+		this.rockSpriteSize = 128;
+		this.rockCount      =   0;
+		this.wantRocks      =  16;
+
+		// Missile variables
+		this.shotCd       = this.sounds.shot.duration;  // Cooldown for missiles
+		this.shots        = new Array();
+		this.shotCount    =  0;
+		this.shotSize     = 16;
+		this.shotHalfSize = this.shotSize   / 2;
+
+		// Player variables
+		this.player           = this.new_player();
+		this.shipFullThrust   =  0.0625;
+		this.shipMonoThrust   =  0.03125;
+		this.shipRealSize     = 30;
+		this.shipHalfRealSize = this.shipRealSize / 2;
+		this.shipSize         = 32;
+		this.shipSpinThrust   =  0.0078125;
+		this.thrustHeat       =  0.0125;
+
+		// Particle variables
+		this.particles     = new Array();
+		this.monoFade      = 0.5;  // Multiplier
+		this.thrustFade    = 0.67;  // Multiplier
+		this.debrisFade    = 0.9999;  // Multiplier
+		this.particleSize  = 1;
+		this.particleCount = 0;
+
+		// Settings
+		this.slideParticles(document.getElementById("particleSlider").value);
+		this.slideStars(document.getElementById("starSlider").value);
+		this.toggleTextures(document.getElementById("texturesToggle").checked);
+		this.toggleRockCollision(document.getElementById("rockCollisionToggle").checked);
+		this.toggleSpeedHack(document.getElementById("speedHackToggle").checked);
+
+		// Initialize asteroids
+		for(var i = 0; i < (this.wantRocks / 2); i++) {
+			// Create an asteroid
+			var rock = this.new_rock();
+
+			// Set coordinates
+			rock.cx = Math.random() * this.width;
+			rock.cy = Math.random() * this.height;
+
+			// Fix speeds
+			// I have no idea why this is necessary
+			//rock.vx*= 2;
+			//rock.vy*= 2;
+
+			// Fix sizes
+			// I have no idea why this is necessary
+			for(var j = 0; j < this.rockPoints; j++) {
+				rock.r[j]/= 2;
+			} //done
+
+			// Add the asteroids to the array
+			this.rocks.push(rock);
+			this.rockCount++;
 		} //done
 
-		// Add the asteroids to the array
-		rocks.push(rock);
-		rockCount++;
-	} //done
+		// Install event-handlers
+		this.canvas.tabIndex      = 1000;
+		this.canvas.style.outline = "none";
+		this.canvas.addEventListener("keydown", this.event_keyDown, true);
+		this.canvas.addEventListener("keyup",   this.event_keyUp,   true);
 
-	// Install event-handlers
-	canvas.tabIndex      = 1000;
-	canvas.style.outline = "none";
-	canvas.addEventListener("keydown", event_keyDown, true);
-	canvas.addEventListener("keyup",   event_keyUp,   true);
+		// Set timers
+		this.gameLoop  = setInterval(this.project1_gameLoop,  this.gameInt);
+		this.menuTimer = setInterval(this.project1_menuTimer, this.gameInt * 30);
+	} //constructor()
 
-	// Set timers
-	gameLoop  = setInterval(project1_gameLoop,  gameInt);
-	menuTimer = setInterval(project1_menuTimer, gameInt * 30);
-} //init()
+	////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+
+	private new_rgba() {
+		var rgba = {
+			r: 127, // Red
+			g: 127, // Green
+			b: 127, // Blue
+			a: 1.0  // Alpha
+		};
+		return rgba;
+	} //new_rgba()
+
+	////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+
+	private new_particle() {
+		var particle = {
+			x: 0,
+			y: 0,
+			vx: 0,
+			vy: 0,
+			rgba: this.new_rgba(),
+			type: 0  // debris:0::mono:1::thrust:2::shot:3
+		};
+		return particle;
+	} //new_particle()
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	private new_star() {
+		var star = {
+			r: 0, // Radius
+			dia: 0, // Diameter
+
+			x: 0, // Center x
+			y: 0, // Center y
+			z: 0, // Distance
+
+			vx: 0, // x-velocity
+			vy: 0, // y-velocity
+
+			rgba: this.new_rgba()
+		};
+
+		// Generate more-or-less scientifically accurate star-data
+		// I used https://en.wikipedia.org/wiki/Stellar_classification#Harvard_spectral_classification
+		// to get the percentages, colors (RGB), luminosities (alpha), and sizes (radius).  As the
+		// Wikipedia percentages did not add up to 100, I scaled them.  I also scaled the luminosities.
+		star.rgba.a = Math.random();  // This is a temporary setting used to determine the stellar spectral class of the star
+				// Class M
+		if(star.rgba.a <= 0.765418272300) {
+			star.rgba.r = 255;
+			star.rgba.g = 189;
+			star.rgba.b = 111;
+			star.rgba.a = Math.round(    0.5   + (Math.random() * 0.027));  // 0.527 - 0.5
+			star.r      = this.maxStarSize * (0     + (Math.random() * 0.7  ));  // 0.7   - 0
+		} else   // Class K
+		if(star.rgba.a <= 0.886563610363) {
+			star.rgba.r = 255;
+			star.rgba.g = 221;
+			star.rgba.b = 180;
+			star.rgba.a = Math.round(    0.527 + (Math.random() * 0.2  ));  // 0.727 - 0.527
+			star.r      = this.maxStarSize * (0.7   + (Math.random() * 0.26 ));  // 0.96  - 0.7
+		} else   // Class G
+		if(star.rgba.a <= 0.962654897080) {
+			star.rgba.r = 255;
+			star.rgba.g = 244;
+			star.rgba.b = 232;
+			star.rgba.a = Math.round(    0.727 + (Math.random() * 0.273));  // 1     - 0.727
+			star.r      = this.maxStarSize * (0.96  + (Math.random() * 0.19 ));  // 1.15  - 0.96
+		} else   // Class F
+		if(star.rgba.a <= 0.992690931310) {
+			star.rgba.r = 251;
+			star.rgba.g = 248;
+			star.rgba.b = 255;
+			star.rgba.a =   1;
+	//		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
+			star.r      = this.maxStarSize * (1.15  + (Math.random() * 0.25 ));  // 1.4   - 1.15
+		} else   // Class A
+		if(star.rgba.a <= 0.998698138156) {
+			star.rgba.r = 202;
+			star.rgba.g = 216;
+			star.rgba.b = 255;
+			star.rgba.a =   1;
+	//		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
+			star.r      = this.maxStarSize * (1.4   + (Math.random() * 0.4  ));  // 1.8   - 1.4
+		} else   // Class B
+		if(star.rgba.a <= 0.999996996400) {
+			star.rgba.r = 170;
+			star.rgba.g = 191;
+			star.rgba.b = 255;
+			star.rgba.a =   1;
+	//		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
+			star.r      = this.maxStarSize * (1.8   + (Math.random() * 4.8  ));  // 6.6   - 1.8
+		} else { // Class O
+			star.rgba.r = 155;
+			star.rgba.g = 176;
+			star.rgba.b = 255;
+			star.rgba.a =   1;
+	//		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
+			star.r      = this.maxStarSize *  6.6;
+	//		star.r      = maxStarSize * (6.6   + (Math.random() * 0    ));  // 6.6   - 6.6
+		} //fi
+
+		// Calculate star speed and apply distance to speed and luminosity
+		star.z      = 6 * Math.random();
+		star.vx     = star.z * this.starSpeed * this.starIVX;
+		star.vy     = star.z * this.starSpeed * this.starIVY;
+		star.r     *= star.z;
+		star.dia    = star.r * 2;
+		star.rgba.a*= star.z / 6;
+
+		// 'Even' means we generate the star with a static x-axis
+		if(Math.round(Math.random()) == 0) {
+			if(!this.speedHack)
+				star.x = (this.bigAxis * -0.5) + (Math.random() * (this.bigAxis * 2.0));
+			else star.x = Math.random() * (this.width + (2 * star.r));
+
+			// 'Even' means we generate the star on the top
+			if(Math.round(Math.random()) == 0) {
+				if(!this.speedHack)
+					star.y = this.bigAxis * -0.5;
+				else star.y = 0 - star.r;
+
+			// 'Odd' means we generate the star on the bottom
+			} else {
+				if(!this.speedHack)
+					star.y = this.bigAxis * 1.5;
+				else star.y = (this.height + star.r);
+			} //fi
+
+		// 'Odd' means we generate the star with a static y-axis
+		} else {
+			if(!this.speedHack)
+				star.y = (this.bigAxis * -0.5) + (Math.random() * (this.bigAxis * 2.0));
+			else star.y = Math.random() * (this.height + (2 * star.r));
+
+			// 'Even' means we generate the star on the left
+			if(Math.round(Math.random()) == 0) {
+				if(!this.speedHack)
+					star.x = this.bigAxis * -0.5;
+				else star.x = (0 - star.r);
+
+			// 'Odd' means we generate the star on the right
+			} else {
+				if(!this.speedHack)
+					star.x = this.bigAxis * 1.5;
+				else star.x = (this.width + star.r);
+			} //fi
+		} //fi
+
+		return star;
+	} //new_star()
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	private new_ship() {
+		var ship = {
+			h: 0,  // Heat
+			vy: 0,  // Vertical velocity
+			vd: 0,  // Rotational velocity, degrees
+			vr: 0,  // Rotational velocity, radians
+			cd: 0   // Missile cooldown timer
+		};
+		return ship;
+	} //new_ship()
+
+	////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+
+	private new_player() {
+		var player = {
+				score: 0,
+				ship: this.new_ship(),
+	//		 shotsFired: 0,
+	//		rocksBroken: 0,
+	//		 timePlayed: 0,
+	//		  timesDied: 0
+		};
+		return player;
+	} //new_player()
+
+	////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+
+	private new_rock() {
+		var rock = {
+			cx: 0,               // Center x
+			vx: 0,               // x-velocity
+				x: new Array(),     // xs
+
+			cy: 0,               // Center y
+			vy: 0,               // y-velocity
+				y: new Array(),     // ys
+
+				r: new Array(),     // Radiuses
+
+				d: 0,               // Facing
+			vd: 0,               // Spin
+
+			irgba: this.new_rgba(), // Initial color
+			rgba: this.new_rgba()  // Color
+		};
+
+		// Generate color
+		rock.irgba.r = 114 - (Math.random() * 3);
+		rock.irgba.g = 111 - (Math.random() * 5);
+		rock.irgba.b = 106 - (Math.random() * 7);
+
+		// Calculate radiuses
+		var rockSize = (this.minRockSize + (Math.random() * (this.maxRockSize - this.minRockSize)));
+		var rockSizeThird = rockSize / 3;
+		for(var j = 0; j < this.rockPoints; j++) {
+			rock.r.push(rockSizeThird + (Math.random() * ((rockSizeThird * 2) - rockSizeThird)));
+		} //done
+
+		// Initialize coordinates
+		for(var j = 0; j < this.rockPoints; j++) {
+			rock.x.push(0);
+			rock.y.push(0);
+		} //done
+
+		// Set velocities
+		rock.vd = Math.random() * this.maxRockSpin;
+		var offsetRockSpeed = this.maxRockSpeed - this.minRockSpeed;
+		rock.vx = this.minRockSpeed + (Math.random() * offsetRockSpeed);
+		rock.vy = this.minRockSpeed + (Math.random() * offsetRockSpeed);
+
+		// Allow negative velocities
+		if(Math.round(Math.random()) == 0)
+			rock.vd*= -1;
+		if(Math.round(Math.random()) == 0)
+			rock.vx*= -1;
+		if(Math.round(Math.random()) == 0)
+			rock.vy*= -1;
+
+		// Set positions
+		rock.d = Math.random() * 360;
+		// 'Even' means we generate the rock with a static y-axis
+		if(Math.round(Math.random()) == 0) {
+			rock.cx = Math.random() * (this.width + (2 * rockSize));
+
+			// If the y-velocity is positive, start the rock on the top
+			if(rock.vy + this.player.ship.vy > 0)
+				rock.cy = (0 - rockSize);
+
+			// If the y-velocity is negative, start the rock on the bottom
+			else rock.cy = (this.height + rockSize);
+
+		// 'Odd' means we generate the rock with a static x-axis
+		} else {
+			rock.cy = Math.random() * (this.height + (2 * rockSize));
+
+			// If the x-velocity is positive, start the rock on the left
+			if(rock.vx > 0)
+				rock.cx = (0 - rockSize);
+
+			// If the x-velocity is negative, start the rock on the right
+			else rock.cx = (this.width + rockSize);
+		} //fi
+
+		return rock;
+	} //new_rock()
+
+	////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+
+	private rocksplosion(rock) {
+
+		// Figure out the size of the rock
+		var avgSize = 0;
+		for(var i = 0; i < this.rockPoints; i++) {
+			avgSize+= rock.r[i];
+		} //done
+		avgSize/= this.rockPoints;
+		var halfSize = avgSize;
+		avgSize*= 2;
+
+		// Create debris
+		for(var i = 0; i < avgSize * this.particleMultiplier; i++) {
+			var particle    = this.new_particle();
+			particle.type   = 0;  // Debris
+			particle.x      = (rock.cx - halfSize) + (Math.random() * avgSize);
+			particle.y      = (rock.cy - halfSize) + (Math.random() * avgSize);
+			particle.vx     = Math.random() * rock.vx * 2;
+			particle.vy     = Math.random() * rock.vy * 2;
+			particle.rgba   = rock.rgba;
+	//		particle.rgba.r = Math.round(particle.rgba.r * particle.rgba.a);
+	//		particle.rgba.g = Math.round(particle.rgba.g * particle.rgba.a);
+	//		particle.rgba.b = Math.round(particle.rgba.b * particle.rgba.a);
+			particle.rgba.a = 1 - particle.rgba.a;
+			this.particles.push(particle);
+			this.particleCount++;
+		} //done
+	} //rocksplosion()
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	private shipsplosion(ship, rock) {
+		for(var l = 0; l < this.shipRealSize * 2 * this.particleMultiplier; l++) {
+			var particle = this.new_particle();
+			particle.x   = (this.halfWidth  - this.shipHalfRealSize) + (Math.random() * this.shipRealSize);
+			particle.y   = (this.halfHeight - this.shipHalfRealSize) + (Math.random() * this.shipRealSize);
+			particle.vx  = Math.random() * rock.vx * 2;
+			particle.vy  = Math.random() * (rock.vy - this.player.ship.vy);
+			switch(Math.round(4 * Math.random())) {
+				case 0: // Monopropellant
+					particle.type   =   1;
+					particle.rgba.r = 255;
+					particle.rgba.g = 255;
+					particle.rgba.b = 255;
+					break;
+				case 1: // Liquid fuel
+					particle.type   =   2;
+					particle.rgba.r = 255 - Math.round(      32 * Math.random() );
+					particle.rgba.g = 127 + Math.round(32 - (64 * Math.random()));
+					particle.rgba.b =       Math.round(      32 * Math.random() );
+					break;
+				case 2: // Grey structure
+					particle.type   =   0;
+					particle.rgba.r =  80;
+					particle.rgba.g =  81;
+					particle.rgba.b =  87;
+					break;
+				case 3: // Orange structure
+					particle.type   =   0;
+					particle.rgba.r =  70;
+					particle.rgba.g =  45;
+					particle.rgba.b =  25;
+					break;
+				case 4: // Solar Panels
+					particle.type   =   0;
+					particle.rgba.r =  17;
+					particle.rgba.g =  21;
+					particle.rgba.b =  26;
+					break;
+			} //esac
+			particle.rgba.a = 1.0;
+			//TODO:  Rotate the vector to match the ship's rotation
+			this.particles.push(particle);
+			this.particleCount++;
+		} //done
+	} //shipsplosion()
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	private new_shot() {
+		var shot = {
+			x: 0, // x-coordinate
+			y: 0, // y-coordinate
+			vx: 0, // x-velocity
+			vy: 0, // y-velocity
+			ax: 0, // x-acceleration
+			ay: 0, // y-acceleration
+			d: 0  // rotation (in degrees)
+		};
+
+		// Center the shot under the ship
+		shot.x  = this.halfWidth  - this.shotHalfSize;
+		shot.y  = this.halfHeight - this.shotHalfSize;
+		shot.ay = 2;
+
+		return shot;
+	} //new_shot()
+
+	////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+
+	private shotsplosion(shot, rock) {
+		for(var l = 0; l < this.shipRealSize * 2 * this.particleMultiplier; l++) {
+			var particle = this.new_particle();
+			particle.x   = (this.halfWidth  - this.shotHalfWidth ) + (Math.random() * this.shotWidth );
+			particle.y   = (this.halfHeight - this.shotHalfHeight) + (Math.random() * this.shotHeight);
+			particle.vx  = Math.random() * (rock.vx - shot.vx);
+			particle.vy  = Math.random() * (rock.vy - shot.vy);
+			switch(Math.round(Math.random())) {
+				case 0: // Liquid fuel
+					particle.type = 3;
+					particle.rgba.r = 255 - Math.round(      32 * Math.random() );
+					particle.rgba.g = 127 + Math.round(32 - (64 * Math.random()));
+					particle.rgba.b =       Math.round(      32 * Math.random() );
+					break;
+				case 1: // Structure
+					particle.type = 0;
+					particle.rgba.r =  49;
+					particle.rgba.g =  49;
+					particle.rgba.b =  47;
+					break;
+			} //esac
+			particle.rgba.a = 1.0;
+			this.particles.push(particle);
+			this.particleCount++;
+		} //done
+	} //shotsplosion()
+
+	////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+
+	private event_keyDown(event) {
+		switch(event.keyCode) {
+
+			case 38:  // Up
+			case 87:  // W
+				if(this.menuIndex == 1)
+					this.sounds.thrust.play();
+				this.upDown = true;
+				break;
+
+			case 37:  // Left
+			case 65:  // A
+				if(this.menuIndex == 1)
+					this.sounds.mono.play();
+				this.leftDown = true;
+				break;
+
+			case 40:  // Down
+			case 68:  // S
+				if(this.menuIndex == 1)
+					this.sounds.mono.play();
+				this.downDown = true;
+				break;
+
+			case 39:  // Right
+			case 83:  // D
+				if(this.menuIndex == 1)
+					this.sounds.mono.play();
+				this.rightDown = true;
+				break;
+
+			case 13:  // Enter
+			case 32:  // Space
+				this.spaceDown = true;
+		} //esac
+	} //event_keyDown()
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	private event_keyUp(event) {
+		switch(event.keyCode) {
+
+			case 38:  // Up
+			case 87:  // W
+				this.sounds.thrust.pause();
+				this.upDown = false;
+				break;
+
+			case 37:  // Left
+			case 65:  // A
+				if(!this.downDown && !this.rightDown)
+					this.sounds.mono.pause();
+				this.leftDown = false;
+				break;
+
+			case 40:  // Down
+			case 68:  // S
+				if(!this.leftDown && !this.rightDown)
+					this.sounds.mono.pause();
+				this.downDown = false;
+				break;
+
+			case 39:  // Right
+			case 83:  // D
+				if(!this.leftDown && !this.downDown)
+					this.sounds.mono.pause();
+				this.rightDown = false;
+				break;
+
+			case 13:  // Enter
+			case 32:  // Space
+				if(this.spaceDown == true) {
+					switch(this.menuIndex) {
+						case 2:  // Game over
+							this.menuIndex = 0;
+							this.player.score = 0;
+							break;
+
+						case 0:  // Main menu
+							this.menuIndex = 1;
+							this.player.ship.cd = this.shotCd;
+							this.rocks.splice(0, this.rockCount);
+							this.rockCount = 0;
+							this.particles.splice(0, this.particleCount);
+							this.particleCount = 0;
+							this.shots.splice(0, this.shotCount);
+							this.shotCount = 0;
+							this.sounds.ship.play();
+							this.menuIndex = 1;
+							break;
+					} //esac
+				} //fi
+				this.spaceDown = false;
+		} //esac
+	} //event_keyUp()
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	private project1_menuTimer() {
+		if(this.menuShow) this.menuShow = false;
+		else this.menuShow = true;
+	} //project1_menuTimer()
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	private project1_gameLoop() {
+
+		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+		// Missiles
+
+		for(var i = 0; i < this.shotCount; i++) {
+
+			// Remove missiles when they leave the screen
+			//TODO
+
+			// Calculate missile vectors
+			//TODO
+
+			// Change missile position
+			this.shots[i].vx+= this.shots[i].ax;
+			this.shots[i].vy+= this.shots[i].ay;
+			this.shots[i].x += this.shots[i].vx;
+			this.shots[i].y += this.shots[i].vy;
+
+			// Create particles
+			//TODO
+
+		} //done
+
+		// Update missile cooldowns and fire new missiles
+		if(this.spaceDown && this.player.ship.cd == 0) {
+			this.sounds.shot.currentTime = 0;
+	//		this.sounds.shot.play();
+			this.player.ship.cd = this.shotCd;
+			this.shots.push(this.new_shot());
+			this.shotCount++;
+		} //fi
+
+		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+
+		if(!this.speedHack) {
+			// Remove stars that are no longer reachable via rotation
+			for(var i = 0; i < this.starCount; i++) {
+				if(this.stars[i].x < 0 - this.bigAxis * 0.5
+				|| this.stars[i].x >     this.bigAxis * 1.5
+				|| this.stars[i].y < 0 - this.bigAxis * 0.5
+				|| this.stars[i].y >    this. bigAxis * 1.5)
+				{ //if
+					this.stars.splice(i, 1);
+					this.starCount--;
+				} //fi
+			} //done
+		} else {
+			// Remove stars that are no longer on the screen
+			for(var i = 0; i < this.starCount; i++) {
+				if(this.stars[i].x < 0      - this.stars[i].dia
+				|| this.stars[i].x > this.width  + this.stars[i].dia
+				|| this.stars[i].y < 0      - this.stars[i].dia
+				|| this.stars[i].y > this.height + this.stars[i].dia)
+				{ //if
+					this.stars.splice(i, 1);
+					this.starCount--;
+				} //fi
+			} //done
+		} //fi
+
+		// Add stars if there aren't enough
+		while(this.starCount < this.wantStars) {
+					this.stars.push(this.new_star());
+					this.starCount++;
+		} //done
+
+		// Apply velocity
+		for(var i = 0; i < this.starCount; i++) {
+			this.stars[i].x+= this.stars[i].vx;
+			this.stars[i].y+= this.stars[i].vy;
+		} //done
+
+		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+
+		if(!this.speedHack) {
+			// Remove asteroids when they are no longer reachable via rotation
+			for(var i = 0; i < this.rockCount; i++) {
+				if(this.rocks[i].cx < 0      - this.maxRockSize / 2
+				|| this.rocks[i].cx > this.width  + this.maxRockSize / 2
+				|| this.rocks[i].cy < 0      - this.maxRockSize / 2
+				|| this.rocks[i].cy > this.height + this.maxRockSize / 2)
+				{ //if
+					this.rocks.splice(i, 1);
+					this.rockCount--;
+				} //fi
+			} //done
+		} else {
+			// Remove asteroids when they leave the screen
+			for(var i = 0; i < this.rockCount; i++) {
+				if(this.rocks[i].cx < 0      - this.maxRockSize / 2
+				|| this.rocks[i].cx > this.width  + this.maxRockSize / 2
+				|| this.rocks[i].cy < 0      - this.maxRockSize / 2
+				|| this.rocks[i].cy > this.height + this.maxRockSize / 2)
+				{ //if
+					this.rocks.splice(i, 1);
+					this.rockCount--;
+				} //fi
+			} //done
+		} //fi
+
+		// Add asteroids if there aren't enough.  Never add more than 1/4 the desired asteroids at once.
+		for(var i = 0; i < this.wantRocks / 4 && this.rockCount <  this.wantRocks; i++)
+		{ //if
+			// Set unconfigurable variables
+			this.rocks.push(this.new_rock());
+			this.rockCount++;
+		} //fi
+
+		// Update asteroids
+		for(var i = 0; i < this.rockCount; i++) {
+
+			// Variables
+			var newcx = this.rocks[i].cx;
+			var newcy = this.rocks[i].cy;
+
+			// Calculate and apply delta-v (more distant asteroids are slower)
+			this.rocks[i].d+=  this.rocks[i].vd;
+			newcx+= (this.rocks[i].vx / 2) + ((this.rocks[i].vx * ((this.wantRocks - i) / this.wantRocks)) / 2);
+			newcy+= (this.rocks[i].vy / 2) + ((this.rocks[i].vy * ((this.wantRocks - i) / this.wantRocks)) / 2);
+
+			// The center must be an int or else the texture freaks out
+			if(this.useTextures) {
+				if(newcx < this.rocks[i].cx)
+					this.rocks[i].cx = Math.floor(newcx);
+				else this.rocks[i].cx = Math.ceil(newcx);
+				if(newcy < this.rocks[i].cy)
+					this.rocks[i].cy = Math.floor(newcy);
+				else this.rocks[i].cy = Math.ceil(newcy);
+			} else {
+				this.rocks[i].cx = newcx;
+				this.rocks[i].cy = newcy;
+			} //fi
+
+			// Prevent overflows
+			if(this.rocks[i].d >=  360) this.rocks[i].d-= 360;
+			if(this.rocks[i].d <= -360) this.rocks[i].d+= 360;
+
+			// Calculate asteroid points.  Overall size is influenced by asteroid index.
+			for(var j = 0; j < this.rockPoints; j++) {
+				//              Center         Angle formula                                  Rotation                           Radius           Resizing formula
+				this.rocks[i].x[j] = this.rocks[i].cx + (Math.sin((j * ((Math.PI * 2) / this.rockPoints)) + (this.rocks[i].d * (Math.PI / 180)))) * (this.rocks[i].r[j] * (0.75 + ((this.wantRocks - i) / (this.wantRocks * 6))));
+				this.rocks[i].y[j] = this.rocks[i].cy + (Math.cos((j * ((Math.PI * 2) / this.rockPoints)) + (this.rocks[i].d * (Math.PI / 180)))) * (this.rocks[i].r[j] * (0.75 + ((this.wantRocks - i) / (this.wantRocks * 6))));
+			//	rocks[i].x[j] = Math.round(rocks[i].x[j]);  // The points must be ints
+			//	rocks[i].y[j] = Math.round(rocks[i].y[j]);  // The points must be ints
+			} //done
+
+			// Apply shading per asteroid index
+			this.rocks[i].rgba.a = 0.50 * (i / this.wantRocks);
+		} //done
+
+		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+		// Ship calculations
+		if(this.menuIndex == 1) {
+
+			// Calculate delta-V
+			if(   this.upDown)
+				this.player.ship.vy+= this.shipFullThrust;
+			if( this.leftDown)
+				this.player.ship.vd+= this.shipSpinThrust;
+			if( this.downDown)
+				this.player.ship.vy-= this.shipMonoThrust;
+			if(this.rightDown)
+				this.player.ship.vd-= this.shipSpinThrust;
+			this.player.ship.vr = this.player.ship.vd * (Math.PI / 180);
+
+			// Calculate heat
+			if(this.upDown) {
+				if(  this.player.ship.h < 1)
+					this.player.ship.h+= this.thrustHeat;
+				else this.player.ship.h = 1;
+			} else {
+				if(  this.player.ship.h > this.thrustHeat)
+					this.player.ship.h-= this.thrustHeat;
+				else this.player.ship.h = 0;
+			} //fi
+
+			// Create exhaust particles
+			if(this.upDown) {
+				for(var i = 0; i < 6 * this.particleMultiplier; i++) {
+					var particle = this.new_particle();
+					particle.type = 2;
+					particle.x = (this.halfWidth  -  2) + (4 * Math.random());
+					particle.y = (this.halfHeight + 15);
+					particle.vx =  0;
+					particle.vy = (2 + (4 * Math.random())) - this.player.ship.vy;
+					particle.rgba.r = 255 - Math.round(      32 * Math.random() );
+					particle.rgba.g = 127 + Math.round(32 - (64 * Math.random()));
+					particle.rgba.b =       Math.round(      32 * Math.random() );
+					this.particles.push(particle);
+					this.particleCount++;
+				} //done
+			} //fi
+			if(this.leftDown) {
+				for(var i = 0; i < 3 * this.particleMultiplier; i++) {
+					var particle = this.new_particle();
+					particle.type = 1;
+					particle.x = this.halfWidth  + 4;
+					particle.y = this.halfHeight - 4;
+					particle.vx =  0 + (4 * Math.random());
+					particle.vy = (3 - (4 * Math.random())) - this.player.ship.vy;
+					particle.rgba.r = 255;
+					particle.rgba.g = 255;
+					particle.rgba.b = 255;
+					this.particles.push(particle);
+					this.particleCount++;
+				} //done
+			} //fi
+			if(this.downDown) {
+				for(var i = 0; i < 3 * this.particleMultiplier; i++) {
+					var particle = this.new_particle();
+					particle.type = 1;
+					particle.x = this.halfWidth;
+					particle.y = this.halfHeight - 4;
+					particle.vx =   2 - (4 * Math.random());
+					particle.vy = (-2 - (4 * Math.random())) - this.player.ship.vy;
+					particle.rgba.r = 255;
+					particle.rgba.g = 255;
+					particle.rgba.b = 255;
+					this.particles.push(particle);
+					this.particleCount++;
+				} //done
+			} //fi
+			if(this.rightDown) {
+				for(var i = 0; i < 3 * this.particleMultiplier; i++) {
+					var particle = this.new_particle();
+					particle.type = 1;
+					particle.x = this.halfWidth  - 4;
+					particle.y = this.halfHeight - 4;
+					particle.vx =  0 - (4 * Math.random());
+					particle.vy = (3 - (4 * Math.random())) - this.player.ship.vy;
+					particle.rgba.r = 255;
+					particle.rgba.g = 255;
+					particle.rgba.b = 255;
+					this.particles.push(particle);
+					this.particleCount++;
+				} //done
+			} //fi
+		} //fi
+
+		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+		// Particle physics
+
+		// Remove invisible particles
+		for(var i = 0; i < this.particleCount; i++) {
+			if(this.particles[i].rgba.a < 0.05) {
+				this.particles.splice(i, 1);
+				this.particleCount--;
+			} //fi
+		} //done
+
+		// Remove off-screen particles
+		for(var i = 0; i < this.particleCount; i++) {
+			if(this.particles[i].x < 0
+			|| this.particles[i].x > this.width
+			|| this.particles[i].y < 0
+			|| this.particles[i].y > this.height)
+			{ //if
+				this.particles.splice(i, 1);
+				this.particleCount--;
+			} //fi
+		} //done
+
+		// Calculate particle positions
+		for(var i = 0; i < this.particleCount; i++) {
+			this.particles[i].x+= this.particles[i].vx;
+			this.particles[i].y+= this.particles[i].vy;
+		} //done
+
+		// Calculate particle alphas
+		for(var i = 0; i < this.particleCount; i++) {
+			switch(this.particles[i].type) {
+
+				case 0:
+					this.particles[i].rgba.a*= this.debrisFade;
+					break;
+
+				case 1:
+					this.particles[i].rgba.a*= this.monoFade;
+					break;
+
+				case 2:
+				case 3:
+					this.particles[i].rgba.a*= this.thrustFade;
+					break;
+
+				default:
+					this.particles[i].rgba.a*= this.debrisFade;
+					break;
+			} //esac
+		} //done
+
+		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+		// Apply rotation
+
+		if(this.menuIndex == 1) {
+			// Particles
+			for(var i = 0; i < this.particleCount; i++) {
+
+				// Calculate new positions
+				var hypotenuse = Math.sqrt(Math.pow(this.particles[i].x - this.halfWidth, 2) + Math.pow(this.particles[i].y - this.halfHeight, 2));
+				var radians    = Math.atan2(this.particles[i].y - this.halfHeight, this.particles[i].x - this.halfWidth) + this.player.ship.vr;
+				this.particles[i].x = this.halfWidth  + (hypotenuse * Math.cos(radians + this.player.ship.vr));
+				this.particles[i].y = this.halfHeight + (hypotenuse * Math.sin(radians + this.player.ship.vr));
+
+				// Calculate new vectors
+				hypotenuse = Math.sqrt(Math.pow(this.particles[i].vx, 2) + Math.pow(this.particles[i].vy, 2));
+				radians    = Math.atan2(this.particles[i].vy, this.particles[i].vx) + this.player.ship.vr;
+				var cos    = Math.cos(radians);
+				var sin    = Math.sin(radians);
+	//			particles[i].vx = (particles[i].vx * cos) - (particles[i].vy * sin);
+	//			particles[i].vy = (particles[i].vx * sin) + (particles[i].vy * cos);
+
+			} //done
+
+			// Asteroids
+			for(var i = 0; i < this.rockCount; i++) {
+
+				// Calculate new positions
+				var hypotenuse = Math.sqrt(Math.pow(this.rocks[i].cx - this.halfWidth, 2) + Math.pow(this.rocks[i].cy - this.halfHeight, 2));
+				var radians    = Math.atan2(this.rocks[i].cy - this.halfHeight, this.rocks[i].cx - this.halfWidth) + this.player.ship.vr;
+				this.rocks[i].cx    = this.halfWidth  + (hypotenuse * Math.cos(radians));
+				this.rocks[i].cy    = this.halfHeight + (hypotenuse * Math.sin(radians));
+
+				// Calculate new rotations
+				//TODO:  This isn't accurate.
+				this.rocks[i].d-= this.player.ship.vd;
+
+				// Calculate new vectors
+				hypotenuse  = Math.sqrt(Math.pow(this.rocks[i].vx, 2) + Math.pow(this.rocks[i].vy, 2));
+				radians     = Math.atan2(this.rocks[i].vy, this.rocks[i].vx) + this.player.ship.vr;
+				var cos     = Math.cos(radians);
+				var sin     = Math.sin(radians);
+	//			rocks[i].vx = (rocks[i].vx * cos) - (rocks[i].vy * sin);
+	//			rocks[i].vy = (rocks[i].vx * sin) + (rocks[i].vy * cos);
+
+			} //done
+
+			// Missiles
+			for(var i = 0; i < this.shotCount; i++) {
+
+				// Calculate new positions
+				var hypotenuse  = Math.sqrt(Math.pow(this.shots[i].x - this.halfWidth, 2) + Math.pow(this.shots[i].y - this.halfHeight, 2));
+				var radians     = Math.atan2(this.shots[i].y - this.halfHeight, this.shots[i].x - this.halfWidth) + this.player.ship.vr;
+				this.shots[i].x      = this.halfWidth  + (hypotenuse * Math.cos(radians + this.player.ship.vr));
+				this.shots[i].y      = this.halfHeight + (hypotenuse * Math.sin(radians + this.player.ship.vr));
+
+				// Calculate new rotations
+				//TODO:  This isn't accurate.
+				this.shots[i].d-= this.player.ship.vd;
+
+				// Calculate new vectors
+				hypotenuse  = Math.sqrt(Math.pow(this.shots[i].vx, 2) + Math.pow(this.shots[i].vy, 2));
+				radians     = Math.atan2(this.shots[i].vy, this.shots[i].vx) + this.player.ship.vr;
+				var cos     = Math.cos(radians);
+				var sin     = Math.sin(radians);
+	//			shots[i].vx = (shots[i].vx * cos) - (shots[i].vy * sin);
+	//			shots[i].vy = (shots[i].vx * sin) + (shots[i].vy * cos);
+
+			} //done
+
+			// Stars
+			for(var i = 0; i < this.starCount; i++) {
+
+				// Calculate new positions
+				var hypotenuse  = Math.sqrt(Math.pow(this.stars[i].x - this.halfWidth, 2) + Math.pow(this.stars[i].y - this.halfHeight, 2));
+				var radians     = Math.atan2(this.stars[i].y - this.halfHeight, this.stars[i].x - this.halfWidth) + this.player.ship.vr;
+				this.stars[i].x      = this.halfWidth  + (hypotenuse * Math.cos(radians + this.player.ship.vr));
+				this.stars[i].y      = this.halfHeight + (hypotenuse * Math.sin(radians + this.player.ship.vr));
+
+				// Calculate new vectors
+				hypotenuse  = Math.sqrt(Math.pow(this.stars[i].vx, 2) + Math.pow(this.stars[i].vy, 2));
+				radians     = Math.atan2(this.stars[i].vy, this.stars[i].vx) + this.player.ship.vr;
+				var cos     = Math.cos(radians);
+				var sin     = Math.sin(radians);
+	//			stars[i].vx = (stars[i].vx * cos) - (stars[i].vy * sin);
+	//			stars[i].vy = (stars[i].vx * sin) + (stars[i].vy * cos);
+
+			} //done
+
+			// Apply delta-V
+			for(var i = 0; i < this.starCount; i++) {
+				this.stars[i].y+= this.stars[i].z * (this.player.ship.vy / 50);
+			} //done
+			for(var i = 0; i < this.shotCount; i++) {
+				this.shots[i].y+= this.player.ship.vy;
+			} //done
+			for(var i = 0; i < this.rockCount; i++) {
+				this.rocks[i].cy+= this.player.ship.vy;
+			} //done
+			for(var i = 0; i < this.particleCount; i++) {
+				this.particles[i].y+= this.player.ship.vy;
+			} //done
+		} //fi
+
+		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+		// Collision
+
+		// Calculate ship collisions
+		if(this.menuIndex == 1) {
+			// Vs particles
+			for(var i = 0; i < this.particleCount; i++) {
+				if(this.halfWidth  - this.shipHalfRealSize <= this.particles[i].x
+				&& this.halfWidth  + this.shipHalfRealSize >= this.particles[i].x
+				&& this.halfHeight - this.shipHalfRealSize <= this.particles[i].y
+				&& this.halfHeight + this.shipHalfRealSize >= this.particles[i].y)
+				{ //if
+					if(this.particles[i].type == 0) {
+						this.player.score++;
+						this.particles.splice(i, 1);
+						i--;
+						this.particleCount--;
+					} //fi
+				} //fi
+			} //done
+		} //fi
+
+		// Calculate asteroid collisions
+		// var rockOffset = rockCount / 3;
+		for(var i = 0; i < this.rockCount; i++) {
+
+			// Get the average size of the asteroid
+			var avgSize1   = this.rocks[i].r[0];
+			var smallSize1 = this.rocks[i].r[0];
+			for(var j = 1; j < this.rockPoints; j++) {
+				avgSize1+= this.rocks[i].r[j];
+				if(this.rocks[i].r[j] < smallSize1)
+					smallSize1 = this.rocks[i].r[j];
+			} //done
+			avgSize1/= this.rockPoints;
+			var halfSize1 = avgSize1;
+			avgSize1*= 2;
+
+			// Vs particles
+			for(var j = 0; j < this.particleCount; j++) {
+				if(this.rocks[i].cx - smallSize1 <= this.particles[j].x
+				&& this.rocks[i].cx + smallSize1 >= this.particles[j].x
+				&& this.rocks[i].cy - smallSize1 <= this.particles[j].y
+				&& this.rocks[i].cy + smallSize1 >= this.particles[j].y)
+				{ //if
+					this.particles.splice(j, 1);
+					j--;
+					this.particleCount--;
+				} //fi
+			} //done
+
+			// Vs missiles
+			for(var j = 0; j < this.shotCount; j++) {
+				//TODO
+			} //done
+
+			// Vs rocks
+			// The particles that result from this are computationally intensive, so I added a toggle.
+			if(this.rockCollision) {
+				for(var l = 0; l < this.rockCount; l++) {
+
+					// Only rocks with similar z-axises should collide.
+					if(l != i /*&& !(l > i + rockOffset || l < i - rockOffset)*/) {
+
+	//					if(speedHack) {
+							// Get the average size of the asteroid
+							var avgSize2 = 0;
+							for(var j = 0; j < this.rockPoints; j++) {
+								avgSize2+= this.rocks[l].r[j];
+							} //done
+							avgSize2/= this.rockPoints;
+							var halfSize2 = avgSize2;
+							avgSize2*= 2;
+
+							if(this.rocks[i]
+							&& this.rocks[i].cx - halfSize1 <= this.rocks[l].cx + halfSize2
+							&& this.rocks[i].cx + halfSize1 >= this.rocks[l].cx - halfSize2
+							&& this.rocks[i].cy - halfSize1 <= this.rocks[l].cy + halfSize2
+							&& this.rocks[i].cy + halfSize1 >= this.rocks[l].cy - halfSize2)
+							{ //if
+								this.rocksplosion(this.rocks[i]);
+								this.rocksplosion(this.rocks[l]);
+								if(i > l) {
+									this.rocks.splice(i, 1);
+									this.rocks.splice(l, 1);
+								} else {
+									this.rocks.splice(l, 1);
+									this.rocks.splice(i, 1);
+								} //fi
+								i--;
+								l--;
+								this.rockCount-= 2;
+							} //fi
+
+	//					// This way is technically accurate, but absolutely ridiculously computationally intensive.  My laptop can't run it.
+	//					} else {
+	//						for(var j = 0; j < rockPoints; j++) {
+	//							for(var k = 0; k < rockPoints; k++) {
+	//								for(var m = 0; m < rockPoints; m++) {
+	//									for(var n = 0; n < rockPoints; n++) {
+	//										if(rocks[i].x[j] <= rocks[l].x[m] && rocks[i].x[k] >= rocks[l].x[n]
+	//										&& rocks[i].x[j] >= rocks[l].x[m] && rocks[i].x[k] <= rocks[l].x[n]
+	//										&& rocks[i].y[j] <= rocks[l].y[m] && rocks[i].y[k] >= rocks[l].y[n]
+	//										&& rocks[i].y[j] >= rocks[l].y[m] && rocks[i].y[k] <= rocks[l].y[n])
+	//										{ //if
+	//											rocksplosion(rocks[i]);
+	//											rocksplosion(rocks[l]);
+	//											rocks.splice(i, 1);
+	//											rocks.splice(l, 1);
+	//											i-= 2;
+	//											rockCount-= 2;
+	//										} //fi
+	//									} //done
+	//								} //done
+	//							} //done
+	//						} //done
+	//					} //fi
+					} //fi
+				} //done
+			} //fi
+			// Vs ships
+			var shipDead = false;
+			if(this.menuIndex == 1 && this.rocks[i]) {
+				for(var j = 0; j < this.rockPoints; j++) {
+					for(var k = 0; k < this.rockPoints; k++) {
+						if(this.rocks[i].x[j] <= this.halfWidth  + this.shipHalfRealSize && this.rocks[i].x[k] >= this.halfWidth  - this.shipHalfRealSize
+						&& this.rocks[i].x[j] >= this.halfWidth  - this.shipHalfRealSize && this.rocks[i].x[k] <= this.halfWidth  + this.shipHalfRealSize
+						&& this.rocks[i].y[j] <= this.halfHeight + this.shipHalfRealSize && this.rocks[i].y[k] >= this.halfHeight - this.shipHalfRealSize
+						&& this.rocks[i].y[j] >= this.halfHeight - this.shipHalfRealSize && this.rocks[i].y[k] <= this.halfHeight + this.shipHalfRealSize)
+						{ //if
+							shipDead = true;
+							this.sounds.boom.play();
+							this.rocksplosion(this.rocks[i]);
+							this.shipsplosion(this.player.ship, this.rocks[i]);
+							this.rocks.splice(i, 1);
+							i--;
+							this.rockCount--;
+							this.menuIndex = 2;
+							this.sounds.shot.pause();
+							this.sounds.shot.currentTime = 0;
+							this.sounds.ship.pause();
+							this.sounds.ship.currentTime = 0;
+							this.sounds.mono.pause();
+							this.sounds.mono.currentTime = 0;
+							this.sounds.thrust.pause();
+							this.sounds.thrust.currentTime = 0;
+							this.player.ship = this.new_ship();
+							break;
+						} // fi
+					} //done
+					if(shipDead) break;
+				} //done
+			} //fi
+			if(shipDead) break;
+		} //done
+
+		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+
+		// Draw background (black)
+		this.context.fillStyle = "rgba(0, 0, 0, 1)";
+		this.context.rect(0, 0, this.width, this.height);
+		this.context.fill();
+
+		// Draw stars
+		// This doesn't actually draw stars in order of distance.  I might make it do so, but it would slow down the game and not really result in a noticeable improvement in realism.
+		for(var i = 0; i < this.starCount; i++) {
+			// Only draw stars that are on the screen
+			if(this.stars[i].x >= 0      - this.stars[i].r
+			|| this.stars[i].x <= this.width  + this.stars[i].r
+			|| this.stars[i].y >= 0      - this.stars[i].r
+			|| this.stars[i].y <= this.height + this.stars[i].r)
+			{ //if
+				// Stars are really bright, so from our perspective, we can only see what color they are from their border.
+				this.context.fillStyle = "rgba(255, 255, 255, " + this.stars[i].rgba.a.toString() + ")";
+				this.context.strokeStyle = "rgba(" + this.stars[i].rgba.r.toString()
+									+ ", "    + this.stars[i].rgba.g.toString()
+									+ ", "    + this.stars[i].rgba.b.toString()
+									+ ", "    + this.stars[i].rgba.a.toString()
+									+ ")";
+				this.context.beginPath();
+				this.context.arc(this.stars[i].x, this.stars[i].y, this.stars[i].r, 0, 2 * Math.PI, false);
+				this.context.closePath();
+				this.context.fill();
+				this.context.stroke();
+			} //fi
+		} //done
+
+		// Draw missiles
+		for(var i = 0; i < this.shotCount; i++) {
+	//		context.drawImage(
+	//			graphics.shot,                            // Image to use
+	//			0,                                        // x-origin (frame)
+	//			shotSize * Math.floor(360 - shots[i].d),  // y-origin (frame)
+	//			shotSize,                                 // width    (frame)
+	//			shotSize,                                 // height   (frame)
+	//			shots[i].x - shotHalfSize,                // x-origin (canvas)
+	//			shots[i].y - shotHalfSize,                // y-origin (canvas)
+	//			shotSize,                                 // width    (canvas)
+	//			shotSize                                  // height   (canvas)
+	//		);
+	//		context.drawImage(graphics.shot, shots[i].x, shots[i].y, shotSize, shotSize);
+		} //done
+
+		// Draw missile particles
+		for(var i = 0; i < this.particleCount; i++) {
+			if(this.particles[i].type == 3) {
+				this.context.fillStyle = "rgba(" + this.particles[i].rgba.r.toString()
+								+ ", "    + this.particles[i].rgba.g.toString()
+								+ ", "    + this.particles[i].rgba.b.toString()
+								+ ", "    + this.particles[i].rgba.a.toString()
+								+ ")"
+				this.context.beginPath();
+				this.context.arc(this.particles[i].x, this.particles[i].y, this.particleSize, 0, 2 * Math.PI, false);
+				this.context.closePath();
+				this.context.fill();
+			} //fi
+		} //done
+
+		// Draw spaceship
+		if(this.menuIndex == 1) {
+				this.context.drawImage(this.graphics.ship,    (this.width - this.shipSize) / 2, (this.height - this.shipSize) / 2, this.shipSize, this.shipSize);
+				this.context.globalAlpha = this.player.ship.h;
+				this.context.drawImage(this.graphics.shipHot, (this.width - this.shipSize) / 2, (this.height - this.shipSize) / 2, this.shipSize, this.shipSize);
+				this.context.globalAlpha = 1;
+		} //fi
+
+		// Draw non-missile particles
+		for(var i = 0; i < this.particleCount; i++) {
+			if(this.particles[i].type != 3) {
+				this.context.fillStyle = "rgba(" + this.particles[i].rgba.r.toString()
+								+ ", "    + this.particles[i].rgba.g.toString()
+								+ ", "    + this.particles[i].rgba.b.toString()
+								+ ", "    + this.particles[i].rgba.a.toString()
+								+ ")"
+				this.context.beginPath();
+				this.context.arc(this.particles[i].x, this.particles[i].y, this.particleSize, 0, 2 * Math.PI, false);
+				this.context.closePath();
+				this.context.fill();
+			} //fi
+		} //done
+
+		// Draw asteroids
+		this.context.strokeStyle = "rgba(0, 0, 0, 0.5)";  // Shadow
+		for(var i = 0; i < this.rockCount; i++) {
+
+			// Calculate spritesheet frame
+			var degrees = this.rocks[i].d;
+			if(degrees < 0) degrees += 360;
+
+			// Set asteroid fill
+			if(!this.useTextures) {
+				this.context.fillStyle = "rgba(" + this.rocks[i].rgba.r.toString()
+								+ ", "   + this.rocks[i].rgba.g.toString()
+								+ ", "   + this.rocks[i].rgba.b.toString()
+								+ ", 1)";
+			} //fi
+
+			// Draw asteroids
+			if(this.useTextures)
+				this.context.save();
+			this.context.beginPath();
+			var cx = 0;
+			var cy = 0;
+			for(var j = 0; j < this.rockPoints; j++) {
+				if(j <= 0) {
+					this.context.moveTo(this.rocks[i].x[j],
+								this.rocks[i].y[j]);
+				} else {
+					this.context.lineTo(this.rocks[i].x[j],
+								this.rocks[i].y[j]);
+				} //fi
+				cx+= this.rocks[i].x[j];
+				cy+= this.rocks[i].y[j];
+			} //done
+			this.context.lineTo(this.rocks[i].x[0],
+						this.rocks[i].y[0]);
+			cx = Math.round(cx / this.rockPoints);
+			cy = Math.round(cy / this.rockPoints);
+			this.context.closePath();
+			if(this.useTextures) {
+				this.context.clip();
+				this.context.drawImage(
+					this.graphics.rock,                               // Image to use
+					0,                                           // x-origin (frame)
+					this.rockSpriteSize * Math.floor(360 - degrees),  // y-origin (frame)
+					this.rockSpriteSize,                              // width    (frame)
+					this.rockSpriteSize,                              // height   (frame)
+					this.rocks[i].cx - (this.maxRockSize / 2),             // x-origin (canvas)
+					this.rocks[i].cy - (this.maxRockSize / 2),             // y-origin (canvas)
+					this.maxRockSize,                                 // width    (canvas)
+					this.maxRockSize                                  // height   (canvas)
+				);
+				this.context.restore();
+			} //fi
+			if(!this.useTextures)
+				this.context.fill();
+			this.context.fillStyle = "rgba(0, 0, 0, " + this.rocks[i].rgba.a.toString() + ')';
+			this.context.fill();
+			this.context.stroke();
+		} //done
+
+		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+
+		// Draw GUI
+		switch(this.menuIndex) {
+
+			case 0:  // Main menu
+				this.context.strokeStyle = "rgba(255, 255, 255, 255)";
+				if(this.menuShow == true) {
+					this.context.drawImage(this.graphics.menu11, 0, 0, this.width, this.height);
+				} else {
+					this.context.drawImage(this.graphics.menu10, 0, 0, this.width, this.height);
+				} //fi
+				this.sounds.ship.pause();  // Also handle music
+				break;
+
+			case 1:  // Game
+				this.sounds.ship.play();  // Also handle music
+				break;
+
+			case 2:  // Game over
+				if(this.menuShow == true) {
+					this.context.drawImage(this.graphics.menu21, 0, 0, this.width, this.height);
+				} else {
+					this.context.drawImage(this.graphics.menu20, 0, 0, this.width, this.height);
+				} //fi
+				this.sounds.ship.pause();  // Also handle music
+				break;
+		} //esac
+
+	//	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+	//	// Sounds
+	//	switch(menuIndex) {
+	//		case 1:
+	//			// Monopropellant
+	//			var soundCutOff = sounds.mono.duration - (gameInt / 500);
+	//			if(!downDown && !rightDown && !leftDown)
+	//				sounds.mono.pause();
+	//			if(downDown || rightDown || leftDown)
+	//				sounds.mono.play();
+	//			if(sounds.mono.currentTime  > soundCutOff)
+	//				sounds.mono.currentTime-= soundCutOff;
+	//			// Thruster
+	//			var soundCutOff = sounds.thrust.duration - (gameInt / 500);
+	//			if(!upDown)
+	//				sounds.thrust.pause();
+	//			if(upDown)
+	//				sounds.thrust.play();
+	//			if(sounds.thrust.currentTime  > soundCutOff)
+	//				sounds.thrust.currentTime-= soundCutOff;
+	//			// Ambience
+	//			var soundCutOff = sounds.ship.duration - (gameInt / 500);
+	//			if(sounds.ship.currentTime  > soundCutOff)
+	//				sounds.ship.currentTime-= soundCutOff;
+	//			break;
+	//		case 0:
+	//		case 2:
+	//			sounds.mono.pause();
+	//			sounds.mono.currentTime = 0;
+	//			sounds.thrust.pause();
+	//			sounds.thrust.currentTime = 0;
+	//	} //esac
+
+		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+
+		// Modify cooldown timers
+		if(  this.player.ship.cd >= this.gameSecs)
+			this.player.ship.cd -= this.gameSecs;
+		else this.player.ship.cd  = 0;
+
+		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+
+		// Check for memory corruption
+		if(!this.speedHack) {
+			if(this.particleCount < 0) this.particleCount = 0;
+			if(this.rockCount     < 0) this.rockCount     = 0;
+			if(this.shotCount     < 0) this.shotCount     = 0;
+			if(this.starCount     < 0) this.starCount     = 0;
+		} //fi
+
+		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
+		// Update scores
+		if(this.menuIndex == 1) {
+			// You gain points simply by staying alive.
+			if(this.rockCollision) {
+					if(this.particleMultiplier > 1)
+						this.player.score+= 1 / this.gameInt;
+					else this.player.score+= 2 / this.gameInt;
+			} else       this.player.score+= 4 / this.gameInt;
+			document.getElementById("scoreSpan").innerHTML = Math.floor(this.player.score).toString();
+		} //fi
+
+	} //project1_gameLoop()
+
+	////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+	// Settings
+
+	private slideParticles(value) {
+
+		// Remove all particles if the multiplier is 0
+		if(value == 0) {
+			this.particles.splice(0, this.particleCount);
+			this.particleCount = 0;
+		} //fi
+
+		// Set the new particle multiplier
+		this.particleMultiplier = Math.pow(value, 2);
+
+		// Update setting-label
+		switch(value) {
+			case 0:
+				document.getElementById("particleSpan").innerHTML = "Off";
+				break;
+			case 1:
+				document.getElementById("particleSpan").innerHTML = "Low";
+				break;
+			case 2:
+				document.getElementById("particleSpan").innerHTML = "High";
+				break;
+		} //esac
+
+	} //slideParticles()
+
+	private slideStars(value) {
+
+		// Speedhack
+		var mult;
+		if(!this.speedHack)
+			mult = 768;
+		else mult = 256;
+
+		// If we're decreasing the number of stars, delete all existing stars
+		if(this.wantStars > mult * value) {
+			this.stars.splice(0, this.wantStars);
+			this.starCount = 0;
+		} //fi
+
+		// Set the new star limit to the value of the slider
+		this.wantStars = mult * value;
+
+		// Create new stars
+		var star;
+		if(!this.speedHack) {
+			for(var i = this.starCount; i < this.wantStars; i++) {
+				star = this.new_star();
+				star.x = (this.bigAxis * -0.5) + (Math.random() * this.bigAxis * 2.0);
+				star.y = (this.bigAxis * -0.5) + (Math.random() * this.bigAxis * 2.0);
+				this.stars.push(star);
+				this.starCount++;
+			} //done
+		} else {
+			for(var i = this.starCount; i < this.wantStars; i++) {
+				star = this.new_star();
+				star.x = Math.random() * this.width;
+				star.y = Math.random() * this.height;
+				this.stars.push(star);
+				this.starCount++;
+			} //done
+		} //fi
+
+		// Update setting-label
+		switch(value) {
+			case 0:
+				document.getElementById("starSpan").innerHTML = "Off";
+				break;
+			case 1:
+				document.getElementById("starSpan").innerHTML = "Low";
+				break;
+			case 2:
+				document.getElementById("starSpan").innerHTML = "Medium";
+				break;
+			case 3:
+				document.getElementById("starSpan").innerHTML = "High";
+				break;
+		} //esac
+
+	} //slideStars()
+
+	private toggleTextures(checked) {
+		this.useTextures = checked;
+	} //textureToggle()
+
+	private toggleRockCollision(checked) {
+		this.rockCollision = checked;
+		for(var i = 0; i < this.particleCount; i++) {
+			if(this.particles[i].type == 0) {
+				this.particles.splice(i, 1);
+				i--;
+				this.particleCount--;
+			} //fi
+		} //done
+	} //rockCollision()
+
+	private toggleSpeedHack(checked) {
+		this.speedHack = checked;
+		this.slideStars(document.getElementById("starSlider").value);
+	} //rockCollision()
+
+	////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
+	// Infobox
+
+	private showPremise() {
+		document.getElementById("instructions").style.display = "none";
+		document.getElementById("settings").style.display = "none";  // Is most likely to be the previous screen, so should be done next-to-last.
+		document.getElementById("premise").style.display = "block";  // Is being unhidden, so should be done last.
+	} //showPremise()
+
+	private showInstructions() {
+		document.getElementById("settings").style.display = "none";
+		document.getElementById("premise").style.display = "none";        // Is most likely to be the previous screen, so should be done next-to-last.
+		document.getElementById("instructions").style.display = "block";  // Is being unhidden, so should be done last.
+	} //showInstructions()
+
+	private showSettings() {
+		document.getElementById("premise").style.display = "none";
+		document.getElementById("instructions").style.display = "none";  // Is most likely to be the previous screen, so should be done next-to-last.
+		document.getElementById("settings").style.display = "block";     // Is being unhidden, so should be done last.
+	} //showSettings()
+}
