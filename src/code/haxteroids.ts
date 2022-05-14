@@ -215,9 +215,9 @@ class Haxteroids {
 		this.toggleSpeedHack(document.getElementById("speedHackToggle").checked);
 
 		// Initialize asteroids
-		for(var i = 0; i < (this.wantRocks / 2); i++) {
+		for(let i = 0; i < (this.wantRocks / 2); i++) {
 			// Create an asteroid
-			var rock = this.new_rock();
+			let rock = this.new_rock();
 
 			// Set coordinates
 			rock.cx = Math.random() * this.width;
@@ -230,7 +230,7 @@ class Haxteroids {
 
 			// Fix sizes
 			// I have no idea why this is necessary
-			for(var j = 0; j < this.rockPoints; j++) {
+			for(let j = 0; j < this.rockPoints; j++) {
 				rock.r[j]/= 2;
 			} //done
 
@@ -254,7 +254,7 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 
 	private new_rgba() {
-		var rgba = {
+		let rgba = {
 			r: 127, // Red
 			g: 127, // Green
 			b: 127, // Blue
@@ -267,7 +267,7 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 
 	private new_particle() {
-		var particle = {
+		let particle = {
 			x: 0,
 			y: 0,
 			vx: 0,
@@ -281,7 +281,7 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 
 	private new_star() {
-		var star = {
+		let star = {
 			r: 0, // Radius
 			dia: 0, // Diameter
 
@@ -408,7 +408,7 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 
 	private new_ship() {
-		var ship = {
+		let ship = {
 			h: 0,  // Heat
 			vy: 0,  // Vertical velocity
 			vd: 0,  // Rotational velocity, degrees
@@ -422,7 +422,7 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 
 	private new_player() {
-		var player = {
+		let player = {
 				score: 0,
 				ship: this.new_ship(),
 	//		 shotsFired: 0,
@@ -437,7 +437,7 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 
 	private new_rock() {
-		var rock = {
+		let rock = {
 			cx: 0,               // Center x
 			vx: 0,               // x-velocity
 				x: new Array(),     // xs
@@ -461,21 +461,21 @@ class Haxteroids {
 		rock.irgba.b = 106 - (Math.random() * 7);
 
 		// Calculate radiuses
-		var rockSize = (this.minRockSize + (Math.random() * (this.maxRockSize - this.minRockSize)));
-		var rockSizeThird = rockSize / 3;
-		for(var j = 0; j < this.rockPoints; j++) {
+		let rockSize = (this.minRockSize + (Math.random() * (this.maxRockSize - this.minRockSize)));
+		let rockSizeThird = rockSize / 3;
+		for(let j = 0; j < this.rockPoints; j++) {
 			rock.r.push(rockSizeThird + (Math.random() * ((rockSizeThird * 2) - rockSizeThird)));
 		} //done
 
 		// Initialize coordinates
-		for(var j = 0; j < this.rockPoints; j++) {
+		for(let j = 0; j < this.rockPoints; j++) {
 			rock.x.push(0);
 			rock.y.push(0);
 		} //done
 
 		// Set velocities
 		rock.vd = Math.random() * this.maxRockSpin;
-		var offsetRockSpeed = this.maxRockSpeed - this.minRockSpeed;
+		let offsetRockSpeed = this.maxRockSpeed - this.minRockSpeed;
 		rock.vx = this.minRockSpeed + (Math.random() * offsetRockSpeed);
 		rock.vy = this.minRockSpeed + (Math.random() * offsetRockSpeed);
 
@@ -521,17 +521,17 @@ class Haxteroids {
 	private rocksplosion(rock) {
 
 		// Figure out the size of the rock
-		var avgSize = 0;
-		for(var i = 0; i < this.rockPoints; i++) {
+		let avgSize = 0;
+		for(let i = 0; i < this.rockPoints; i++) {
 			avgSize+= rock.r[i];
 		} //done
 		avgSize/= this.rockPoints;
-		var halfSize = avgSize;
+		let halfSize = avgSize;
 		avgSize*= 2;
 
 		// Create debris
-		for(var i = 0; i < avgSize * this.particleMultiplier; i++) {
-			var particle    = this.new_particle();
+		for(let i = 0; i < avgSize * this.particleMultiplier; i++) {
+			let particle    = this.new_particle();
 			particle.type   = 0;  // Debris
 			particle.x      = (rock.cx - halfSize) + (Math.random() * avgSize);
 			particle.y      = (rock.cy - halfSize) + (Math.random() * avgSize);
@@ -550,8 +550,8 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 
 	private shipsplosion(ship, rock) {
-		for(var l = 0; l < this.shipRealSize * 2 * this.particleMultiplier; l++) {
-			var particle = this.new_particle();
+		for(let l = 0; l < this.shipRealSize * 2 * this.particleMultiplier; l++) {
+			let particle = this.new_particle();
 			particle.x   = (this.halfWidth  - this.shipHalfRealSize) + (Math.random() * this.shipRealSize);
 			particle.y   = (this.halfHeight - this.shipHalfRealSize) + (Math.random() * this.shipRealSize);
 			particle.vx  = Math.random() * rock.vx * 2;
@@ -598,7 +598,7 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 
 	private new_shot() {
-		var shot = {
+		let shot = {
 			x: 0, // x-coordinate
 			y: 0, // y-coordinate
 			vx: 0, // x-velocity
@@ -620,8 +620,8 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 
 	private shotsplosion(shot, rock) {
-		for(var l = 0; l < this.shipRealSize * 2 * this.particleMultiplier; l++) {
-			var particle = this.new_particle();
+		for(let l = 0; l < this.shipRealSize * 2 * this.particleMultiplier; l++) {
+			let particle = this.new_particle();
 			particle.x   = (this.halfWidth  - this.shotHalfWidth ) + (Math.random() * this.shotWidth );
 			particle.y   = (this.halfHeight - this.shotHalfHeight) + (Math.random() * this.shotHeight);
 			particle.vx  = Math.random() * (rock.vx - shot.vx);
@@ -759,7 +759,7 @@ class Haxteroids {
 		//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 		// Missiles
 
-		for(var i = 0; i < this.shotCount; i++) {
+		for(let i = 0; i < this.shotCount; i++) {
 
 			// Remove missiles when they leave the screen
 			//TODO
@@ -791,7 +791,7 @@ class Haxteroids {
 
 		if(!this.speedHack) {
 			// Remove stars that are no longer reachable via rotation
-			for(var i = 0; i < this.starCount; i++) {
+			for(let i = 0; i < this.starCount; i++) {
 				if(this.stars[i].x < 0 - this.bigAxis * 0.5
 				|| this.stars[i].x >     this.bigAxis * 1.5
 				|| this.stars[i].y < 0 - this.bigAxis * 0.5
@@ -803,7 +803,7 @@ class Haxteroids {
 			} //done
 		} else {
 			// Remove stars that are no longer on the screen
-			for(var i = 0; i < this.starCount; i++) {
+			for(let i = 0; i < this.starCount; i++) {
 				if(this.stars[i].x < 0      - this.stars[i].dia
 				|| this.stars[i].x > this.width  + this.stars[i].dia
 				|| this.stars[i].y < 0      - this.stars[i].dia
@@ -822,7 +822,7 @@ class Haxteroids {
 		} //done
 
 		// Apply velocity
-		for(var i = 0; i < this.starCount; i++) {
+		for(let i = 0; i < this.starCount; i++) {
 			this.stars[i].x+= this.stars[i].vx;
 			this.stars[i].y+= this.stars[i].vy;
 		} //done
@@ -831,7 +831,7 @@ class Haxteroids {
 
 		if(!this.speedHack) {
 			// Remove asteroids when they are no longer reachable via rotation
-			for(var i = 0; i < this.rockCount; i++) {
+			for(let i = 0; i < this.rockCount; i++) {
 				if(this.rocks[i].cx < 0      - this.maxRockSize / 2
 				|| this.rocks[i].cx > this.width  + this.maxRockSize / 2
 				|| this.rocks[i].cy < 0      - this.maxRockSize / 2
@@ -843,7 +843,7 @@ class Haxteroids {
 			} //done
 		} else {
 			// Remove asteroids when they leave the screen
-			for(var i = 0; i < this.rockCount; i++) {
+			for(let i = 0; i < this.rockCount; i++) {
 				if(this.rocks[i].cx < 0      - this.maxRockSize / 2
 				|| this.rocks[i].cx > this.width  + this.maxRockSize / 2
 				|| this.rocks[i].cy < 0      - this.maxRockSize / 2
@@ -856,7 +856,7 @@ class Haxteroids {
 		} //fi
 
 		// Add asteroids if there aren't enough.  Never add more than 1/4 the desired asteroids at once.
-		for(var i = 0; i < this.wantRocks / 4 && this.rockCount <  this.wantRocks; i++)
+		for(let i = 0; i < this.wantRocks / 4 && this.rockCount <  this.wantRocks; i++)
 		{ //if
 			// Set unconfigurable variables
 			this.rocks.push(this.new_rock());
@@ -864,11 +864,11 @@ class Haxteroids {
 		} //fi
 
 		// Update asteroids
-		for(var i = 0; i < this.rockCount; i++) {
+		for(let i = 0; i < this.rockCount; i++) {
 
 			// Variables
-			var newcx = this.rocks[i].cx;
-			var newcy = this.rocks[i].cy;
+			let newcx = this.rocks[i].cx;
+			let newcy = this.rocks[i].cy;
 
 			// Calculate and apply delta-v (more distant asteroids are slower)
 			this.rocks[i].d+=  this.rocks[i].vd;
@@ -893,7 +893,7 @@ class Haxteroids {
 			if(this.rocks[i].d <= -360) this.rocks[i].d+= 360;
 
 			// Calculate asteroid points.  Overall size is influenced by asteroid index.
-			for(var j = 0; j < this.rockPoints; j++) {
+			for(let j = 0; j < this.rockPoints; j++) {
 				//              Center         Angle formula                                  Rotation                           Radius           Resizing formula
 				this.rocks[i].x[j] = this.rocks[i].cx + (Math.sin((j * ((Math.PI * 2) / this.rockPoints)) + (this.rocks[i].d * (Math.PI / 180)))) * (this.rocks[i].r[j] * (0.75 + ((this.wantRocks - i) / (this.wantRocks * 6))));
 				this.rocks[i].y[j] = this.rocks[i].cy + (Math.cos((j * ((Math.PI * 2) / this.rockPoints)) + (this.rocks[i].d * (Math.PI / 180)))) * (this.rocks[i].r[j] * (0.75 + ((this.wantRocks - i) / (this.wantRocks * 6))));
@@ -933,8 +933,8 @@ class Haxteroids {
 
 			// Create exhaust particles
 			if(this.upDown) {
-				for(var i = 0; i < 6 * this.particleMultiplier; i++) {
-					var particle = this.new_particle();
+				for(let i = 0; i < 6 * this.particleMultiplier; i++) {
+					let particle = this.new_particle();
 					particle.type = 2;
 					particle.x = (this.halfWidth  -  2) + (4 * Math.random());
 					particle.y = (this.halfHeight + 15);
@@ -948,8 +948,8 @@ class Haxteroids {
 				} //done
 			} //fi
 			if(this.leftDown) {
-				for(var i = 0; i < 3 * this.particleMultiplier; i++) {
-					var particle = this.new_particle();
+				for(let i = 0; i < 3 * this.particleMultiplier; i++) {
+					let particle = this.new_particle();
 					particle.type = 1;
 					particle.x = this.halfWidth  + 4;
 					particle.y = this.halfHeight - 4;
@@ -963,8 +963,8 @@ class Haxteroids {
 				} //done
 			} //fi
 			if(this.downDown) {
-				for(var i = 0; i < 3 * this.particleMultiplier; i++) {
-					var particle = this.new_particle();
+				for(let i = 0; i < 3 * this.particleMultiplier; i++) {
+					let particle = this.new_particle();
 					particle.type = 1;
 					particle.x = this.halfWidth;
 					particle.y = this.halfHeight - 4;
@@ -978,8 +978,8 @@ class Haxteroids {
 				} //done
 			} //fi
 			if(this.rightDown) {
-				for(var i = 0; i < 3 * this.particleMultiplier; i++) {
-					var particle = this.new_particle();
+				for(let i = 0; i < 3 * this.particleMultiplier; i++) {
+					let particle = this.new_particle();
 					particle.type = 1;
 					particle.x = this.halfWidth  - 4;
 					particle.y = this.halfHeight - 4;
@@ -998,7 +998,7 @@ class Haxteroids {
 		// Particle physics
 
 		// Remove invisible particles
-		for(var i = 0; i < this.particleCount; i++) {
+		for(let i = 0; i < this.particleCount; i++) {
 			if(this.particles[i].rgba.a < 0.05) {
 				this.particles.splice(i, 1);
 				this.particleCount--;
@@ -1006,7 +1006,7 @@ class Haxteroids {
 		} //done
 
 		// Remove off-screen particles
-		for(var i = 0; i < this.particleCount; i++) {
+		for(let i = 0; i < this.particleCount; i++) {
 			if(this.particles[i].x < 0
 			|| this.particles[i].x > this.width
 			|| this.particles[i].y < 0
@@ -1018,13 +1018,13 @@ class Haxteroids {
 		} //done
 
 		// Calculate particle positions
-		for(var i = 0; i < this.particleCount; i++) {
+		for(let i = 0; i < this.particleCount; i++) {
 			this.particles[i].x+= this.particles[i].vx;
 			this.particles[i].y+= this.particles[i].vy;
 		} //done
 
 		// Calculate particle alphas
-		for(var i = 0; i < this.particleCount; i++) {
+		for(let i = 0; i < this.particleCount; i++) {
 			switch(this.particles[i].type) {
 
 				case 0:
@@ -1051,30 +1051,30 @@ class Haxteroids {
 
 		if(this.menuIndex == 1) {
 			// Particles
-			for(var i = 0; i < this.particleCount; i++) {
+			for(let i = 0; i < this.particleCount; i++) {
 
 				// Calculate new positions
-				var hypotenuse = Math.sqrt(Math.pow(this.particles[i].x - this.halfWidth, 2) + Math.pow(this.particles[i].y - this.halfHeight, 2));
-				var radians    = Math.atan2(this.particles[i].y - this.halfHeight, this.particles[i].x - this.halfWidth) + this.player.ship.vr;
+				let hypotenuse = Math.sqrt(Math.pow(this.particles[i].x - this.halfWidth, 2) + Math.pow(this.particles[i].y - this.halfHeight, 2));
+				let radians    = Math.atan2(this.particles[i].y - this.halfHeight, this.particles[i].x - this.halfWidth) + this.player.ship.vr;
 				this.particles[i].x = this.halfWidth  + (hypotenuse * Math.cos(radians + this.player.ship.vr));
 				this.particles[i].y = this.halfHeight + (hypotenuse * Math.sin(radians + this.player.ship.vr));
 
 				// Calculate new vectors
 				hypotenuse = Math.sqrt(Math.pow(this.particles[i].vx, 2) + Math.pow(this.particles[i].vy, 2));
 				radians    = Math.atan2(this.particles[i].vy, this.particles[i].vx) + this.player.ship.vr;
-				var cos    = Math.cos(radians);
-				var sin    = Math.sin(radians);
+				let cos    = Math.cos(radians);
+				let sin    = Math.sin(radians);
 	//			particles[i].vx = (particles[i].vx * cos) - (particles[i].vy * sin);
 	//			particles[i].vy = (particles[i].vx * sin) + (particles[i].vy * cos);
 
 			} //done
 
 			// Asteroids
-			for(var i = 0; i < this.rockCount; i++) {
+			for(let i = 0; i < this.rockCount; i++) {
 
 				// Calculate new positions
-				var hypotenuse = Math.sqrt(Math.pow(this.rocks[i].cx - this.halfWidth, 2) + Math.pow(this.rocks[i].cy - this.halfHeight, 2));
-				var radians    = Math.atan2(this.rocks[i].cy - this.halfHeight, this.rocks[i].cx - this.halfWidth) + this.player.ship.vr;
+				let hypotenuse = Math.sqrt(Math.pow(this.rocks[i].cx - this.halfWidth, 2) + Math.pow(this.rocks[i].cy - this.halfHeight, 2));
+				let radians    = Math.atan2(this.rocks[i].cy - this.halfHeight, this.rocks[i].cx - this.halfWidth) + this.player.ship.vr;
 				this.rocks[i].cx    = this.halfWidth  + (hypotenuse * Math.cos(radians));
 				this.rocks[i].cy    = this.halfHeight + (hypotenuse * Math.sin(radians));
 
@@ -1085,19 +1085,19 @@ class Haxteroids {
 				// Calculate new vectors
 				hypotenuse  = Math.sqrt(Math.pow(this.rocks[i].vx, 2) + Math.pow(this.rocks[i].vy, 2));
 				radians     = Math.atan2(this.rocks[i].vy, this.rocks[i].vx) + this.player.ship.vr;
-				var cos     = Math.cos(radians);
-				var sin     = Math.sin(radians);
+				let cos     = Math.cos(radians);
+				let sin     = Math.sin(radians);
 	//			rocks[i].vx = (rocks[i].vx * cos) - (rocks[i].vy * sin);
 	//			rocks[i].vy = (rocks[i].vx * sin) + (rocks[i].vy * cos);
 
 			} //done
 
 			// Missiles
-			for(var i = 0; i < this.shotCount; i++) {
+			for(let i = 0; i < this.shotCount; i++) {
 
 				// Calculate new positions
-				var hypotenuse  = Math.sqrt(Math.pow(this.shots[i].x - this.halfWidth, 2) + Math.pow(this.shots[i].y - this.halfHeight, 2));
-				var radians     = Math.atan2(this.shots[i].y - this.halfHeight, this.shots[i].x - this.halfWidth) + this.player.ship.vr;
+				let hypotenuse  = Math.sqrt(Math.pow(this.shots[i].x - this.halfWidth, 2) + Math.pow(this.shots[i].y - this.halfHeight, 2));
+				let radians     = Math.atan2(this.shots[i].y - this.halfHeight, this.shots[i].x - this.halfWidth) + this.player.ship.vr;
 				this.shots[i].x      = this.halfWidth  + (hypotenuse * Math.cos(radians + this.player.ship.vr));
 				this.shots[i].y      = this.halfHeight + (hypotenuse * Math.sin(radians + this.player.ship.vr));
 
@@ -1108,43 +1108,43 @@ class Haxteroids {
 				// Calculate new vectors
 				hypotenuse  = Math.sqrt(Math.pow(this.shots[i].vx, 2) + Math.pow(this.shots[i].vy, 2));
 				radians     = Math.atan2(this.shots[i].vy, this.shots[i].vx) + this.player.ship.vr;
-				var cos     = Math.cos(radians);
-				var sin     = Math.sin(radians);
+				let cos     = Math.cos(radians);
+				let sin     = Math.sin(radians);
 	//			shots[i].vx = (shots[i].vx * cos) - (shots[i].vy * sin);
 	//			shots[i].vy = (shots[i].vx * sin) + (shots[i].vy * cos);
 
 			} //done
 
 			// Stars
-			for(var i = 0; i < this.starCount; i++) {
+			for(let i = 0; i < this.starCount; i++) {
 
 				// Calculate new positions
-				var hypotenuse  = Math.sqrt(Math.pow(this.stars[i].x - this.halfWidth, 2) + Math.pow(this.stars[i].y - this.halfHeight, 2));
-				var radians     = Math.atan2(this.stars[i].y - this.halfHeight, this.stars[i].x - this.halfWidth) + this.player.ship.vr;
+				let hypotenuse  = Math.sqrt(Math.pow(this.stars[i].x - this.halfWidth, 2) + Math.pow(this.stars[i].y - this.halfHeight, 2));
+				let radians     = Math.atan2(this.stars[i].y - this.halfHeight, this.stars[i].x - this.halfWidth) + this.player.ship.vr;
 				this.stars[i].x      = this.halfWidth  + (hypotenuse * Math.cos(radians + this.player.ship.vr));
 				this.stars[i].y      = this.halfHeight + (hypotenuse * Math.sin(radians + this.player.ship.vr));
 
 				// Calculate new vectors
 				hypotenuse  = Math.sqrt(Math.pow(this.stars[i].vx, 2) + Math.pow(this.stars[i].vy, 2));
 				radians     = Math.atan2(this.stars[i].vy, this.stars[i].vx) + this.player.ship.vr;
-				var cos     = Math.cos(radians);
-				var sin     = Math.sin(radians);
+				let cos     = Math.cos(radians);
+				let sin     = Math.sin(radians);
 	//			stars[i].vx = (stars[i].vx * cos) - (stars[i].vy * sin);
 	//			stars[i].vy = (stars[i].vx * sin) + (stars[i].vy * cos);
 
 			} //done
 
 			// Apply delta-V
-			for(var i = 0; i < this.starCount; i++) {
+			for(let i = 0; i < this.starCount; i++) {
 				this.stars[i].y+= this.stars[i].z * (this.player.ship.vy / 50);
 			} //done
-			for(var i = 0; i < this.shotCount; i++) {
+			for(let i = 0; i < this.shotCount; i++) {
 				this.shots[i].y+= this.player.ship.vy;
 			} //done
-			for(var i = 0; i < this.rockCount; i++) {
+			for(let i = 0; i < this.rockCount; i++) {
 				this.rocks[i].cy+= this.player.ship.vy;
 			} //done
-			for(var i = 0; i < this.particleCount; i++) {
+			for(let i = 0; i < this.particleCount; i++) {
 				this.particles[i].y+= this.player.ship.vy;
 			} //done
 		} //fi
@@ -1155,7 +1155,7 @@ class Haxteroids {
 		// Calculate ship collisions
 		if(this.menuIndex == 1) {
 			// Vs particles
-			for(var i = 0; i < this.particleCount; i++) {
+			for(let i = 0; i < this.particleCount; i++) {
 				if(this.halfWidth  - this.shipHalfRealSize <= this.particles[i].x
 				&& this.halfWidth  + this.shipHalfRealSize >= this.particles[i].x
 				&& this.halfHeight - this.shipHalfRealSize <= this.particles[i].y
@@ -1172,23 +1172,23 @@ class Haxteroids {
 		} //fi
 
 		// Calculate asteroid collisions
-		// var rockOffset = rockCount / 3;
-		for(var i = 0; i < this.rockCount; i++) {
+		// let rockOffset = rockCount / 3;
+		for(let i = 0; i < this.rockCount; i++) {
 
 			// Get the average size of the asteroid
-			var avgSize1   = this.rocks[i].r[0];
-			var smallSize1 = this.rocks[i].r[0];
-			for(var j = 1; j < this.rockPoints; j++) {
+			let avgSize1   = this.rocks[i].r[0];
+			let smallSize1 = this.rocks[i].r[0];
+			for(let j = 1; j < this.rockPoints; j++) {
 				avgSize1+= this.rocks[i].r[j];
 				if(this.rocks[i].r[j] < smallSize1)
 					smallSize1 = this.rocks[i].r[j];
 			} //done
 			avgSize1/= this.rockPoints;
-			var halfSize1 = avgSize1;
+			let halfSize1 = avgSize1;
 			avgSize1*= 2;
 
 			// Vs particles
-			for(var j = 0; j < this.particleCount; j++) {
+			for(let j = 0; j < this.particleCount; j++) {
 				if(this.rocks[i].cx - smallSize1 <= this.particles[j].x
 				&& this.rocks[i].cx + smallSize1 >= this.particles[j].x
 				&& this.rocks[i].cy - smallSize1 <= this.particles[j].y
@@ -1201,26 +1201,26 @@ class Haxteroids {
 			} //done
 
 			// Vs missiles
-			for(var j = 0; j < this.shotCount; j++) {
+			for(let j = 0; j < this.shotCount; j++) {
 				//TODO
 			} //done
 
 			// Vs rocks
 			// The particles that result from this are computationally intensive, so I added a toggle.
 			if(this.rockCollision) {
-				for(var l = 0; l < this.rockCount; l++) {
+				for(let l = 0; l < this.rockCount; l++) {
 
 					// Only rocks with similar z-axises should collide.
 					if(l != i /*&& !(l > i + rockOffset || l < i - rockOffset)*/) {
 
 	//					if(speedHack) {
 							// Get the average size of the asteroid
-							var avgSize2 = 0;
-							for(var j = 0; j < this.rockPoints; j++) {
+							let avgSize2 = 0;
+							for(let j = 0; j < this.rockPoints; j++) {
 								avgSize2+= this.rocks[l].r[j];
 							} //done
 							avgSize2/= this.rockPoints;
-							var halfSize2 = avgSize2;
+							let halfSize2 = avgSize2;
 							avgSize2*= 2;
 
 							if(this.rocks[i]
@@ -1245,10 +1245,10 @@ class Haxteroids {
 
 	//					// This way is technically accurate, but absolutely ridiculously computationally intensive.  My laptop can't run it.
 	//					} else {
-	//						for(var j = 0; j < rockPoints; j++) {
-	//							for(var k = 0; k < rockPoints; k++) {
-	//								for(var m = 0; m < rockPoints; m++) {
-	//									for(var n = 0; n < rockPoints; n++) {
+	//						for(let j = 0; j < rockPoints; j++) {
+	//							for(let k = 0; k < rockPoints; k++) {
+	//								for(let m = 0; m < rockPoints; m++) {
+	//									for(let n = 0; n < rockPoints; n++) {
 	//										if(rocks[i].x[j] <= rocks[l].x[m] && rocks[i].x[k] >= rocks[l].x[n]
 	//										&& rocks[i].x[j] >= rocks[l].x[m] && rocks[i].x[k] <= rocks[l].x[n]
 	//										&& rocks[i].y[j] <= rocks[l].y[m] && rocks[i].y[k] >= rocks[l].y[n]
@@ -1270,10 +1270,10 @@ class Haxteroids {
 				} //done
 			} //fi
 			// Vs ships
-			var shipDead = false;
+			let shipDead = false;
 			if(this.menuIndex == 1 && this.rocks[i]) {
-				for(var j = 0; j < this.rockPoints; j++) {
-					for(var k = 0; k < this.rockPoints; k++) {
+				for(let j = 0; j < this.rockPoints; j++) {
+					for(let k = 0; k < this.rockPoints; k++) {
 						if(this.rocks[i].x[j] <= this.halfWidth  + this.shipHalfRealSize && this.rocks[i].x[k] >= this.halfWidth  - this.shipHalfRealSize
 						&& this.rocks[i].x[j] >= this.halfWidth  - this.shipHalfRealSize && this.rocks[i].x[k] <= this.halfWidth  + this.shipHalfRealSize
 						&& this.rocks[i].y[j] <= this.halfHeight + this.shipHalfRealSize && this.rocks[i].y[k] >= this.halfHeight - this.shipHalfRealSize
@@ -1314,7 +1314,7 @@ class Haxteroids {
 
 		// Draw stars
 		// This doesn't actually draw stars in order of distance.  I might make it do so, but it would slow down the game and not really result in a noticeable improvement in realism.
-		for(var i = 0; i < this.starCount; i++) {
+		for(let i = 0; i < this.starCount; i++) {
 			// Only draw stars that are on the screen
 			if(this.stars[i].x >= 0      - this.stars[i].r
 			|| this.stars[i].x <= this.width  + this.stars[i].r
@@ -1337,7 +1337,7 @@ class Haxteroids {
 		} //done
 
 		// Draw missiles
-		for(var i = 0; i < this.shotCount; i++) {
+		for(let i = 0; i < this.shotCount; i++) {
 	//		context.drawImage(
 	//			graphics.shot,                            // Image to use
 	//			0,                                        // x-origin (frame)
@@ -1353,7 +1353,7 @@ class Haxteroids {
 		} //done
 
 		// Draw missile particles
-		for(var i = 0; i < this.particleCount; i++) {
+		for(let i = 0; i < this.particleCount; i++) {
 			if(this.particles[i].type == 3) {
 				this.context.fillStyle = "rgba(" + this.particles[i].rgba.r.toString()
 								+ ", "    + this.particles[i].rgba.g.toString()
@@ -1376,7 +1376,7 @@ class Haxteroids {
 		} //fi
 
 		// Draw non-missile particles
-		for(var i = 0; i < this.particleCount; i++) {
+		for(let i = 0; i < this.particleCount; i++) {
 			if(this.particles[i].type != 3) {
 				this.context.fillStyle = "rgba(" + this.particles[i].rgba.r.toString()
 								+ ", "    + this.particles[i].rgba.g.toString()
@@ -1392,10 +1392,10 @@ class Haxteroids {
 
 		// Draw asteroids
 		this.context.strokeStyle = "rgba(0, 0, 0, 0.5)";  // Shadow
-		for(var i = 0; i < this.rockCount; i++) {
+		for(let i = 0; i < this.rockCount; i++) {
 
 			// Calculate spritesheet frame
-			var degrees = this.rocks[i].d;
+			let degrees = this.rocks[i].d;
 			if(degrees < 0) degrees += 360;
 
 			// Set asteroid fill
@@ -1410,9 +1410,9 @@ class Haxteroids {
 			if(this.useTextures)
 				this.context.save();
 			this.context.beginPath();
-			var cx = 0;
-			var cy = 0;
-			for(var j = 0; j < this.rockPoints; j++) {
+			let cx = 0;
+			let cy = 0;
+			for(let j = 0; j < this.rockPoints; j++) {
 				if(j <= 0) {
 					this.context.moveTo(this.rocks[i].x[j],
 								this.rocks[i].y[j]);
@@ -1484,7 +1484,7 @@ class Haxteroids {
 	//	switch(menuIndex) {
 	//		case 1:
 	//			// Monopropellant
-	//			var soundCutOff = sounds.mono.duration - (gameInt / 500);
+	//			let soundCutOff = sounds.mono.duration - (gameInt / 500);
 	//			if(!downDown && !rightDown && !leftDown)
 	//				sounds.mono.pause();
 	//			if(downDown || rightDown || leftDown)
@@ -1492,7 +1492,7 @@ class Haxteroids {
 	//			if(sounds.mono.currentTime  > soundCutOff)
 	//				sounds.mono.currentTime-= soundCutOff;
 	//			// Thruster
-	//			var soundCutOff = sounds.thrust.duration - (gameInt / 500);
+	//			let soundCutOff = sounds.thrust.duration - (gameInt / 500);
 	//			if(!upDown)
 	//				sounds.thrust.pause();
 	//			if(upDown)
@@ -1500,7 +1500,7 @@ class Haxteroids {
 	//			if(sounds.thrust.currentTime  > soundCutOff)
 	//				sounds.thrust.currentTime-= soundCutOff;
 	//			// Ambience
-	//			var soundCutOff = sounds.ship.duration - (gameInt / 500);
+	//			let soundCutOff = sounds.ship.duration - (gameInt / 500);
 	//			if(sounds.ship.currentTime  > soundCutOff)
 	//				sounds.ship.currentTime-= soundCutOff;
 	//			break;
@@ -1576,7 +1576,7 @@ class Haxteroids {
 	private slideStars(value) {
 
 		// Speedhack
-		var mult;
+		let mult;
 		if(!this.speedHack)
 			mult = 768;
 		else mult = 256;
@@ -1591,9 +1591,9 @@ class Haxteroids {
 		this.wantStars = mult * value;
 
 		// Create new stars
-		var star;
+		let star;
 		if(!this.speedHack) {
-			for(var i = this.starCount; i < this.wantStars; i++) {
+			for(let i = this.starCount; i < this.wantStars; i++) {
 				star = this.new_star();
 				star.x = (this.bigAxis * -0.5) + (Math.random() * this.bigAxis * 2.0);
 				star.y = (this.bigAxis * -0.5) + (Math.random() * this.bigAxis * 2.0);
@@ -1601,7 +1601,7 @@ class Haxteroids {
 				this.starCount++;
 			} //done
 		} else {
-			for(var i = this.starCount; i < this.wantStars; i++) {
+			for(let i = this.starCount; i < this.wantStars; i++) {
 				star = this.new_star();
 				star.x = Math.random() * this.width;
 				star.y = Math.random() * this.height;
@@ -1634,7 +1634,7 @@ class Haxteroids {
 
 	private toggleRockCollision(checked) {
 		this.rockCollision = checked;
-		for(var i = 0; i < this.particleCount; i++) {
+		for(let i = 0; i < this.particleCount; i++) {
 			if(this.particles[i].type == 0) {
 				this.particles.splice(i, 1);
 				i--;
