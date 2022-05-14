@@ -312,7 +312,7 @@ export class Haxteroids {
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
 
-    private event_keyDown(event: { keyCode; }) {
+    private readonly event_keyDown = (event: { keyCode; }) => {
         switch (event.keyCode) {
 
             case 38:  // Up
@@ -351,7 +351,7 @@ export class Haxteroids {
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    private event_keyUp(event: { keyCode; }) {
+    private readonly event_keyUp = (event: { keyCode; }) => {
         switch (event.keyCode) {
 
             case 38:  // Up
