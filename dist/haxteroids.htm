@@ -8,7 +8,7 @@
 		<link rel=stylesheet type=text/css href=style.css>
 		<script type=text/javascript src=incl/haxteroids.js></script>
 	</head>
-	<body onload="Haxteroids()">
+	<body onload="var game = new Haxteroids()">
 		<table class=mar-top><tr>
 			<td class=pad-hor>
 				<div class=card>
@@ -23,19 +23,19 @@
 					<h2>
 						Premise
 						<span class=mar-right></span>
-						<a onclick=showInstructions()>Instructions</a>
+						<a onclick=game.showInstructions()>Instructions</a>
 						<span class=mar-right></span>
-						<a onclick=showSettings()>Settings</a>
+						<a onclick=game.showSettings()>Settings</a>
 					</h2>
 					<p>The United Human Space Program has launched a small probe into the Oort cloud.  You are located nearby (in astronomical terms) inside an orbital station flying high over the Pluto-Charon system.  Your job is to monitor this probe and process the data it uncovers.  Unfortunately, shortly after the probe's arrival to a particularly dense segment of the Oort cloud, the automatic guidance system was irreparably damaged, likely due to impact with high-velocity microdebris.  As the success or failure of your career depends upon that of this mission, you have decided to take manual control over the probe, in a last-ditch effort to minimize the mission's inevitable losses.</p>
 				</div>
 				<div id=instructions class=card style=display:none>
 					<h2>
-						<a onclick=showPremise()>Premise</a>
+						<a onclick=game.showPremise()>Premise</a>
 						<span class=mar-right></span>
 						Instructions
 						<span class=mar-right></span>
-						<a onclick=showSettings()>Settings</a>
+						<a onclick=game.showSettings()>Settings</a>
 					</h2>
 					<ul class=list-style-circle>
 						<li>To move, use either the arrow keys or WASD.</li>
@@ -49,18 +49,18 @@
 				</div>
 				<div id=settings class=card style=display:none>
 					<h2>
-						<a onclick=showPremise()>Premise</a>
+						<a onclick=game.showPremise()>Premise</a>
 						<span class=mar-right></span>
-						<a onclick=showInstructions()>Instructions</a>
+						<a onclick=game.showInstructions()>Instructions</a>
 						<span class=mar-right></span>
 						Settings
 					</h2>
 					<ul>
-						<li>Particles:&nbsp;<input id=particleSlider onchange=slideParticles() type=range min=1 max=2 step=1 value=2>&nbsp;<span id=particleSpan>High</span></li>
-						<li>Stars:&nbsp;<input id=starSlider onchange=slideStars() type=range min=0 max=3 step=1 value=3>&nbsp;<span id=starSpan>High</span></li>
-						<li><input id=texturesToggle onchange=toggleTextures() type=checkbox checked=true>&nbsp;Rock&nbsp;Textures</li>
-						<li><input id=rockCollisionToggle onchange=toggleRockCollision() type=checkbox checked=true>&nbsp;Rock&nbsp;Collision</li>
-						<li><input id=speedHackToggle onchange=toggleSpeedHack() type=checkbox checked=true>&nbsp;Speedhacks</li>
+						<li>Particles:&nbsp;<input id=particleSlider onchange=game.slideParticles() type=range min=1 max=2 step=1 value=2>&nbsp;<span id=particleSpan>High</span></li>
+						<li>Stars:&nbsp;<input id=starSlider onchange=game.slideStars() type=range min=0 max=3 step=1 value=3>&nbsp;<span id=starSpan>High</span></li>
+						<li><input id=texturesToggle onchange=game.toggleTextures() type=checkbox checked=true>&nbsp;Rock&nbsp;Textures</li>
+						<li><input id=rockCollisionToggle onchange=game.toggleRockCollision() type=checkbox checked=true>&nbsp;Rock&nbsp;Collision</li>
+						<li><input id=speedHackToggle onchange=game.toggleSpeedHack() type=checkbox checked=true>&nbsp;Speedhacks</li>
 					</ul>
 				</div>
 			</td>
