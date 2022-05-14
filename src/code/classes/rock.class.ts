@@ -1,3 +1,4 @@
+import { Defines } from "defines.const";
 import { Player } from "./player.class";
 import { RGBA } from "./rgba.class";
 
@@ -32,16 +33,7 @@ export class Rock {
     public rgba = new RGBA();
 
     ////////////////////////////////////////////////////////////////////////////////
-
-    protected readonly maxRockSpeed = 1.0;
-    protected readonly maxRockSpin = 1.0;
-    protected readonly minRockSize = this.maxRockSize / 4;
-    protected readonly minRockSpeed = this.maxRockSpeed / 4;
-
-    ////////////////////////////////////////////////////////////////////////////////
     constructor(
-        private rockPoints: number,
-        private maxRockSize: number,
         private player: Player,
         private width: number,
         private height: number,
@@ -53,23 +45,23 @@ export class Rock {
 		this.irgba.b = 106 - (Math.random() * 7);
 
 		// Calculate radiuses
-		const rockSize = (this.minRockSize + (Math.random() * (this.maxRockSize - this.minRockSize)));
+		const rockSize = (Defines.minRockSize + (Math.random() * (Defines.maxRockSize - Defines.minRockSize)));
 		const rockSizeThird = rockSize / 3;
-		for (let j = 0; j < this.rockPoints; j++) {
+		for (let j = 0; j < Defines.rockPoints; j++) {
 			this.r.push(rockSizeThird + (Math.random() * ((rockSizeThird * 2) - rockSizeThird)));
 		} //done
 
 		// Initialize coordinates
-		for (let j = 0; j < this.rockPoints; j++) {
+		for (let j = 0; j < Defines.rockPoints; j++) {
 			this.x.push(0);
 			this.y.push(0);
 		} //done
 
 		// Set velocities
-		this.vd = Math.random() * this.maxRockSpin;
-		const offsetRockSpeed = this.maxRockSpeed - this.minRockSpeed;
-		this.vx = this.minRockSpeed + (Math.random() * offsetRockSpeed);
-		this.vy = this.minRockSpeed + (Math.random() * offsetRockSpeed);
+		this.vd = Math.random() * Defines.maxRockSpin;
+		const offsetRockSpeed = Defines.maxRockSpeed - Defines.minRockSpeed;
+		this.vx = Defines.minRockSpeed + (Math.random() * offsetRockSpeed);
+		this.vy = Defines.minRockSpeed + (Math.random() * offsetRockSpeed);
 
 		// Allow negative velocities
 		if (Math.round(Math.random()) == 0)
