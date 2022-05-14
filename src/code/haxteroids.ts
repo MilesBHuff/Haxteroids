@@ -2,6 +2,7 @@ import { Particle, ParticleType } from "classes/particle.class";
 import { Player } from "classes/player.class";
 import { RGBA } from "classes/rgba.class";
 import { Ship } from "classes/ship.class";
+import { Star } from "classes/star.class";
 
 ////////////////////////////////////////////////////////////////////////////////
 export class Haxteroids {
@@ -48,11 +49,7 @@ export class Haxteroids {
 	private debrisFade: number;
 
 	// Star variables
-	private maxStarSize: number;
-	private starIVX: number;
-	private starIVY: number;
 	private stars: Array<any>;
-	private starSpeed: number;
 	private starCount: number;
 	private wantStars: number;
 
@@ -165,11 +162,7 @@ export class Haxteroids {
 		this.menuShow = false;
 
 		// Star variables
-		this.maxStarSize = 0.05;
-		this.starIVX = 1.0 - (Math.random() * 2.0);
-		this.starIVY = 1.0 - (Math.random() * 2.0);
 		this.stars = new Array();
-		this.starSpeed = 0.1625;
 		this.starCount = 0;
 
 		// Asteroid variables
@@ -251,133 +244,6 @@ export class Haxteroids {
 		this.gameLoop = setInterval(this.haxteroidsGameLoop, this.gameInt);
 		this.menuTimer = setInterval(this.haxteroidsMenuTimer, this.gameInt * 30);
 	} //constructor()
-
-	////////////////////////////////////////////////////////////////////////////////
-
-	private new_star() {
-		let star = {
-			r: 0, // Radius
-			dia: 0, // Diameter
-
-			x: 0, // Center x
-			y: 0, // Center y
-			z: 0, // Distance
-
-			vx: 0, // x-velocity
-			vy: 0, // y-velocity
-
-			rgba: new RGBA()
-		};
-
-		// Generate more-or-less scientifically accurate star-data
-		// I used https://en.wikipedia.org/wiki/Stellar_classification#Harvard_spectral_classification
-		// to get the percentages, colors (RGB), luminosities (alpha), and sizes (radius).  As the
-		// Wikipedia percentages did not add up to 100, I scaled them.  I also scaled the luminosities.
-		star.rgba.a = Math.random();  // This is a temporary setting used to determine the stellar spectral class of the star
-		// Class M
-		if (star.rgba.a <= 0.765418272300) {
-			star.rgba.r = 255;
-			star.rgba.g = 189;
-			star.rgba.b = 111;
-			star.rgba.a = Math.round(0.5 + (Math.random() * 0.027));  // 0.527 - 0.5
-			star.r = this.maxStarSize * (0 + (Math.random() * 0.7));  // 0.7   - 0
-		} else   // Class K
-			if (star.rgba.a <= 0.886563610363) {
-				star.rgba.r = 255;
-				star.rgba.g = 221;
-				star.rgba.b = 180;
-				star.rgba.a = Math.round(0.527 + (Math.random() * 0.2));  // 0.727 - 0.527
-				star.r = this.maxStarSize * (0.7 + (Math.random() * 0.26));  // 0.96  - 0.7
-			} else   // Class G
-				if (star.rgba.a <= 0.962654897080) {
-					star.rgba.r = 255;
-					star.rgba.g = 244;
-					star.rgba.b = 232;
-					star.rgba.a = Math.round(0.727 + (Math.random() * 0.273));  // 1     - 0.727
-					star.r = this.maxStarSize * (0.96 + (Math.random() * 0.19));  // 1.15  - 0.96
-				} else   // Class F
-					if (star.rgba.a <= 0.992690931310) {
-						star.rgba.r = 251;
-						star.rgba.g = 248;
-						star.rgba.b = 255;
-						star.rgba.a = 1;
-						//		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
-						star.r = this.maxStarSize * (1.15 + (Math.random() * 0.25));  // 1.4   - 1.15
-					} else   // Class A
-						if (star.rgba.a <= 0.998698138156) {
-							star.rgba.r = 202;
-							star.rgba.g = 216;
-							star.rgba.b = 255;
-							star.rgba.a = 1;
-							//		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
-							star.r = this.maxStarSize * (1.4 + (Math.random() * 0.4));  // 1.8   - 1.4
-						} else   // Class B
-							if (star.rgba.a <= 0.999996996400) {
-								star.rgba.r = 170;
-								star.rgba.g = 191;
-								star.rgba.b = 255;
-								star.rgba.a = 1;
-								//		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
-								star.r = this.maxStarSize * (1.8 + (Math.random() * 4.8));  // 6.6   - 1.8
-							} else { // Class O
-								star.rgba.r = 155;
-								star.rgba.g = 176;
-								star.rgba.b = 255;
-								star.rgba.a = 1;
-								//		star.rgba.a = Math.round(    1     + (Math.random() * 0    ));  // 1     - 1
-								star.r = this.maxStarSize * 6.6;
-								//		star.r      = maxStarSize * (6.6   + (Math.random() * 0    ));  // 6.6   - 6.6
-							} //fi
-
-		// Calculate star speed and apply distance to speed and luminosity
-		star.z = 6 * Math.random();
-		star.vx = star.z * this.starSpeed * this.starIVX;
-		star.vy = star.z * this.starSpeed * this.starIVY;
-		star.r *= star.z;
-		star.dia = star.r * 2;
-		star.rgba.a *= star.z / 6;
-
-		// 'Even' means we generate the star with a static x-axis
-		if (Math.round(Math.random()) == 0) {
-			if (!this.speedHack)
-				star.x = (this.bigAxis * -0.5) + (Math.random() * (this.bigAxis * 2.0));
-			else star.x = Math.random() * (this.width + (2 * star.r));
-
-			// 'Even' means we generate the star on the top
-			if (Math.round(Math.random()) == 0) {
-				if (!this.speedHack)
-					star.y = this.bigAxis * -0.5;
-				else star.y = 0 - star.r;
-
-				// 'Odd' means we generate the star on the bottom
-			} else {
-				if (!this.speedHack)
-					star.y = this.bigAxis * 1.5;
-				else star.y = (this.height + star.r);
-			} //fi
-
-			// 'Odd' means we generate the star with a static y-axis
-		} else {
-			if (!this.speedHack)
-				star.y = (this.bigAxis * -0.5) + (Math.random() * (this.bigAxis * 2.0));
-			else star.y = Math.random() * (this.height + (2 * star.r));
-
-			// 'Even' means we generate the star on the left
-			if (Math.round(Math.random()) == 0) {
-				if (!this.speedHack)
-					star.x = this.bigAxis * -0.5;
-				else star.x = (0 - star.r);
-
-				// 'Odd' means we generate the star on the right
-			} else {
-				if (!this.speedHack)
-					star.x = this.bigAxis * 1.5;
-				else star.x = (this.width + star.r);
-			} //fi
-		} //fi
-
-		return star;
-	} //new_star()
 
 	////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
@@ -768,7 +634,7 @@ export class Haxteroids {
 
 		// Add stars if there aren't enough
 		while (this.starCount < this.wantStars) {
-			this.stars.push(this.new_star());
+			this.stars.push(new Star(this.bigAxis, this.width, this.height, this.speedHack));
 			this.starCount++;
 		} //done
 
@@ -1538,7 +1404,7 @@ export class Haxteroids {
 		let star;
 		if (!this.speedHack) {
 			for (let i = this.starCount; i < this.wantStars; i++) {
-				star = this.new_star();
+				star = new Star(this.bigAxis, this.width, this.height, this.speedHack);
 				star.x = (this.bigAxis * -0.5) + (Math.random() * this.bigAxis * 2.0);
 				star.y = (this.bigAxis * -0.5) + (Math.random() * this.bigAxis * 2.0);
 				this.stars.push(star);
@@ -1546,7 +1412,7 @@ export class Haxteroids {
 			} //done
 		} else {
 			for (let i = this.starCount; i < this.wantStars; i++) {
-				star = this.new_star();
+				star = new Star(this.bigAxis, this.width, this.height, this.speedHack);
 				star.x = Math.random() * this.width;
 				star.y = Math.random() * this.height;
 				this.stars.push(star);
