@@ -4,7 +4,7 @@
     "compilerOptions": {
 
         // Library versions
-        "moduleResolution": "node",
+        "moduleResolution": "NodeNext",
         "module": "ESNext",
         "target": "ES5",
 
