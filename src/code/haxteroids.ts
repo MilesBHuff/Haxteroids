@@ -1,6 +1,8 @@
 import { Particle, ParticleType } from "classes/particle.class";
 import { RGBA } from "classes/rgba.class";
+import { Ship } from "classes/ship.class";
 
+////////////////////////////////////////////////////////////////////////////////
 export class Haxteroids {
 
 	// Resources
@@ -377,25 +379,12 @@ export class Haxteroids {
 	} //new_star()
 
 	////////////////////////////////////////////////////////////////////////////////
-
-	private new_ship() {
-		let ship = {
-			h: 0,  // Heat
-			vy: 0,  // Vertical velocity
-			vd: 0,  // Rotational velocity, degrees
-			vr: 0,  // Rotational velocity, radians
-			cd: 0   // Missile cooldown timer
-		};
-		return ship;
-	} //new_ship()
-
-	////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
 
 	private new_player() {
 		let player = {
 			score: 0,
-			ship: this.new_ship(),
+			ship: new Ship(),
 			//		 shotsFired: 0,
 			//		rocksBroken: 0,
 			//		 timePlayed: 0,
@@ -1263,7 +1252,7 @@ export class Haxteroids {
 							this.sounds.mono.currentTime = 0;
 							this.sounds.thrust.pause();
 							this.sounds.thrust.currentTime = 0;
-							this.player.ship = this.new_ship();
+							this.player.ship = new Ship();
 							break;
 						} // fi
 					} //done
