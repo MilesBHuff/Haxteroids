@@ -1,6 +1,5 @@
 import { Particle, ParticleType } from "classes/particle.class";
 import { Player } from "classes/player.class";
-import { RGBA } from "classes/rgba.class";
 import { Rock } from "classes/rock.class";
 import { Ship } from "classes/ship.class";
 import { Star } from "classes/star.class";
