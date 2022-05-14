@@ -430,14 +430,14 @@ export class Haxteroids {
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    private haxteroidsMenuTimer() {
+    private readonly haxteroidsMenuTimer = () => {
         if (this.menuShow) this.menuShow = false;
         else this.menuShow = true;
     } //haxteroidsMenuTimer()
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    private haxteroidsGameLoop() {
+    private readonly haxteroidsGameLoop = () => {
 
         //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
         // Missiles
@@ -980,6 +980,7 @@ export class Haxteroids {
         //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 
         // Draw background (black)
+        if(!this.context) throw new ReferenceError(`${this.context}`);
         this.context.fillStyle = 'rgba(0, 0, 0, 1)';
         this.context.rect(0, 0, this.width, this.height);
         this.context.fill();
