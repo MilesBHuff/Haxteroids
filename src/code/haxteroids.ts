@@ -964,29 +964,28 @@ export class Haxteroids {
                             this.rockCount -= 2;
                         } //fi
 
-                        //					// This way is technically accurate, but absolutely ridiculously computationally intensive.  My laptop can't run it.
-                        //					} else {
-                        //						for(let j = 0; j < rockPoints; j++) {
-                        //							for(let k = 0; k < rockPoints; k++) {
-                        //								for(let m = 0; m < rockPoints; m++) {
-                        //									for(let n = 0; n < rockPoints; n++) {
-                        //										if(rocks[i].x[j] <= rocks[l].x[m] && rocks[i].x[k] >= rocks[l].x[n]
-                        //										&& rocks[i].x[j] >= rocks[l].x[m] && rocks[i].x[k] <= rocks[l].x[n]
-                        //										&& rocks[i].y[j] <= rocks[l].y[m] && rocks[i].y[k] >= rocks[l].y[n]
-                        //										&& rocks[i].y[j] >= rocks[l].y[m] && rocks[i].y[k] <= rocks[l].y[n])
-                        //										{ //if
-                        //											rocksplosion(rocks[i]);
-                        //											rocksplosion(rocks[l]);
-                        //											rocks.splice(i, 1);
-                        //											rocks.splice(l, 1);
-                        //											i-= 2;
-                        //											rockCount-= 2;
-                        //										} //fi
-                        //									} //done
-                        //								} //done
-                        //							} //done
-                        //						} //done
-                        //					} //fi
+                        // // This way is technically accurate, but absolutely ridiculously computationally intensive.  My laptop can't run it.
+                        // } else {
+                        //     for (let j = 0; j < rockPoints; j++) {
+                        //         for (let k = 0; k < rockPoints; k++) {
+                        //             for (let m = 0; m < rockPoints; m++) {
+                        //                 for (let n = 0; n < rockPoints; n++) {
+                        //                     if (rocks[i].x[j] <= rocks[l].x[m] && rocks[i].x[k] >= rocks[l].x[n]
+                        //                         && rocks[i].x[j] >= rocks[l].x[m] && rocks[i].x[k] <= rocks[l].x[n]
+                        //                         && rocks[i].y[j] <= rocks[l].y[m] && rocks[i].y[k] >= rocks[l].y[n]
+                        //                         && rocks[i].y[j] >= rocks[l].y[m] && rocks[i].y[k] <= rocks[l].y[n]) { //if
+                        //                         rocksplosion(rocks[i]);
+                        //                         rocksplosion(rocks[l]);
+                        //                         rocks.splice(i, 1);
+                        //                         rocks.splice(l, 1);
+                        //                         i -= 2;
+                        //                         rockCount -= 2;
+                        //                     } //fi
+                        //                 } //done
+                        //             } //done
+                        //         } //done
+                        //     } //done
+                        // } //fi
                     } //fi
                 } //done
             } //fi
@@ -1057,18 +1056,18 @@ export class Haxteroids {
 
         // Draw missiles
         for (let i = 0; i < this.shotCount; i++) {
-            //		context.drawImage(
-            //			graphics.shot,                            // Image to use
-            //			0,                                        // x-origin (frame)
-            //			shotSize * Math.floor(360 - shots[i].d),  // y-origin (frame)
-            //			shotSize,                                 // width    (frame)
-            //			shotSize,                                 // height   (frame)
-            //			shots[i].x - shotHalfSize,                // x-origin (canvas)
-            //			shots[i].y - shotHalfSize,                // y-origin (canvas)
-            //			shotSize,                                 // width    (canvas)
-            //			shotSize                                  // height   (canvas)
-            //		);
-            //		context.drawImage(graphics.shot, shots[i].x, shots[i].y, shotSize, shotSize);
+            // context.drawImage(
+            //     graphics.shot,                            // Image to use
+            //     0,                                        // x-origin (frame)
+            //     shotSize * Math.floor(360 - shots[i].d),  // y-origin (frame)
+            //     shotSize,                                 // width    (frame)
+            //     shotSize,                                 // height   (frame)
+            //     shots[i].x - shotHalfSize,                // x-origin (canvas)
+            //     shots[i].y - shotHalfSize,                // y-origin (canvas)
+            //     shotSize,                                 // width    (canvas)
+            //     shotSize                                  // height   (canvas)
+            // );
+            // context.(graphics.shot, shots[i].x, shots[i].y, shotSize, shotSize);
         } //done
 
         // Draw missile particles
@@ -1199,37 +1198,37 @@ export class Haxteroids {
         } //esac
 
         //	//  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
-        //	// Sounds
-        //	switch(menuIndex) {
-        //		case 1:
-        //			// Monopropellant
-        //			const soundCutOff = sounds.mono.duration - (gameInt / 500);
-        //			if(!downDown && !rightDown && !leftDown)
-        //				sounds.mono.pause();
-        //			if(downDown || rightDown || leftDown)
-        //				sounds.mono.play();
-        //			if(sounds.mono.currentTime  > soundCutOff)
-        //				sounds.mono.currentTime-= soundCutOff;
-        //			// Thruster
-        //			const soundCutOff = sounds.thrust.duration - (gameInt / 500);
-        //			if(!upDown)
-        //				sounds.thrust.pause();
-        //			if(upDown)
-        //				sounds.thrust.play();
-        //			if(sounds.thrust.currentTime  > soundCutOff)
-        //				sounds.thrust.currentTime-= soundCutOff;
-        //			// Ambience
-        //			const soundCutOff = sounds.ship.duration - (gameInt / 500);
-        //			if(sounds.ship.currentTime  > soundCutOff)
-        //				sounds.ship.currentTime-= soundCutOff;
-        //			break;
-        //		case 0:
-        //		case 2:
-        //			sounds.mono.pause();
-        //			sounds.mono.currentTime = 0;
-        //			sounds.thrust.pause();
-        //			sounds.thrust.currentTime = 0;
-        //	} //esac
+        // // Sounds
+        // switch (menuIndex) {
+        //     case 1:
+        //         // Monopropellant
+        //         const soundCutOff = sounds.mono.duration - (gameInt / 500);
+        //         if (!downDown && !rightDown && !leftDown)
+        //             sounds.mono.pause();
+        //         if (downDown || rightDown || leftDown)
+        //             sounds.mono.play();
+        //         if (sounds.mono.currentTime > soundCutOff)
+        //             sounds.mono.currentTime -= soundCutOff;
+        //         // Thruster
+        //         const soundCutOff = sounds.thrust.duration - (gameInt / 500);
+        //         if (!upDown)
+        //             sounds.thrust.pause();
+        //         if (upDown)
+        //             sounds.thrust.play();
+        //         if (sounds.thrust.currentTime > soundCutOff)
+        //             sounds.thrust.currentTime -= soundCutOff;
+        //         // Ambience
+        //         const soundCutOff = sounds.ship.duration - (gameInt / 500);
+        //         if (sounds.ship.currentTime > soundCutOff)
+        //             sounds.ship.currentTime -= soundCutOff;
+        //         break;
+        //     case 0:
+        //     case 2:
+        //         sounds.mono.pause();
+        //         sounds.mono.currentTime = 0;
+        //         sounds.thrust.pause();
+        //         sounds.thrust.currentTime = 0;
+        // } //esac
 
         //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 
