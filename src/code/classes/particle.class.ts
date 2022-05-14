@@ -1,4 +1,4 @@
-import { RGBA } from "./rgba.class";
+import { RGBA } from './rgba.class';
 
 ////////////////////////////////////////////////////////////////////////////////
 export enum ParticleType {

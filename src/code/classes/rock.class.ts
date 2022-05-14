@@ -1,6 +1,6 @@
-import { Defines } from "defines.const";
-import { Player } from "./player.class";
-import { RGBA } from "./rgba.class";
+import { Defines } from 'defines.const';
+import { Player } from './player.class';
+import { RGBA } from './rgba.class';
 
 ////////////////////////////////////////////////////////////////////////////////
 export class Rock {

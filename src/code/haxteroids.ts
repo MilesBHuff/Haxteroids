@@ -1,9 +1,9 @@
-import { Particle, ParticleType } from "classes/particle.class";
-import { Player } from "classes/player.class";
-import { Rock } from "classes/rock.class";
-import { Ship } from "classes/ship.class";
-import { Star } from "classes/star.class";
-import { Defines } from "defines.const";
+import { Particle, ParticleType } from 'classes/particle.class';
+import { Player } from 'classes/player.class';
+import { Rock } from 'classes/rock.class';
+import { Ship } from 'classes/ship.class';
+import { Star } from 'classes/star.class';
+import { Defines } from 'defines.const';
 
 ////////////////////////////////////////////////////////////////////////////////
 export class Haxteroids {
@@ -72,11 +72,11 @@ export class Haxteroids {
 
         // Audio
         this.sounds = {
-            boom: new Audio("res/boom.ogg"),
-            mono: new Audio("res/mono.ogg"),
-            ship: new Audio("res/ship.ogg"),
-            shot: new Audio("res/shot.ogg"),
-            thrust: new Audio("res/thrust.ogg")
+            boom: new Audio('res/boom.ogg'),
+            mono: new Audio('res/mono.ogg'),
+            ship: new Audio('res/ship.ogg'),
+            shot: new Audio('res/shot.ogg'),
+            thrust: new Audio('res/thrust.ogg')
         };
         this.sounds.mono.loop = true;
         this.sounds.thrust.loop = true;
@@ -96,18 +96,18 @@ export class Haxteroids {
             menu20: new Image(),
             menu21: new Image()
         };
-        this.graphics.rock.src = "res/rock.png";
-        this.graphics.ship.src = "res/ship.png";
-        this.graphics.shipHot.src = "res/shiphot.png";
-        this.graphics.shot.src = "res/shot.png";
-        this.graphics.menu10.src = "res/menu(1, 0).png";
-        this.graphics.menu11.src = "res/menu(1, 1).png";
-        this.graphics.menu20.src = "res/menu(2, 0).png";
-        this.graphics.menu21.src = "res/menu(2, 1).png";
+        this.graphics.rock.src = 'res/rock.png';
+        this.graphics.ship.src = 'res/ship.png';
+        this.graphics.shipHot.src = 'res/shiphot.png';
+        this.graphics.shot.src = 'res/shot.png';
+        this.graphics.menu10.src = 'res/menu(1, 0).png';
+        this.graphics.menu11.src = 'res/menu(1, 1).png';
+        this.graphics.menu20.src = 'res/menu(2, 0).png';
+        this.graphics.menu21.src = 'res/menu(2, 1).png';
 
         // DOM Variables
-        this.canvas = document.getElementById("haxteroids") as HTMLCanvasElement;
-        this.context = this.canvas.getContext("2d");
+        this.canvas = document.getElementById('haxteroids') as HTMLCanvasElement;
+        this.context = this.canvas.getContext('2d');
         this.menuIndex = 0;
 
         // Scale variables
@@ -182,9 +182,9 @@ export class Haxteroids {
 
         // Install event-handlers
         this.canvas.tabIndex = 1000;
-        this.canvas.style.outline = "none";
-        this.canvas.addEventListener("keydown", this.event_keyDown, true);
-        this.canvas.addEventListener("keyup", this.event_keyUp, true);
+        this.canvas.style.outline = 'none';
+        this.canvas.addEventListener('keydown', this.event_keyDown, true);
+        this.canvas.addEventListener('keyup', this.event_keyUp, true);
 
         // Set timers
         setInterval(this.haxteroidsGameLoop, Defines.gameInt);
@@ -980,7 +980,7 @@ export class Haxteroids {
         //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //  //
 
         // Draw background (black)
-        this.context.fillStyle = "rgba(0, 0, 0, 1)";
+        this.context.fillStyle = 'rgba(0, 0, 0, 1)';
         this.context.rect(0, 0, this.width, this.height);
         this.context.fill();
 
@@ -993,12 +993,12 @@ export class Haxteroids {
                 || this.stars[i].y >= 0 - this.stars[i].r
                 || this.stars[i].y <= this.height + this.stars[i].r) { //if
                 // Stars are really bright, so from our perspective, we can only see what color they are from their border.
-                this.context.fillStyle = "rgba(255, 255, 255, " + this.stars[i].rgba.a.toString() + ")";
-                this.context.strokeStyle = "rgba(" + this.stars[i].rgba.r.toString()
-                    + ", " + this.stars[i].rgba.g.toString()
-                    + ", " + this.stars[i].rgba.b.toString()
-                    + ", " + this.stars[i].rgba.a.toString()
-                    + ")";
+                this.context.fillStyle = 'rgba(255, 255, 255, ' + this.stars[i].rgba.a.toString() + ')';
+                this.context.strokeStyle = 'rgba(' + this.stars[i].rgba.r.toString()
+                    + ', ' + this.stars[i].rgba.g.toString()
+                    + ', ' + this.stars[i].rgba.b.toString()
+                    + ', ' + this.stars[i].rgba.a.toString()
+                    + ')';
                 this.context.beginPath();
                 this.context.arc(this.stars[i].x, this.stars[i].y, this.stars[i].r, 0, 2 * Math.PI, false);
                 this.context.closePath();
@@ -1026,11 +1026,11 @@ export class Haxteroids {
         // Draw missile particles
         for (let i = 0; i < this.particleCount; i++) {
             if (this.particles[i].type == 3) {
-                this.context.fillStyle = "rgba(" + this.particles[i].rgba.r.toString()
-                    + ", " + this.particles[i].rgba.g.toString()
-                    + ", " + this.particles[i].rgba.b.toString()
-                    + ", " + this.particles[i].rgba.a.toString()
-                    + ")"
+                this.context.fillStyle = 'rgba(' + this.particles[i].rgba.r.toString()
+                    + ', ' + this.particles[i].rgba.g.toString()
+                    + ', ' + this.particles[i].rgba.b.toString()
+                    + ', ' + this.particles[i].rgba.a.toString()
+                    + ')'
                 this.context.beginPath();
                 this.context.arc(this.particles[i].x, this.particles[i].y, Defines.particleSize, 0, 2 * Math.PI, false);
                 this.context.closePath();
@@ -1049,11 +1049,11 @@ export class Haxteroids {
         // Draw non-missile particles
         for (let i = 0; i < this.particleCount; i++) {
             if (this.particles[i].type != 3) {
-                this.context.fillStyle = "rgba(" + this.particles[i].rgba.r.toString()
-                    + ", " + this.particles[i].rgba.g.toString()
-                    + ", " + this.particles[i].rgba.b.toString()
-                    + ", " + this.particles[i].rgba.a.toString()
-                    + ")"
+                this.context.fillStyle = 'rgba(' + this.particles[i].rgba.r.toString()
+                    + ', ' + this.particles[i].rgba.g.toString()
+                    + ', ' + this.particles[i].rgba.b.toString()
+                    + ', ' + this.particles[i].rgba.a.toString()
+                    + ')'
                 this.context.beginPath();
                 this.context.arc(this.particles[i].x, this.particles[i].y, Defines.particleSize, 0, 2 * Math.PI, false);
                 this.context.closePath();
@@ -1062,7 +1062,7 @@ export class Haxteroids {
         } //done
 
         // Draw asteroids
-        this.context.strokeStyle = "rgba(0, 0, 0, 0.5)";  // Shadow
+        this.context.strokeStyle = 'rgba(0, 0, 0, 0.5)';  // Shadow
         for (let i = 0; i < this.rockCount; i++) {
 
             // Calculate spritesheet frame
@@ -1071,10 +1071,10 @@ export class Haxteroids {
 
             // Set asteroid fill
             if (!this.useTextures) {
-                this.context.fillStyle = "rgba(" + this.rocks[i].rgba.r.toString()
-                    + ", " + this.rocks[i].rgba.g.toString()
-                    + ", " + this.rocks[i].rgba.b.toString()
-                    + ", 1)";
+                this.context.fillStyle = 'rgba(' + this.rocks[i].rgba.r.toString()
+                    + ', ' + this.rocks[i].rgba.g.toString()
+                    + ', ' + this.rocks[i].rgba.b.toString()
+                    + ', 1)';
             } //fi
 
             // Draw asteroids
@@ -1116,7 +1116,7 @@ export class Haxteroids {
             } //fi
             if (!this.useTextures)
                 this.context.fill();
-            this.context.fillStyle = "rgba(0, 0, 0, " + this.rocks[i].rgba.a.toString() + ')';
+            this.context.fillStyle = 'rgba(0, 0, 0, ' + this.rocks[i].rgba.a.toString() + ')';
             this.context.fill();
             this.context.stroke();
         } //done
@@ -1127,7 +1127,7 @@ export class Haxteroids {
         switch (this.menuIndex) {
 
             case 0:  // Main menu
-                this.context.strokeStyle = "rgba(255, 255, 255, 255)";
+                this.context.strokeStyle = 'rgba(255, 255, 255, 255)';
                 if (this.menuShow == true) {
                     this.context.drawImage(this.graphics.menu11, 0, 0, this.width, this.height);
                 } else {
@@ -1209,7 +1209,7 @@ export class Haxteroids {
                     this.player.score += 1 / Defines.gameInt;
                 else this.player.score += 2 / Defines.gameInt;
             } else this.player.score += 4 / Defines.gameInt;
-            document.getElementById("scoreSpan").innerHTML = Math.floor(this.player.score).toString();
+            document.getElementById('scoreSpan').innerHTML = Math.floor(this.player.score).toString();
         } //fi
 
     } //haxteroidsGameLoop()
@@ -1219,7 +1219,7 @@ export class Haxteroids {
     // Settings
 
     public slideParticles() {
-        const value: number = Number.parseInt((document.getElementById("particleSlider") as HTMLInputElement).value);
+        const value: number = Number.parseInt((document.getElementById('particleSlider') as HTMLInputElement).value);
 
         // Remove all particles if the multiplier is 0
         if (value == 0) {
@@ -1233,20 +1233,20 @@ export class Haxteroids {
         // Update setting-label
         switch (value) {
             case 0:
-                document.getElementById("particleSpan").innerHTML = "Off";
+                document.getElementById('particleSpan').innerHTML = 'Off';
                 break;
             case 1:
-                document.getElementById("particleSpan").innerHTML = "Low";
+                document.getElementById('particleSpan').innerHTML = 'Low';
                 break;
             case 2:
-                document.getElementById("particleSpan").innerHTML = "High";
+                document.getElementById('particleSpan').innerHTML = 'High';
                 break;
         } //esac
 
     } //slideParticles()
 
     public slideStars() {
-        const value: number = Number.parseInt((document.getElementById("starSlider") as HTMLInputElement).value);
+        const value: number = Number.parseInt((document.getElementById('starSlider') as HTMLInputElement).value);
 
         // Speedhack
         let mult: number;
@@ -1286,28 +1286,28 @@ export class Haxteroids {
         // Update setting-label
         switch (value) {
             case 0:
-                document.getElementById("starSpan").innerHTML = "Off";
+                document.getElementById('starSpan').innerHTML = 'Off';
                 break;
             case 1:
-                document.getElementById("starSpan").innerHTML = "Low";
+                document.getElementById('starSpan').innerHTML = 'Low';
                 break;
             case 2:
-                document.getElementById("starSpan").innerHTML = "Medium";
+                document.getElementById('starSpan').innerHTML = 'Medium';
                 break;
             case 3:
-                document.getElementById("starSpan").innerHTML = "High";
+                document.getElementById('starSpan').innerHTML = 'High';
                 break;
         } //esac
 
     } //slideStars()
 
     public toggleTextures() {
-        const checked: boolean = (document.getElementById("texturesToggle") as HTMLInputElement).checked;
+        const checked: boolean = (document.getElementById('texturesToggle') as HTMLInputElement).checked;
         this.useTextures = checked;
     } //textureToggle()
 
     public toggleRockCollision() {
-        const checked: boolean = (document.getElementById("rockCollisionToggle") as HTMLInputElement).checked;
+        const checked: boolean = (document.getElementById('rockCollisionToggle') as HTMLInputElement).checked;
         this.rockCollision = checked;
         for (let i = 0; i < this.particleCount; i++) {
             if (this.particles[i].type == 0) {
@@ -1319,7 +1319,7 @@ export class Haxteroids {
     } //rockCollision()
 
     public toggleSpeedHack() {
-        const checked: boolean = (document.getElementById("speedHackToggle") as HTMLInputElement).checked;
+        const checked: boolean = (document.getElementById('speedHackToggle') as HTMLInputElement).checked;
         this.speedHack = checked;
         this.slideStars();
     } //rockCollision()
@@ -1329,20 +1329,20 @@ export class Haxteroids {
     // Infobox
 
     public showPremise() {
-        document.getElementById("instructions").style.display = "none";
-        document.getElementById("settings").style.display = "none";  // Is most likely to be the previous screen, so should be done next-to-last.
-        document.getElementById("premise").style.display = "block";  // Is being unhidden, so should be done last.
+        document.getElementById('instructions').style.display = 'none';
+        document.getElementById('settings').style.display = 'none';  // Is most likely to be the previous screen, so should be done next-to-last.
+        document.getElementById('premise').style.display = 'block';  // Is being unhidden, so should be done last.
     } //showPremise()
 
     public showInstructions() {
-        document.getElementById("settings").style.display = "none";
-        document.getElementById("premise").style.display = "none";        // Is most likely to be the previous screen, so should be done next-to-last.
-        document.getElementById("instructions").style.display = "block";  // Is being unhidden, so should be done last.
+        document.getElementById('settings').style.display = 'none';
+        document.getElementById('premise').style.display = 'none';        // Is most likely to be the previous screen, so should be done next-to-last.
+        document.getElementById('instructions').style.display = 'block';  // Is being unhidden, so should be done last.
     } //showInstructions()
 
     public showSettings() {
-        document.getElementById("premise").style.display = "none";
-        document.getElementById("instructions").style.display = "none";  // Is most likely to be the previous screen, so should be done next-to-last.
-        document.getElementById("settings").style.display = "block";     // Is being unhidden, so should be done last.
+        document.getElementById('premise').style.display = 'none';
+        document.getElementById('instructions').style.display = 'none';  // Is most likely to be the previous screen, so should be done next-to-last.
+        document.getElementById('settings').style.display = 'block';     // Is being unhidden, so should be done last.
     } //showSettings()
 }
