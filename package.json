@@ -25,11 +25,9 @@
     "build": "rm -rf dist/incl && npx tsc"
   },
   "engines": {
-    "node": "^16",
     "npm": "^8"
   },
   "devDependencies": {
-    "@types/node": "^16",
     "tslib": "^2",
     "typescript": "^4"
   }

@@ -11,11 +11,11 @@
       "license": "LGPL-3.0-or-later",
       "bin": {
         "boom.ogg": "dist/res/boom.ogg",
-        "haxteroids.d.ts": "dist/incl/src/code/haxteroids.d.ts",
-        "haxteroids.d.ts.map": "dist/incl/src/code/haxteroids.d.ts.map",
+        "haxteroids.d.ts": "dist/incl/haxteroids.d.ts",
+        "haxteroids.d.ts.map": "dist/incl/haxteroids.d.ts.map",
         "haxteroids.htm": "dist/haxteroids.htm",
-        "haxteroids.js": "dist/incl/src/code/haxteroids.js",
-        "haxteroids.js.map": "dist/incl/src/code/haxteroids.js.map",
+        "haxteroids.js": "dist/incl/haxteroids.js",
+        "haxteroids.js.map": "dist/incl/haxteroids.js.map",
         "menu(1, 0).png": "dist/res/menu(1, 0).png",
         "menu(1, 1).png": "dist/res/menu(1, 1).png",
         "menu(2, 0).png": "dist/res/menu(2, 0).png",
@@ -29,24 +29,15 @@
         "shot.ogg": "dist/res/shot.ogg",
         "shot.png": "dist/res/shot.png",
         "style.css": "dist/style.css",
-        "thrust.ogg": "dist/res/thrust.ogg",
-        "tsconfig.tsbuildinfo": "dist/incl/tsconfig.tsbuildinfo"
+        "thrust.ogg": "dist/res/thrust.ogg"
       },
       "devDependencies": {
-        "@types/node": "^16",
         "tslib": "^2",
         "typescript": "^4"
       },
       "engines": {
-        "node": "^16",
         "npm": "^8"
       }
-    },
-    "node_modules/@types/node": {
-      "version": "16.11.35",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.35.tgz",
-      "integrity": "sha512-QXu45LyepgnhUfnIAj/FyT4uM87ug5KpIrgXfQtUPNAlx8w5hmd8z8emqCLNvG11QkpRSCG9Qg2buMxvqfjfsQ==",
-      "dev": true
     },
     "node_modules/tslib": {
       "version": "2.4.0",
@@ -69,12 +60,6 @@
     }
   },
   "dependencies": {
-    "@types/node": {
-      "version": "16.11.35",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.35.tgz",
-      "integrity": "sha512-QXu45LyepgnhUfnIAj/FyT4uM87ug5KpIrgXfQtUPNAlx8w5hmd8z8emqCLNvG11QkpRSCG9Qg2buMxvqfjfsQ==",
-      "dev": true
-    },
     "tslib": {
       "version": "2.4.0",
       "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.4.0.tgz",
