@@ -2,6 +2,7 @@ import { Particle, ParticleType } from 'classes/particle.class';
 import { Player } from 'classes/player.class';
 import { Rock } from 'classes/rock.class';
 import { Ship } from 'classes/ship.class';
+import { Shot } from 'classes/shot.class';
 import { Star } from 'classes/star.class';
 import { Defines } from 'defines.const';
 
@@ -279,27 +280,6 @@ export class Haxteroids {
     } //shipsplosion()
 
     ////////////////////////////////////////////////////////////////////////////////
-
-    private new_shot() {
-        const shot = {
-            x: 0, // x-coordinate
-            y: 0, // y-coordinate
-            vx: 0, // x-velocity
-            vy: 0, // y-velocity
-            ax: 0, // x-acceleration
-            ay: 0, // y-acceleration
-            d: 0  // rotation (in degrees)
-        };
-
-        // Center the shot under the ship
-        shot.x = this.halfWidth - Defines.shotHalfSize;
-        shot.y = this.halfHeight - Defines.shotHalfSize;
-        shot.ay = 2;
-
-        return shot;
-    } //new_shot()
-
-    ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
 
     private shotsplosion(shot: { vx: number; vy: number; }, rock: { vx: number; vy: number; }) {
@@ -466,7 +446,7 @@ export class Haxteroids {
             this.sounds.shot.currentTime = 0;
             //		this.sounds.shot.play();
             this.player.ship.cd = this.shotCD;
-            this.shots.push(this.new_shot());
+            this.shots.push(new Shot(this.halfWidth, this.halfHeight));
             this.shotCount++;
         } //fi
 
