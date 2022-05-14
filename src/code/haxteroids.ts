@@ -5,95 +5,95 @@
 class Haxteroids {
 
 	// Resources
-	private graphics;
-	private sounds;
+	private graphics: { [key: string]: HTMLImageElement; };
+	private sounds: { [key: string]: HTMLAudioElement; };
 
 	// Settings
-	private particleMultiplier;
-	private rockCollision;
-	private speedHack;
-	private useTextures;
+	private particleMultiplier: number;
+	private rockCollision: boolean;
+	private speedHack: boolean;
+	private useTextures: boolean;
 
 	// DOM variables
-	private canvas;
-	private context;
+	private canvas: HTMLCanvasElement;
+	private context: CanvasRenderingContext2D;
 
 	// Game variables
-	private gameInt;
+	private gameInt: number;
 	private gameLoop;
-	private gameSecs;
-	private menuIndex;
+	private gameSecs: number;
+	private menuIndex: number;
 	private menuTimer;
 
 	// Scale variables
-	private height;
-	private halfHeight;
-	private halfWidth;
-	private width;
-	private bigAxis;
+	private height: number;
+	private halfHeight: number;
+	private halfWidth: number;
+	private width: number;
+	private bigAxis: number;
 
 	// Input variables
-	private downDown;
-	private leftDown;
-	private rightDown;
-	private spaceDown;
-	private upDown;
-	private menuShow;
+	private downDown: boolean;
+	private leftDown: boolean;
+	private rightDown: boolean;
+	private spaceDown: boolean;
+	private upDown: boolean;
+	private menuShow: boolean;
 
 	// Fade variables
-	private monoFade;
-	private thrustFade;
-	private debrisFade;
+	private monoFade: number;
+	private thrustFade: number;
+	private debrisFade: number;
 
 	// Star variables
-	private maxStarSize;
-	private starIVX;
-	private starIVY;
-	private stars;
-	private starSpeed;
-	private starCount;
-	private wantStars;
+	private maxStarSize: number;
+	private starIVX: number;
+	private starIVY: number;
+	private stars: Array<any>;
+	private starSpeed: number;
+	private starCount: number;
+	private wantStars: number;
 
 	// Asteroid variables
-	private maxRockSize;
-	private maxRockSpeed;
-	private maxRockSpin;
-	private minRockSize;
-	private minRockSpeed;
+	private maxRockSize: number;
+	private maxRockSpeed: number;
+	private maxRockSpin: number;
+	private minRockSize: number;
+	private minRockSpeed: number;
 	private rockCD;
 	private rockCDnow;
-	private rockPoints;
-	private rocks = [];
-	private rockSpriteSize;
-	private rockCount;
-	private wantRocks;
+	private rockPoints: number;
+	private rocks: Array<any>;
+	private rockSpriteSize: number;
+	private rockCount: number;
+	private wantRocks: number;
 
 	// Missile variables
 	private shotCd;
-	private shots;
-	private shotCount;
-	private shotSize;
-	private shotHalfSize;
-	private shotHalfWidth;
-	private shotHalfHeight;
-	private shotWidth;
-	private shotHeight;
+	private shots: Array<any>;
+	private shotCount: number;
+	private shotSize: number;
+	private shotHalfSize: number;
+	private shotHalfWidth: number;
+	private shotHalfHeight: number;
+	private shotWidth: number;
+	private shotHeight: number;
 
 	// Player variables
-	private player;
-	private shipFullThrust;
-	private shipHalfRealSize;
-	private shipMonoThrust;
-	private shipRealSize;
-	private shipSize;
-	private shipSpinThrust;
-	private thrustHeat;
+	private player: { [key: string]: any; };
+	private shipFullThrust: number;
+	private shipHalfRealSize: number;
+	private shipMonoThrust: number;
+	private shipRealSize: number;
+	private shipSize: number;
+	private shipSpinThrust: number;
+	private thrustHeat: number;
 
 	// Particle variables
-	private particles;
+	private particles: Array<any>;
 	private particleFade;
-	private particleSize;
-	private particleCount;
+	private particleSize: number;
+	private particleCount: number;
 
 	////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
@@ -139,7 +139,7 @@ class Haxteroids {
 		this.graphics.menu21.src  = "res/menu(2, 1).png";
 
 		// DOM Variables
-		this.canvas    = document.getElementById("haxteroids");
+		this.canvas    = document.getElementById("haxteroids") as HTMLCanvasElement;
 		this.context   = this.canvas.getContext("2d");
 		this.gameInt   = 1000 / 60;
 		this.gameSecs  = this.gameInt / 1000;
@@ -518,7 +518,14 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
 
-	private rocksplosion(rock) {
+	private rocksplosion(rock: {
+			r: number[]; cx: number; cy: number; vx: number; vy: number; rgba: {
+				r: number; // Red
+				g: number; // Green
+				b: number; // Blue
+				a: number; // Alpha
+			};
+		}) {
 
 		// Figure out the size of the rock
 		let avgSize = 0;
@@ -549,7 +556,7 @@ class Haxteroids {
 
 	////////////////////////////////////////////////////////////////////////////////
 
-	private shipsplosion(ship, rock) {
+	private shipsplosion(ship: any, rock: { vx: number; vy: number; }) {
 		for(let l = 0; l < this.shipRealSize * 2 * this.particleMultiplier; l++) {
 			let particle = this.new_particle();
 			particle.x   = (this.halfWidth  - this.shipHalfRealSize) + (Math.random() * this.shipRealSize);
@@ -619,7 +626,7 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
 
-	private shotsplosion(shot, rock) {
+	private shotsplosion(shot: { vx: number; vy: number; }, rock: { vx: number; vy: number; }) {
 		for(let l = 0; l < this.shipRealSize * 2 * this.particleMultiplier; l++) {
 			let particle = this.new_particle();
 			particle.x   = (this.halfWidth  - this.shotHalfWidth ) + (Math.random() * this.shotWidth );
@@ -649,7 +656,7 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
 
-	private event_keyDown(event) {
+	private event_keyDown(event: { keyCode; }) {
 		switch(event.keyCode) {
 
 			case 38:  // Up
@@ -688,7 +695,7 @@ class Haxteroids {
 
 	////////////////////////////////////////////////////////////////////////////////
 
-	private event_keyUp(event) {
+	private event_keyUp(event: { keyCode; }) {
 		switch(event.keyCode) {
 
 			case 38:  // Up
@@ -1547,7 +1554,7 @@ class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 	// Settings
 
-	private slideParticles(value) {
+	private slideParticles(value: number) {
 
 		// Remove all particles if the multiplier is 0
 		if(value == 0) {
@@ -1573,10 +1580,10 @@ class Haxteroids {
 
 	} //slideParticles()
 
-	private slideStars(value) {
+	private slideStars(value: number) {
 
 		// Speedhack
-		let mult;
+		let mult: number;
 		if(!this.speedHack)
 			mult = 768;
 		else mult = 256;
@@ -1628,11 +1635,11 @@ class Haxteroids {
 
 	} //slideStars()
 
-	private toggleTextures(checked) {
+	private toggleTextures(checked: any) {
 		this.useTextures = checked;
 	} //textureToggle()
 
-	private toggleRockCollision(checked) {
+	private toggleRockCollision(checked: any) {
 		this.rockCollision = checked;
 		for(let i = 0; i < this.particleCount; i++) {
 			if(this.particles[i].type == 0) {
@@ -1643,7 +1650,7 @@ class Haxteroids {
 		} //done
 	} //rockCollision()
 
-	private toggleSpeedHack(checked) {
+	private toggleSpeedHack(checked: any) {
 		this.speedHack = checked;
 		this.slideStars(document.getElementById("starSlider").value);
 	} //rockCollision()
