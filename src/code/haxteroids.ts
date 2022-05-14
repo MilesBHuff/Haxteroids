@@ -9,8 +9,8 @@ import { Star } from "classes/star.class";
 export class Haxteroids {
 
 	// Resources
-	private graphics: { [key: string]: HTMLImageElement; };
-	private sounds: { [key: string]: HTMLAudioElement; };
+	private readonly graphics: { [key: string]: HTMLImageElement; };
+	private readonly sounds: { [key: string]: HTMLAudioElement; };
 
 	// Settings
 	private particleMultiplier: number;
@@ -19,22 +19,22 @@ export class Haxteroids {
 	private useTextures: boolean;
 
 	// DOM variables
-	private canvas: HTMLCanvasElement;
-	private context: CanvasRenderingContext2D;
+	private readonly canvas: HTMLCanvasElement;
+	private readonly context: CanvasRenderingContext2D;
 
 	// Game variables
-	private gameInt: number;
-	private gameLoop;
-	private gameSecs: number;
+	private readonly gameInt: number;
+	private readonly gameLoop;
+	private readonly gameSecs: number;
 	private menuIndex: number;
-	private menuTimer;
+	private readonly menuTimer;
 
 	// Scale variables
-	private height: number;
-	private halfHeight: number;
-	private halfWidth: number;
-	private width: number;
-	private bigAxis: number;
+	private readonly height: number;
+	private readonly halfHeight: number;
+	private readonly halfWidth: number;
+	private readonly width: number;
+	private readonly bigAxis: number;
 
 	// Input variables
 	private downDown: boolean;
@@ -45,50 +45,50 @@ export class Haxteroids {
 	private menuShow: boolean;
 
 	// Fade variables
-	private monoFade: number;
-	private thrustFade: number;
-	private debrisFade: number;
+	private readonly monoFade: number;
+	private readonly thrustFade: number;
+	private readonly debrisFade: number;
 
 	// Star variables
-	private stars: Array<any>;
+	private readonly stars: Array<any>;
 	private starCount: number;
 	private wantStars: number;
 
 	// Asteroid variables
-	private maxRockSize: number;
-	private rockCD;
+	private readonly maxRockSize: number;
+	private readonly rockCD;
 	private rockCDnow;
-	private rockPoints: number;
-	private rocks: Array<any>;
-	private rockSpriteSize: number;
+	private readonly rockPoints: number;
+	private readonly rocks: Array<any>;
+	private readonly rockSpriteSize: number;
 	private rockCount: number;
-	private wantRocks: number;
+	private readonly wantRocks: number;
 
 	// Missile variables
-	private shotCd;
-	private shots: Array<any>;
+	private readonly shotCd;
+	private readonly shots: Array<any>;
 	private shotCount: number;
-	private shotSize: number;
-	private shotHalfSize: number;
-	private shotHalfWidth: number;
-	private shotHalfHeight: number;
-	private shotWidth: number;
-	private shotHeight: number;
+	private readonly shotSize: number;
+	private readonly shotHalfSize: number;
+	private readonly shotHalfWidth: number;
+	private readonly shotHalfHeight: number;
+	private readonly shotWidth: number;
+	private readonly shotHeight: number;
 
 	// Player variables
-	private player: Player;
-	private shipFullThrust: number;
-	private shipHalfRealSize: number;
-	private shipMonoThrust: number;
-	private shipRealSize: number;
-	private shipSize: number;
-	private shipSpinThrust: number;
-	private thrustHeat: number;
+	private readonly player: Player;
+	private readonly shipFullThrust: number;
+	private readonly shipHalfRealSize: number;
+	private readonly shipMonoThrust: number;
+	private readonly shipRealSize: number;
+	private readonly shipSize: number;
+	private readonly shipSpinThrust: number;
+	private readonly thrustHeat: number;
 
 	// Particle variables
-	private particles: Array<any>;
-	private particleFade;
-	private particleSize: number;
+	private readonly particles: Array<any>;
+	private readonly particleFade;
+	private readonly particleSize: number;
 	private particleCount: number;
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -205,7 +205,7 @@ export class Haxteroids {
 		// Initialize asteroids
 		for (let i = 0; i < (this.wantRocks / 2); i++) {
 			// Create an asteroid
-			let rock = new Rock(this.rockPoints, this.maxRockSize, this.player, this.width, this.height);
+			const rock = new Rock(this.rockPoints, this.maxRockSize, this.player, this.width, this.height);
 
 			// Set coordinates
 			rock.cx = Math.random() * this.width;
@@ -256,12 +256,12 @@ export class Haxteroids {
 			avgSize += rock.r[i];
 		} //done
 		avgSize /= this.rockPoints;
-		let halfSize = avgSize;
+		const halfSize = avgSize;
 		avgSize *= 2;
 
 		// Create debris
 		for (let i = 0; i < avgSize * this.particleMultiplier; i++) {
-			let particle = new Particle();
+			const particle = new Particle();
 			particle.type = ParticleType.debris;
 			particle.x = (rock.cx - halfSize) + (Math.random() * avgSize);
 			particle.y = (rock.cy - halfSize) + (Math.random() * avgSize);
@@ -281,7 +281,7 @@ export class Haxteroids {
 
 	private shipsplosion(ship: any, rock: { vx: number; vy: number; }) {
 		for (let l = 0; l < this.shipRealSize * 2 * this.particleMultiplier; l++) {
-			let particle = new Particle();
+			const particle = new Particle();
 			particle.x = (this.halfWidth - this.shipHalfRealSize) + (Math.random() * this.shipRealSize);
 			particle.y = (this.halfHeight - this.shipHalfRealSize) + (Math.random() * this.shipRealSize);
 			particle.vx = Math.random() * rock.vx * 2;
@@ -328,7 +328,7 @@ export class Haxteroids {
 	////////////////////////////////////////////////////////////////////////////////
 
 	private new_shot() {
-		let shot = {
+		const shot = {
 			x: 0, // x-coordinate
 			y: 0, // y-coordinate
 			vx: 0, // x-velocity
@@ -351,7 +351,7 @@ export class Haxteroids {
 
 	private shotsplosion(shot: { vx: number; vy: number; }, rock: { vx: number; vy: number; }) {
 		for (let l = 0; l < this.shipRealSize * 2 * this.particleMultiplier; l++) {
-			let particle = new Particle();
+			const particle = new Particle();
 			particle.x = (this.halfWidth - this.shotHalfWidth) + (Math.random() * this.shotWidth);
 			particle.y = (this.halfHeight - this.shotHalfHeight) + (Math.random() * this.shotHeight);
 			particle.vx = Math.random() * (rock.vx - shot.vx);
@@ -659,7 +659,7 @@ export class Haxteroids {
 			// Create exhaust particles
 			if (this.upDown) {
 				for (let i = 0; i < 6 * this.particleMultiplier; i++) {
-					let particle = new Particle();
+					const particle = new Particle();
 					particle.type = ParticleType.shot;
 					particle.x = (this.halfWidth - 2) + (4 * Math.random());
 					particle.y = (this.halfHeight + 15);
@@ -674,7 +674,7 @@ export class Haxteroids {
 			} //fi
 			if (this.leftDown) {
 				for (let i = 0; i < 3 * this.particleMultiplier; i++) {
-					let particle = new Particle();
+					const particle = new Particle();
 					particle.type = ParticleType.mono;
 					particle.x = this.halfWidth + 4;
 					particle.y = this.halfHeight - 4;
@@ -689,7 +689,7 @@ export class Haxteroids {
 			} //fi
 			if (this.downDown) {
 				for (let i = 0; i < 3 * this.particleMultiplier; i++) {
-					let particle = new Particle();
+					const particle = new Particle();
 					particle.type = ParticleType.mono;
 					particle.x = this.halfWidth;
 					particle.y = this.halfHeight - 4;
@@ -704,7 +704,7 @@ export class Haxteroids {
 			} //fi
 			if (this.rightDown) {
 				for (let i = 0; i < 3 * this.particleMultiplier; i++) {
-					let particle = new Particle();
+					const particle = new Particle();
 					particle.type = ParticleType.mono;
 					particle.x = this.halfWidth - 4;
 					particle.y = this.halfHeight - 4;
@@ -786,8 +786,8 @@ export class Haxteroids {
 				// Calculate new vectors
 				hypotenuse = Math.sqrt(Math.pow(this.particles[i].vx, 2) + Math.pow(this.particles[i].vy, 2));
 				radians = Math.atan2(this.particles[i].vy, this.particles[i].vx) + this.player.ship.vr;
-				let cos = Math.cos(radians);
-				let sin = Math.sin(radians);
+				const cos = Math.cos(radians);
+				const sin = Math.sin(radians);
 				//			particles[i].vx = (particles[i].vx * cos) - (particles[i].vy * sin);
 				//			particles[i].vy = (particles[i].vx * sin) + (particles[i].vy * cos);
 
@@ -809,8 +809,8 @@ export class Haxteroids {
 				// Calculate new vectors
 				hypotenuse = Math.sqrt(Math.pow(this.rocks[i].vx, 2) + Math.pow(this.rocks[i].vy, 2));
 				radians = Math.atan2(this.rocks[i].vy, this.rocks[i].vx) + this.player.ship.vr;
-				let cos = Math.cos(radians);
-				let sin = Math.sin(radians);
+				const cos = Math.cos(radians);
+				const sin = Math.sin(radians);
 				//			rocks[i].vx = (rocks[i].vx * cos) - (rocks[i].vy * sin);
 				//			rocks[i].vy = (rocks[i].vx * sin) + (rocks[i].vy * cos);
 
@@ -832,8 +832,8 @@ export class Haxteroids {
 				// Calculate new vectors
 				hypotenuse = Math.sqrt(Math.pow(this.shots[i].vx, 2) + Math.pow(this.shots[i].vy, 2));
 				radians = Math.atan2(this.shots[i].vy, this.shots[i].vx) + this.player.ship.vr;
-				let cos = Math.cos(radians);
-				let sin = Math.sin(radians);
+				const cos = Math.cos(radians);
+				const sin = Math.sin(radians);
 				//			shots[i].vx = (shots[i].vx * cos) - (shots[i].vy * sin);
 				//			shots[i].vy = (shots[i].vx * sin) + (shots[i].vy * cos);
 
@@ -851,8 +851,8 @@ export class Haxteroids {
 				// Calculate new vectors
 				hypotenuse = Math.sqrt(Math.pow(this.stars[i].vx, 2) + Math.pow(this.stars[i].vy, 2));
 				radians = Math.atan2(this.stars[i].vy, this.stars[i].vx) + this.player.ship.vr;
-				let cos = Math.cos(radians);
-				let sin = Math.sin(radians);
+				const cos = Math.cos(radians);
+				const sin = Math.sin(radians);
 				//			stars[i].vx = (stars[i].vx * cos) - (stars[i].vy * sin);
 				//			stars[i].vy = (stars[i].vx * sin) + (stars[i].vy * cos);
 
@@ -895,7 +895,7 @@ export class Haxteroids {
 		} //fi
 
 		// Calculate asteroid collisions
-		// let rockOffset = rockCount / 3;
+		// const rockOffset = rockCount / 3;
 		for (let i = 0; i < this.rockCount; i++) {
 
 			// Get the average size of the asteroid
@@ -907,7 +907,7 @@ export class Haxteroids {
 					smallSize1 = this.rocks[i].r[j];
 			} //done
 			avgSize1 /= this.rockPoints;
-			let halfSize1 = avgSize1;
+			const halfSize1 = avgSize1;
 			avgSize1 *= 2;
 
 			// Vs particles
@@ -942,7 +942,7 @@ export class Haxteroids {
 							avgSize2 += this.rocks[l].r[j];
 						} //done
 						avgSize2 /= this.rockPoints;
-						let halfSize2 = avgSize2;
+						const halfSize2 = avgSize2;
 						avgSize2 *= 2;
 
 						if (this.rocks[i]
@@ -1203,7 +1203,7 @@ export class Haxteroids {
 		//	switch(menuIndex) {
 		//		case 1:
 		//			// Monopropellant
-		//			let soundCutOff = sounds.mono.duration - (gameInt / 500);
+		//			const soundCutOff = sounds.mono.duration - (gameInt / 500);
 		//			if(!downDown && !rightDown && !leftDown)
 		//				sounds.mono.pause();
 		//			if(downDown || rightDown || leftDown)
@@ -1211,7 +1211,7 @@ export class Haxteroids {
 		//			if(sounds.mono.currentTime  > soundCutOff)
 		//				sounds.mono.currentTime-= soundCutOff;
 		//			// Thruster
-		//			let soundCutOff = sounds.thrust.duration - (gameInt / 500);
+		//			const soundCutOff = sounds.thrust.duration - (gameInt / 500);
 		//			if(!upDown)
 		//				sounds.thrust.pause();
 		//			if(upDown)
@@ -1219,7 +1219,7 @@ export class Haxteroids {
 		//			if(sounds.thrust.currentTime  > soundCutOff)
 		//				sounds.thrust.currentTime-= soundCutOff;
 		//			// Ambience
-		//			let soundCutOff = sounds.ship.duration - (gameInt / 500);
+		//			const soundCutOff = sounds.ship.duration - (gameInt / 500);
 		//			if(sounds.ship.currentTime  > soundCutOff)
 		//				sounds.ship.currentTime-= soundCutOff;
 		//			break;

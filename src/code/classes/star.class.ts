@@ -25,10 +25,10 @@ export class Star {
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    protected maxStarSize = 0.05;
-    protected starIVX = 1.0 - (Math.random() * 2.0);
-    protected starIVY = 1.0 - (Math.random() * 2.0);
-    protected starSpeed = 0.1625;
+    protected readonly maxStarSize = 0.05;
+    protected readonly starIVX = 1.0 - (Math.random() * 2.0);
+    protected readonly starIVY = 1.0 - (Math.random() * 2.0);
+    protected readonly starSpeed = 0.1625;
 
     ////////////////////////////////////////////////////////////////////////////////
     constructor(

@@ -33,10 +33,10 @@ export class Rock {
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    protected maxRockSpeed = 1.0;
-    protected maxRockSpin = 1.0;
-    protected minRockSize = this.maxRockSize / 4;
-    protected minRockSpeed = this.maxRockSpeed / 4;
+    protected readonly maxRockSpeed = 1.0;
+    protected readonly maxRockSpin = 1.0;
+    protected readonly minRockSize = this.maxRockSize / 4;
+    protected readonly minRockSpeed = this.maxRockSpeed / 4;
 
     ////////////////////////////////////////////////////////////////////////////////
     constructor(
@@ -53,8 +53,8 @@ export class Rock {
 		this.irgba.b = 106 - (Math.random() * 7);
 
 		// Calculate radiuses
-		let rockSize = (this.minRockSize + (Math.random() * (this.maxRockSize - this.minRockSize)));
-		let rockSizeThird = rockSize / 3;
+		const rockSize = (this.minRockSize + (Math.random() * (this.maxRockSize - this.minRockSize)));
+		const rockSizeThird = rockSize / 3;
 		for (let j = 0; j < this.rockPoints; j++) {
 			this.r.push(rockSizeThird + (Math.random() * ((rockSizeThird * 2) - rockSizeThird)));
 		} //done
@@ -67,7 +67,7 @@ export class Rock {
 
 		// Set velocities
 		this.vd = Math.random() * this.maxRockSpin;
-		let offsetRockSpeed = this.maxRockSpeed - this.minRockSpeed;
+		const offsetRockSpeed = this.maxRockSpeed - this.minRockSpeed;
 		this.vx = this.minRockSpeed + (Math.random() * offsetRockSpeed);
 		this.vy = this.minRockSpeed + (Math.random() * offsetRockSpeed);
 
